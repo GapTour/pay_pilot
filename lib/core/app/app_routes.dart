@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/features/incomes/presentation/cubit/incomes_cubit.dart';
 import 'package:pay_pilot/features/incomes/presentation/screens/incomes_screen.dart';
 import 'package:pay_pilot/features/main/presentation/screens/main_screen.dart';
 import 'package:pay_pilot/features/members/presentation/cubit/members_cubit.dart';
@@ -40,7 +41,10 @@ class AppRoutes {
       GoRoute(
         name: incomesScreen,
         path: IncomesScreen.routeName,
-        builder: (context, state) => const IncomesScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => IncomesCubit(locator()),
+          child: const IncomesScreen(),
+        ),
       ),
     ],
   );

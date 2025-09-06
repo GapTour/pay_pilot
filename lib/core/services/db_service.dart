@@ -1,13 +1,23 @@
 import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/features/incomes/data/income_form.dart';
 import 'package:pay_pilot/features/members/data/member_form.dart';
 
 class DatabaseService {
   final AppDatabase _db;
   DatabaseService(this._db);
 
-  Future<void> insertIncome(IncomesCompanion income) async {
-    await _db.into(_db.incomes).insert(income);
+  Future<int> insertIncome(IncomeForm income) async {
+    return await _db
+        .into(_db.incomes)
+        .insert(
+          IncomesCompanion(
+            title: Value(income.title),
+            amount: Value(income.amount),
+            date: Value(income.date),
+            description: Value(income.description),
+          ),
+        );
   }
 
   Future<List<Income>> getAllIncomes() async {
@@ -20,8 +30,18 @@ class DatabaseService {
     )..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
-  Future<void> updateIncome(IncomesCompanion income) async {
-    await _db.update(_db.incomes).replace(income);
+  Future<void> updateIncome(IncomeForm income) async {
+    await _db
+        .update(_db.incomes)
+        .replace(
+          IncomesCompanion(
+            id: Value(income.id!),
+            amount: Value(income.amount),
+            title: Value(income.title),
+            date: Value(income.date),
+            description: Value(income.description),
+          ),
+        );
   }
 
   Future<void> deleteIncome(int id) async {
