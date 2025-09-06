@@ -1,4 +1,6 @@
+import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/features/members/data/member_form.dart';
 
 class DatabaseService {
   final AppDatabase _db;
@@ -26,8 +28,16 @@ class DatabaseService {
     await (_db.delete(_db.incomes)..where((tbl) => tbl.id.equals(id))).go();
   }
 
-  Future<void> insertMember(MembersCompanion member) async {
-    await _db.into(_db.members).insert(member);
+  Future<int> insertMember(MemberForm member) async {
+    return await _db
+        .into(_db.members)
+        .insert(
+          MembersCompanion(
+            name: Value(member.name),
+            percentage: Value(member.percentage),
+            description: Value(member.description),
+          ),
+        );
   }
 
   Future<List<Member>> getAllMembers() async {
@@ -40,8 +50,17 @@ class DatabaseService {
     )..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
-  Future<void> updateMember(MembersCompanion member) async {
-    await _db.update(_db.members).replace(member);
+  Future<void> updateMember(MemberForm member) async {
+    await _db
+        .update(_db.members)
+        .replace(
+          MembersCompanion(
+            id: Value(member.id!),
+            name: Value(member.name),
+            percentage: Value(member.percentage),
+            description: Value(member.description),
+          ),
+        );
   }
 
   Future<void> deleteMember(int id) async {

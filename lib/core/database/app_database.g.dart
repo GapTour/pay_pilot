@@ -436,10 +436,12 @@ class $MembersTable extends Members with TableInfo<$MembersTable, Member> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  static const VerificationMeta _percentageMeta = const VerificationMeta(
+    'percentage',
+  );
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
+  late final GeneratedColumn<double> percentage = GeneratedColumn<double>(
+    'percentage',
     aliasedName,
     false,
     type: DriftSqlType.double,
@@ -462,7 +464,7 @@ class $MembersTable extends Members with TableInfo<$MembersTable, Member> {
     id,
     name,
     description,
-    amount,
+    percentage,
     createAt,
   ];
   @override
@@ -497,13 +499,13 @@ class $MembersTable extends Members with TableInfo<$MembersTable, Member> {
         ),
       );
     }
-    if (data.containsKey('amount')) {
+    if (data.containsKey('percentage')) {
       context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+        _percentageMeta,
+        percentage.isAcceptableOrUnknown(data['percentage']!, _percentageMeta),
       );
     } else if (isInserting) {
-      context.missing(_amountMeta);
+      context.missing(_percentageMeta);
     }
     if (data.containsKey('create_at')) {
       context.handle(
@@ -532,9 +534,9 @@ class $MembersTable extends Members with TableInfo<$MembersTable, Member> {
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
-      amount: attachedDatabase.typeMapping.read(
+      percentage: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}amount'],
+        data['${effectivePrefix}percentage'],
       )!,
       createAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -553,13 +555,13 @@ class Member extends DataClass implements Insertable<Member> {
   final int id;
   final String name;
   final String? description;
-  final double amount;
+  final double percentage;
   final DateTime createAt;
   const Member({
     required this.id,
     required this.name,
     this.description,
-    required this.amount,
+    required this.percentage,
     required this.createAt,
   });
   @override
@@ -570,7 +572,7 @@ class Member extends DataClass implements Insertable<Member> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
-    map['amount'] = Variable<double>(amount);
+    map['percentage'] = Variable<double>(percentage);
     map['create_at'] = Variable<DateTime>(createAt);
     return map;
   }
@@ -582,7 +584,7 @@ class Member extends DataClass implements Insertable<Member> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
-      amount: Value(amount),
+      percentage: Value(percentage),
       createAt: Value(createAt),
     );
   }
@@ -596,7 +598,7 @@ class Member extends DataClass implements Insertable<Member> {
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
-      amount: serializer.fromJson<double>(json['amount']),
+      percentage: serializer.fromJson<double>(json['percentage']),
       createAt: serializer.fromJson<DateTime>(json['createAt']),
     );
   }
@@ -607,7 +609,7 @@ class Member extends DataClass implements Insertable<Member> {
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
-      'amount': serializer.toJson<double>(amount),
+      'percentage': serializer.toJson<double>(percentage),
       'createAt': serializer.toJson<DateTime>(createAt),
     };
   }
@@ -616,13 +618,13 @@ class Member extends DataClass implements Insertable<Member> {
     int? id,
     String? name,
     Value<String?> description = const Value.absent(),
-    double? amount,
+    double? percentage,
     DateTime? createAt,
   }) => Member(
     id: id ?? this.id,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
-    amount: amount ?? this.amount,
+    percentage: percentage ?? this.percentage,
     createAt: createAt ?? this.createAt,
   );
   Member copyWithCompanion(MembersCompanion data) {
@@ -632,7 +634,9 @@ class Member extends DataClass implements Insertable<Member> {
       description: data.description.present
           ? data.description.value
           : this.description,
-      amount: data.amount.present ? data.amount.value : this.amount,
+      percentage: data.percentage.present
+          ? data.percentage.value
+          : this.percentage,
       createAt: data.createAt.present ? data.createAt.value : this.createAt,
     );
   }
@@ -643,14 +647,14 @@ class Member extends DataClass implements Insertable<Member> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('amount: $amount, ')
+          ..write('percentage: $percentage, ')
           ..write('createAt: $createAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, description, amount, createAt);
+  int get hashCode => Object.hash(id, name, description, percentage, createAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -658,7 +662,7 @@ class Member extends DataClass implements Insertable<Member> {
           other.id == this.id &&
           other.name == this.name &&
           other.description == this.description &&
-          other.amount == this.amount &&
+          other.percentage == this.percentage &&
           other.createAt == this.createAt);
 }
 
@@ -666,35 +670,35 @@ class MembersCompanion extends UpdateCompanion<Member> {
   final Value<int> id;
   final Value<String> name;
   final Value<String?> description;
-  final Value<double> amount;
+  final Value<double> percentage;
   final Value<DateTime> createAt;
   const MembersCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
-    this.amount = const Value.absent(),
+    this.percentage = const Value.absent(),
     this.createAt = const Value.absent(),
   });
   MembersCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     this.description = const Value.absent(),
-    required double amount,
+    required double percentage,
     this.createAt = const Value.absent(),
   }) : name = Value(name),
-       amount = Value(amount);
+       percentage = Value(percentage);
   static Insertable<Member> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? description,
-    Expression<double>? amount,
+    Expression<double>? percentage,
     Expression<DateTime>? createAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
-      if (amount != null) 'amount': amount,
+      if (percentage != null) 'percentage': percentage,
       if (createAt != null) 'create_at': createAt,
     });
   }
@@ -703,14 +707,14 @@ class MembersCompanion extends UpdateCompanion<Member> {
     Value<int>? id,
     Value<String>? name,
     Value<String?>? description,
-    Value<double>? amount,
+    Value<double>? percentage,
     Value<DateTime>? createAt,
   }) {
     return MembersCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      amount: amount ?? this.amount,
+      percentage: percentage ?? this.percentage,
       createAt: createAt ?? this.createAt,
     );
   }
@@ -727,8 +731,8 @@ class MembersCompanion extends UpdateCompanion<Member> {
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
-    if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+    if (percentage.present) {
+      map['percentage'] = Variable<double>(percentage.value);
     }
     if (createAt.present) {
       map['create_at'] = Variable<DateTime>(createAt.value);
@@ -742,7 +746,7 @@ class MembersCompanion extends UpdateCompanion<Member> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('amount: $amount, ')
+          ..write('percentage: $percentage, ')
           ..write('createAt: $createAt')
           ..write(')'))
         .toString();
@@ -1384,7 +1388,7 @@ typedef $$MembersTableCreateCompanionBuilder =
       Value<int> id,
       required String name,
       Value<String?> description,
-      required double amount,
+      required double percentage,
       Value<DateTime> createAt,
     });
 typedef $$MembersTableUpdateCompanionBuilder =
@@ -1392,7 +1396,7 @@ typedef $$MembersTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> name,
       Value<String?> description,
-      Value<double> amount,
+      Value<double> percentage,
       Value<DateTime> createAt,
     });
 
@@ -1420,8 +1424,8 @@ class $$MembersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
+  ColumnFilters<double> get percentage => $composableBuilder(
+    column: $table.percentage,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1455,8 +1459,8 @@ class $$MembersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
-    column: $table.amount,
+  ColumnOrderings<double> get percentage => $composableBuilder(
+    column: $table.percentage,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1486,8 +1490,10 @@ class $$MembersTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => column);
+  GeneratedColumn<double> get percentage => $composableBuilder(
+    column: $table.percentage,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createAt =>
       $composableBuilder(column: $table.createAt, builder: (column) => column);
@@ -1524,13 +1530,13 @@ class $$MembersTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
-                Value<double> amount = const Value.absent(),
+                Value<double> percentage = const Value.absent(),
                 Value<DateTime> createAt = const Value.absent(),
               }) => MembersCompanion(
                 id: id,
                 name: name,
                 description: description,
-                amount: amount,
+                percentage: percentage,
                 createAt: createAt,
               ),
           createCompanionCallback:
@@ -1538,13 +1544,13 @@ class $$MembersTableTableManager
                 Value<int> id = const Value.absent(),
                 required String name,
                 Value<String?> description = const Value.absent(),
-                required double amount,
+                required double percentage,
                 Value<DateTime> createAt = const Value.absent(),
               }) => MembersCompanion.insert(
                 id: id,
                 name: name,
                 description: description,
-                amount: amount,
+                percentage: percentage,
                 createAt: createAt,
               ),
           withReferenceMapper: (p0) => p0
