@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 
 class AppTextField extends StatefulWidget {
@@ -25,32 +27,34 @@ class AppTextField extends StatefulWidget {
   final int? customLines;
   final int? maxLines;
   final int? minLines;
+  final List<TextInputFormatter>? inputFormatters;
 
   const AppTextField({
     super.key,
-    this.keyboardType,
-    this.textInputAction,
-    this.controller,
-    this.maxLength,
-    this.formKey,
     this.label,
+    this.formKey,
     this.hint,
-    this.validatorText,
+    this.controller,
+    this.textInputAction,
+    this.keyboardType,
     this.validator,
+    this.validatorText,
     this.autoFocus = false,
     this.prefixIcon,
     this.suffixIcon,
     this.onTapSuffixIcon,
     this.onChange,
-    this.onEditingComplete,
-    this.nextFocusNode,
     this.onFieldSubmitted,
+    this.nextFocusNode,
+    this.onEditingComplete,
+    this.maxLength,
     this.onTap,
     this.focusNode,
     this.readOnly = false,
     this.customLines,
     this.maxLines,
     this.minLines,
+    this.inputFormatters,
   });
 
   @override
@@ -135,6 +139,7 @@ class _AppTextFieldState extends State<AppTextField> {
       obscureText: widget.keyboardType == TextInputType.visiblePassword,
       maxLines: widget.maxLines,
       minLines: widget.minLines,
+      inputFormatters: widget.inputFormatters,
       validator: widget.validatorText == null
           ? widget.validator
           : (value) {
