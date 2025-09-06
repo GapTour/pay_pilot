@@ -17,6 +17,7 @@ class MembersCubit extends Cubit<MembersState> {
 
     try {
       final members = await _repository.getAllMembers();
+      members.sort((a, b) => b.percentage.compareTo(a.percentage));
 
       emit(
         state.copyWith(membersStatus: MembersStatus.success, members: members),
