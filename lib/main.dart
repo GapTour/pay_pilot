@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pay_pilot/locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,6 +10,9 @@ void main() async {
       statusBarColor: Colors.transparent,
     ),
   );
+
+  /// init locator
+  await locatorSetup();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
