@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/platform/platfrom.dart';
 import 'package:pay_pilot/core/services/db_service.dart';
+import 'package:pay_pilot/features/incomes/data/income_db_provider.dart';
+import 'package:pay_pilot/features/incomes/repository/income_repository.dart';
 import 'package:pay_pilot/features/members/data/member_db_provider.dart';
 import 'package:pay_pilot/features/members/repository/member_repository.dart';
 
@@ -26,11 +28,17 @@ void _callProviders() {
   locator.registerLazySingleton<MemberDbProvider>(
     () => MemberDbProvider(locator()),
   );
+  locator.registerLazySingleton<IncomeDbProvider>(
+    () => IncomeDbProvider(locator()),
+  );
 }
 
 void _callRepositories() {
   locator.registerLazySingleton<MemberRepository>(
     () => MemberRepository(locator()),
+  );
+  locator.registerLazySingleton<IncomeRepository>(
+    () => IncomeRepository(locator()),
   );
 }
 
