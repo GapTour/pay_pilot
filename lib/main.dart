@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pay_pilot/core/app/app_routes.dart';
 import 'package:pay_pilot/locator.dart';
 
 void main() async {
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Pay Pilot');
+    return MaterialApp.router(
+      routerConfig: AppRoutes.router,
+      title: 'Pay Pilot',
+    );
   }
 }
