@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/platform/platfrom.dart';
 import 'package:pay_pilot/core/services/db_service.dart';
+import 'package:pay_pilot/features/members/data/member_db_provider.dart';
+import 'package:pay_pilot/features/members/repository/member_repository.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -20,8 +22,16 @@ void _callServices() {
   locator.registerSingleton<DatabaseService>(DatabaseService(database));
 }
 
-void _callProviders() {}
+void _callProviders() {
+  locator.registerLazySingleton<MemberDbProvider>(
+    () => MemberDbProvider(locator()),
+  );
+}
 
-void _callRepositories() {}
+void _callRepositories() {
+  locator.registerLazySingleton<MemberRepository>(
+    () => MemberRepository(locator()),
+  );
+}
 
 void _callBlocs() {}
