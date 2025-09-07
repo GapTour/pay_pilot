@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
+import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/widgets/add_report_dialog_box.dart';
 
@@ -44,13 +45,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
             return const Center(child: Text('No reports found.'));
           }
 
-          return GridView.builder(
+          return ListView.separated(
             itemCount: reports.length,
             padding: const EdgeInsets.all(18),
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 380,
-              childAspectRatio: 6,
-            ),
+            separatorBuilder: (context, index) => Gap(3),
             itemBuilder: (context, index) {
               return InkWell(
                 highlightColor: Colors.transparent,
@@ -65,7 +63,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 },
                 child: Card(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 8,
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,17 +81,30 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             ),
 
                             Text(
-                              'V ${reports[index].version}',
+                              AmountHelper.integerToFormattedPrice(
+                                reports[index].totalBalance,
+                              ),
                               textAlign: TextAlign.center,
                               style: const TextStyle(fontSize: 12),
                             ),
                           ],
                         ),
-                        Gap(8),
-                        Text(
-                          DateFormat.yMMM().format(reports[index].date),
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(fontSize: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                DateFormat.yMMM().format(reports[index].date),
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                            ),
+
+                            Text(
+                              'V ${reports[index].version}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
                         ),
                       ],
                     ),
