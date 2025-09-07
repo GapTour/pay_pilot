@@ -160,7 +160,7 @@ class _AppTextFieldState extends State<AppTextField> {
           vertical: 10,
         ),
         hintStyle: TextStyle(
-          // color: AppColors.gray,
+          color: Colors.black26,
           fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
