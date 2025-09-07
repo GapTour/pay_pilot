@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/features/incomes/data/income_form.dart';
 import 'package:pay_pilot/features/members/data/member_form.dart';
+import 'package:pay_pilot/features/reports/data/report_form.dart';
 
 class DatabaseService {
   final AppDatabase _db;
@@ -87,8 +88,19 @@ class DatabaseService {
     await (_db.delete(_db.members)..where((tbl) => tbl.id.equals(id))).go();
   }
 
-  Future<void> insertReport(ReportsCompanion report) async {
-    await _db.into(_db.reports).insert(report);
+  Future<int> insertReport(ReportForm report) async {
+    return await _db
+        .into(_db.reports)
+        .insert(
+          ReportsCompanion(
+            version: Value(report.version),
+            description: Value(report.description),
+            membersReport: Value(
+              report.membersReport.map((e) => e.toJson()).toList().toString(),
+            ),
+            date: Value(report.date),
+          ),
+        );
   }
 
   Future<List<Report>> getAllReports() async {
@@ -101,8 +113,20 @@ class DatabaseService {
     )..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
-  Future<void> updateReport(ReportsCompanion report) async {
-    await _db.update(_db.reports).replace(report);
+  Future<void> updateReport(ReportForm report) async {
+    await _db
+        .update(_db.reports)
+        .replace(
+          ReportsCompanion(
+            id: Value(report.id!),
+            version: Value(report.version),
+            description: Value(report.description),
+            membersReport: Value(
+              report.membersReport.map((e) => e.toJson()).toList().toString(),
+            ),
+            date: Value(report.date),
+          ),
+        );
   }
 
   Future<void> deleteReport(int id) async {

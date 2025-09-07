@@ -6,6 +6,8 @@ import 'package:pay_pilot/features/incomes/data/income_db_provider.dart';
 import 'package:pay_pilot/features/incomes/repository/income_repository.dart';
 import 'package:pay_pilot/features/members/data/member_db_provider.dart';
 import 'package:pay_pilot/features/members/repository/member_repository.dart';
+import 'package:pay_pilot/features/reports/data/report_db_provider.dart';
+import 'package:pay_pilot/features/reports/repository/report_repository.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -31,6 +33,9 @@ void _callProviders() {
   locator.registerLazySingleton<IncomeDbProvider>(
     () => IncomeDbProvider(locator()),
   );
+  locator.registerLazySingleton<ReportDbProvider>(
+    () => ReportDbProvider(locator()),
+  );
 }
 
 void _callRepositories() {
@@ -39,6 +44,9 @@ void _callRepositories() {
   );
   locator.registerLazySingleton<IncomeRepository>(
     () => IncomeRepository(locator()),
+  );
+  locator.registerLazySingleton<ReportRepository>(
+    () => ReportRepository(locator()),
   );
 }
 
