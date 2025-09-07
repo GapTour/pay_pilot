@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/features/incomes/presentation/cubit/incomes_cubit.dart';
@@ -180,12 +182,10 @@ class _SelectingIncomesState extends State<SelectingIncomes> {
                   }
 
                   return Expanded(
-                    child: GridView.builder(
+                    child: ListView.separated(
                       itemCount: incomes.length,
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 380,
-                        childAspectRatio: 3.8,
-                      ),
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      separatorBuilder: (context, index) => Gap(3),
                       itemBuilder: (context, index) {
                         final isSelected = widget.selectedIncomes.any(
                           (element) => element.id == incomes[index].id,
@@ -217,12 +217,28 @@ class _SelectingIncomesState extends State<SelectingIncomes> {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 45.0),
-                                child: Text(
-                                  AmountHelper.integerToFormattedPrice(
-                                    incomes[index].amount,
-                                  ),
-                                  style: const TextStyle(fontSize: 12),
+                                padding: const EdgeInsets.only(
+                                  left: 45.0,
+                                  bottom: 8,
+                                  right: 18,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        AmountHelper.integerToFormattedPrice(
+                                          incomes[index].amount,
+                                        ),
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                    ),
+                                    Text(
+                                      DateFormat.MMMEd().format(
+                                        incomes[index].date,
+                                      ),
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

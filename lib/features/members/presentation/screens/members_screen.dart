@@ -40,17 +40,15 @@ class _MembersScreenState extends State<MembersScreen> {
             return const Center(child: Text('No members found.'));
           }
 
-          return GridView.builder(
+          return ListView.separated(
             itemCount: members.length,
             padding: const EdgeInsets.all(18),
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 380,
-              childAspectRatio: 6,
-            ),
+            separatorBuilder: (context, index) => Gap(3),
             itemBuilder: (context, index) {
               return InkWell(
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
+                radius: 15,
                 onTap: () {
                   showDialog(
                     context: context,
@@ -65,24 +63,28 @@ class _MembersScreenState extends State<MembersScreen> {
                   );
                 },
                 child: Card(
-                  child: Row(
-                    children: [
-                      Gap(15),
-                      Expanded(
-                        child: Text(
-                          members[index].name,
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(fontSize: 18),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18.0,
+                      vertical: 8,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            members[index].name,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(fontSize: 18),
+                          ),
                         ),
-                      ),
 
-                      Text(
-                        '${members[index].percentage.toString()}%',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      Gap(15),
-                    ],
+                        Text(
+                          '${members[index].percentage.toString()}%',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

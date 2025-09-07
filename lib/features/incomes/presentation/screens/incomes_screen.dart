@@ -42,13 +42,10 @@ class _IncomesScreenState extends State<IncomesScreen> {
             return const Center(child: Text('No incomes found.'));
           }
 
-          return GridView.builder(
+          return ListView.separated(
             itemCount: incomes.length,
             padding: const EdgeInsets.all(18),
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 380,
-              childAspectRatio: 4.4,
-            ),
+            separatorBuilder: (context, index) => Gap(3),
             itemBuilder: (context, index) {
               return InkWell(
                 highlightColor: Colors.transparent,
