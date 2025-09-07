@@ -54,7 +54,8 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
     versionController.text = reportLength.toString();
   }
 
-  Future<List<MemberReport>> generateReport() async {
+  Future<({List<MemberReport> members, double totalBalance})>
+  generateReport() async {
     final List<MemberReport> memberReports = [];
     final double totalIncome = selectedIncomes.fold(
       0,
@@ -77,7 +78,7 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
       );
     }
 
-    return memberReports;
+    return (members: memberReports, totalBalance: totalIncome);
   }
 
   @override
@@ -236,12 +237,13 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                       version: int.parse(
                                         versionController.text,
                                       ),
+                                      totalBalance: value.totalBalance,
                                       description: descriptionController.text,
                                       date: DateTime(
                                         selectedDate!.year,
                                         selectedDate!.month,
                                       ),
-                                      membersReport: value,
+                                      membersReport: value.members,
                                     ),
                                   );
                                 });

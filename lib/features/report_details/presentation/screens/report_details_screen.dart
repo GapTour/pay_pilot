@@ -47,10 +47,20 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
             return ListView(
               padding: EdgeInsets.symmetric(horizontal: 18),
               children: [
-                Text('This report generated for'),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(text: 'This report generated for '),
+                      TextSpan(
+                        text: DateFormat.yMMMM().format(reportDetails.date),
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
                 Text(
-                  DateFormat.yMMMM().format(reportDetails.date),
-                  style: TextStyle(fontSize: 19),
+                  'Total Balance ${AmountHelper.integerToFormattedPrice(reportDetails.totalBalance)}',
+                  style: TextStyle(fontSize: 14),
                 ),
                 Text(
                   'Version ${reportDetails.version}',
@@ -94,11 +104,18 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                               ],
                             ),
 
-                            Text(
-                              AmountHelper.integerToFormattedPrice(
-                                members[index].amount,
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(text: 'Salary  '),
+                                  TextSpan(
+                                    text: AmountHelper.integerToFormattedPrice(
+                                      members[index].amount,
+                                    ),
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                ],
                               ),
-                              style: const TextStyle(fontSize: 15),
                             ),
                           ],
                         ),
