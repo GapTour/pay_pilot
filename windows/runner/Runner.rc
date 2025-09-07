@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "pay_pilot" "\0"
+            VALUE "CompanyName", "Gap Tour" "\0"
+            VALUE "FileDescription", "Pay Pilot DEV" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "pay_pilot" "\0"
+            VALUE "InternalName", "Pay Pilot DEV" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "pay_pilot.exe" "\0"
-            VALUE "ProductName", "pay_pilot" "\0"
+            VALUE "OriginalFilename", "payPilot_dev.exe" "\0"
+            VALUE "ProductName", "Pay Pilot DEV" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
