@@ -64,24 +64,36 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   );
                 },
                 child: Card(
-                  child: Row(
-                    children: [
-                      Gap(15),
-                      Expanded(
-                        child: Text(
-                          DateFormat.yM().format(reports[index].date),
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                reports[index].title,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
 
-                      Text(
-                        'Version ${reports[index].version}',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      Gap(15),
-                    ],
+                            Text(
+                              'V ${reports[index].version}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        Gap(8),
+                        Text(
+                          DateFormat.yMMM().format(reports[index].date),
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

@@ -95,6 +95,7 @@ class DatabaseService {
         .into(_db.reports)
         .insert(
           ReportsCompanion(
+            title: Value(report.title),
             version: Value(report.version),
             description: Value(report.description),
             totalBalance: Value(report.totalBalance),

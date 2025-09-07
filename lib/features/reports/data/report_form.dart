@@ -1,5 +1,6 @@
 class ReportForm {
   final int? id;
+  final String title;
   final int version;
   final String? description;
   final DateTime date;
@@ -8,6 +9,7 @@ class ReportForm {
 
   ReportForm({
     this.id,
+    required this.title,
     required this.version,
     required this.description,
     required this.date,

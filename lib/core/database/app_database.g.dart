@@ -771,6 +771,15 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _versionMeta = const VerificationMeta(
     'version',
   );
@@ -840,6 +849,7 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    title,
     version,
     description,
     membersReport,
@@ -861,6 +871,14 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
     }
     if (data.containsKey('version')) {
       context.handle(
@@ -926,6 +944,10 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
       version: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}version'],
@@ -961,6 +983,7 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
 
 class Report extends DataClass implements Insertable<Report> {
   final int id;
+  final String title;
   final int version;
   final String? description;
   final String membersReport;
@@ -969,6 +992,7 @@ class Report extends DataClass implements Insertable<Report> {
   final DateTime createAt;
   const Report({
     required this.id,
+    required this.title,
     required this.version,
     this.description,
     required this.membersReport,
@@ -980,6 +1004,7 @@ class Report extends DataClass implements Insertable<Report> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['title'] = Variable<String>(title);
     map['version'] = Variable<int>(version);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
@@ -994,6 +1019,7 @@ class Report extends DataClass implements Insertable<Report> {
   ReportsCompanion toCompanion(bool nullToAbsent) {
     return ReportsCompanion(
       id: Value(id),
+      title: Value(title),
       version: Value(version),
       description: description == null && nullToAbsent
           ? const Value.absent()
@@ -1012,6 +1038,7 @@ class Report extends DataClass implements Insertable<Report> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Report(
       id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
       version: serializer.fromJson<int>(json['version']),
       description: serializer.fromJson<String?>(json['description']),
       membersReport: serializer.fromJson<String>(json['membersReport']),
@@ -1025,6 +1052,7 @@ class Report extends DataClass implements Insertable<Report> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
       'version': serializer.toJson<int>(version),
       'description': serializer.toJson<String?>(description),
       'membersReport': serializer.toJson<String>(membersReport),
@@ -1036,6 +1064,7 @@ class Report extends DataClass implements Insertable<Report> {
 
   Report copyWith({
     int? id,
+    String? title,
     int? version,
     Value<String?> description = const Value.absent(),
     String? membersReport,
@@ -1044,6 +1073,7 @@ class Report extends DataClass implements Insertable<Report> {
     DateTime? createAt,
   }) => Report(
     id: id ?? this.id,
+    title: title ?? this.title,
     version: version ?? this.version,
     description: description.present ? description.value : this.description,
     membersReport: membersReport ?? this.membersReport,
@@ -1054,6 +1084,7 @@ class Report extends DataClass implements Insertable<Report> {
   Report copyWithCompanion(ReportsCompanion data) {
     return Report(
       id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
       version: data.version.present ? data.version.value : this.version,
       description: data.description.present
           ? data.description.value
@@ -1073,6 +1104,7 @@ class Report extends DataClass implements Insertable<Report> {
   String toString() {
     return (StringBuffer('Report(')
           ..write('id: $id, ')
+          ..write('title: $title, ')
           ..write('version: $version, ')
           ..write('description: $description, ')
           ..write('membersReport: $membersReport, ')
@@ -1086,6 +1118,7 @@ class Report extends DataClass implements Insertable<Report> {
   @override
   int get hashCode => Object.hash(
     id,
+    title,
     version,
     description,
     membersReport,
@@ -1098,6 +1131,7 @@ class Report extends DataClass implements Insertable<Report> {
       identical(this, other) ||
       (other is Report &&
           other.id == this.id &&
+          other.title == this.title &&
           other.version == this.version &&
           other.description == this.description &&
           other.membersReport == this.membersReport &&
@@ -1108,6 +1142,7 @@ class Report extends DataClass implements Insertable<Report> {
 
 class ReportsCompanion extends UpdateCompanion<Report> {
   final Value<int> id;
+  final Value<String> title;
   final Value<int> version;
   final Value<String?> description;
   final Value<String> membersReport;
@@ -1116,6 +1151,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
   final Value<DateTime> createAt;
   const ReportsCompanion({
     this.id = const Value.absent(),
+    this.title = const Value.absent(),
     this.version = const Value.absent(),
     this.description = const Value.absent(),
     this.membersReport = const Value.absent(),
@@ -1125,17 +1161,20 @@ class ReportsCompanion extends UpdateCompanion<Report> {
   });
   ReportsCompanion.insert({
     this.id = const Value.absent(),
+    required String title,
     required int version,
     this.description = const Value.absent(),
     required String membersReport,
     required double totalBalance,
     this.date = const Value.absent(),
     this.createAt = const Value.absent(),
-  }) : version = Value(version),
+  }) : title = Value(title),
+       version = Value(version),
        membersReport = Value(membersReport),
        totalBalance = Value(totalBalance);
   static Insertable<Report> custom({
     Expression<int>? id,
+    Expression<String>? title,
     Expression<int>? version,
     Expression<String>? description,
     Expression<String>? membersReport,
@@ -1145,6 +1184,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (title != null) 'title': title,
       if (version != null) 'version': version,
       if (description != null) 'description': description,
       if (membersReport != null) 'members_report': membersReport,
@@ -1156,6 +1196,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
 
   ReportsCompanion copyWith({
     Value<int>? id,
+    Value<String>? title,
     Value<int>? version,
     Value<String?>? description,
     Value<String>? membersReport,
@@ -1165,6 +1206,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
   }) {
     return ReportsCompanion(
       id: id ?? this.id,
+      title: title ?? this.title,
       version: version ?? this.version,
       description: description ?? this.description,
       membersReport: membersReport ?? this.membersReport,
@@ -1179,6 +1221,9 @@ class ReportsCompanion extends UpdateCompanion<Report> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
     }
     if (version.present) {
       map['version'] = Variable<int>(version.value);
@@ -1205,6 +1250,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
   String toString() {
     return (StringBuffer('ReportsCompanion(')
           ..write('id: $id, ')
+          ..write('title: $title, ')
           ..write('version: $version, ')
           ..write('description: $description, ')
           ..write('membersReport: $membersReport, ')
@@ -1637,6 +1683,7 @@ typedef $$MembersTableProcessedTableManager =
 typedef $$ReportsTableCreateCompanionBuilder =
     ReportsCompanion Function({
       Value<int> id,
+      required String title,
       required int version,
       Value<String?> description,
       required String membersReport,
@@ -1647,6 +1694,7 @@ typedef $$ReportsTableCreateCompanionBuilder =
 typedef $$ReportsTableUpdateCompanionBuilder =
     ReportsCompanion Function({
       Value<int> id,
+      Value<String> title,
       Value<int> version,
       Value<String?> description,
       Value<String> membersReport,
@@ -1666,6 +1714,11 @@ class $$ReportsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1714,6 +1767,11 @@ class $$ReportsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get version => $composableBuilder(
     column: $table.version,
     builder: (column) => ColumnOrderings(column),
@@ -1756,6 +1814,9 @@ class $$ReportsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
 
   GeneratedColumn<int> get version =>
       $composableBuilder(column: $table.version, builder: (column) => column);
@@ -1811,6 +1872,7 @@ class $$ReportsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
                 Value<int> version = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<String> membersReport = const Value.absent(),
@@ -1819,6 +1881,7 @@ class $$ReportsTableTableManager
                 Value<DateTime> createAt = const Value.absent(),
               }) => ReportsCompanion(
                 id: id,
+                title: title,
                 version: version,
                 description: description,
                 membersReport: membersReport,
@@ -1829,6 +1892,7 @@ class $$ReportsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                required String title,
                 required int version,
                 Value<String?> description = const Value.absent(),
                 required String membersReport,
@@ -1837,6 +1901,7 @@ class $$ReportsTableTableManager
                 Value<DateTime> createAt = const Value.absent(),
               }) => ReportsCompanion.insert(
                 id: id,
+                title: title,
                 version: version,
                 description: description,
                 membersReport: membersReport,

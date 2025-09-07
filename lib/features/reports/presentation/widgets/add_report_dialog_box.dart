@@ -26,12 +26,13 @@ class AddReportDialogBox extends StatefulWidget {
 
 class _AddReportDialogBoxState extends State<AddReportDialogBox> {
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
   final TextEditingController versionController = TextEditingController();
   final TextEditingController totalAmountController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final PageController pageController = PageController();
   final formKey = GlobalKey<FormState>();
-  late int? reportID;
+  // late int? reportID;
   ({int month, int year})? selectedDate;
   final List<Member> selectedMembers = [];
   final List<Income> selectedIncomes = [];
@@ -84,6 +85,7 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
   @override
   void dispose() {
     descriptionController.dispose();
+    titleController.dispose();
     versionController.dispose();
     totalAmountController.dispose();
     dateController.dispose();
@@ -95,16 +97,16 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
   void initState() {
     super.initState();
 
-    if (widget.report != null) {
-      reportID = widget.report!.id;
-      // titleController.text = widget.income!.title;
-      // amountController.text = widget.income!.amount.toString();
-      // descriptionController.text = widget.income!.description ?? '';
-      // dateController.text = DateFormat.MMMMEEEEd().format(widget.income!.date);
-      // selectedDate = widget.income!.date;
-    } else {
-      // incomeID = null;
-    }
+    // if (widget.report != null) {
+    //   reportID = widget.report!.id;
+    //   // titleController.text = widget.income!.title;
+    //   // amountController.text = widget.income!.amount.toString();
+    //   // descriptionController.text = widget.income!.description ?? '';
+    //   // dateController.text = DateFormat.MMMMEEEEd().format(widget.income!.date);
+    //   // selectedDate = widget.income!.date;
+    // } else {
+    //   // incomeID = null;
+    // }
   }
 
   @override
@@ -163,8 +165,23 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Form(
+                          key: formKey,
+                          child: AppTextField(
+                            label: 'Title',
+                            hint: 'This month salary',
+                            controller: titleController,
+                            keyboardType: TextInputType.name,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return '*Required';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
                         AppTextField(
-                          label: 'Version',
+                          label: 'Version (read only)',
                           controller: versionController,
                           readOnly: true,
                         ),
@@ -228,12 +245,14 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                 return;
                               }
                               if (pageIndex == 2) {
+                                if (!formKey.currentState!.validate()) return;
                                 isGenerating = true;
                                 setState(() {});
 
                                 await generateReport().then((value) {
                                   widget.onPressedSubmit.call(
                                     ReportForm(
+                                      title: titleController.text,
                                       version: int.parse(
                                         versionController.text,
                                       ),
