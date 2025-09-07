@@ -1,11 +1,26 @@
+import 'dart:convert';
+
+import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/features/incomes/data/income_form.dart';
+import 'package:pay_pilot/features/members/data/member_form.dart';
+import 'package:pay_pilot/features/reports/data/report_form.dart';
 
 class DatabaseService {
   final AppDatabase _db;
   DatabaseService(this._db);
 
-  Future<void> insertIncome(IncomesCompanion income) async {
-    await _db.into(_db.incomes).insert(income);
+  Future<int> insertIncome(IncomeForm income) async {
+    return await _db
+        .into(_db.incomes)
+        .insert(
+          IncomesCompanion(
+            title: Value(income.title),
+            amount: Value(income.amount),
+            date: Value(income.date),
+            description: Value(income.description),
+          ),
+        );
   }
 
   Future<List<Income>> getAllIncomes() async {
@@ -18,16 +33,34 @@ class DatabaseService {
     )..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
-  Future<void> updateIncome(IncomesCompanion income) async {
-    await _db.update(_db.incomes).replace(income);
+  Future<void> updateIncome(IncomeForm income) async {
+    await _db
+        .update(_db.incomes)
+        .replace(
+          IncomesCompanion(
+            id: Value(income.id!),
+            amount: Value(income.amount),
+            title: Value(income.title),
+            date: Value(income.date),
+            description: Value(income.description),
+          ),
+        );
   }
 
   Future<void> deleteIncome(int id) async {
     await (_db.delete(_db.incomes)..where((tbl) => tbl.id.equals(id))).go();
   }
 
-  Future<void> insertMember(MembersCompanion member) async {
-    await _db.into(_db.members).insert(member);
+  Future<int> insertMember(MemberForm member) async {
+    return await _db
+        .into(_db.members)
+        .insert(
+          MembersCompanion(
+            name: Value(member.name),
+            percentage: Value(member.percentage),
+            description: Value(member.description),
+          ),
+        );
   }
 
   Future<List<Member>> getAllMembers() async {
@@ -40,16 +73,38 @@ class DatabaseService {
     )..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
-  Future<void> updateMember(MembersCompanion member) async {
-    await _db.update(_db.members).replace(member);
+  Future<void> updateMember(MemberForm member) async {
+    await _db
+        .update(_db.members)
+        .replace(
+          MembersCompanion(
+            id: Value(member.id!),
+            name: Value(member.name),
+            percentage: Value(member.percentage),
+            description: Value(member.description),
+          ),
+        );
   }
 
   Future<void> deleteMember(int id) async {
     await (_db.delete(_db.members)..where((tbl) => tbl.id.equals(id))).go();
   }
 
-  Future<void> insertReport(ReportsCompanion report) async {
-    await _db.into(_db.reports).insert(report);
+  Future<int> insertReport(ReportForm report) async {
+    return await _db
+        .into(_db.reports)
+        .insert(
+          ReportsCompanion(
+            title: Value(report.title),
+            version: Value(report.version),
+            description: Value(report.description),
+            totalBalance: Value(report.totalBalance),
+            membersReport: Value(
+              jsonEncode(report.membersReport.map((e) => e.toJson()).toList()),
+            ),
+            date: Value(report.date),
+          ),
+        );
   }
 
   Future<List<Report>> getAllReports() async {
@@ -62,8 +117,20 @@ class DatabaseService {
     )..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
-  Future<void> updateReport(ReportsCompanion report) async {
-    await _db.update(_db.reports).replace(report);
+  Future<void> updateReport(ReportForm report) async {
+    await _db
+        .update(_db.reports)
+        .replace(
+          ReportsCompanion(
+            id: Value(report.id!),
+            version: Value(report.version),
+            description: Value(report.description),
+            membersReport: Value(
+              report.membersReport.map((e) => e.toJson()).toList().toString(),
+            ),
+            date: Value(report.date),
+          ),
+        );
   }
 
   Future<void> deleteReport(int id) async {
