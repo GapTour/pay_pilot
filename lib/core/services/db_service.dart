@@ -97,6 +97,7 @@ class DatabaseService {
           ReportsCompanion(
             version: Value(report.version),
             description: Value(report.description),
+            totalBalance: Value(report.totalBalance),
             membersReport: Value(
               jsonEncode(report.membersReport.map((e) => e.toJson()).toList()),
             ),

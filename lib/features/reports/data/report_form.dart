@@ -3,6 +3,7 @@ class ReportForm {
   final int version;
   final String? description;
   final DateTime date;
+  final double totalBalance;
   final List<MemberReport> membersReport;
 
   ReportForm({
@@ -10,6 +11,7 @@ class ReportForm {
     required this.version,
     required this.description,
     required this.date,
+    required this.totalBalance,
     required this.membersReport,
   });
 }

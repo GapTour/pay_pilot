@@ -804,6 +804,17 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _totalBalanceMeta = const VerificationMeta(
+    'totalBalance',
+  );
+  @override
+  late final GeneratedColumn<double> totalBalance = GeneratedColumn<double>(
+    'total_balance',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
@@ -832,6 +843,7 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
     version,
     description,
     membersReport,
+    totalBalance,
     date,
     createAt,
   ];
@@ -878,6 +890,17 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
     } else if (isInserting) {
       context.missing(_membersReportMeta);
     }
+    if (data.containsKey('total_balance')) {
+      context.handle(
+        _totalBalanceMeta,
+        totalBalance.isAcceptableOrUnknown(
+          data['total_balance']!,
+          _totalBalanceMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_totalBalanceMeta);
+    }
     if (data.containsKey('date')) {
       context.handle(
         _dateMeta,
@@ -915,6 +938,10 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
         DriftSqlType.string,
         data['${effectivePrefix}members_report'],
       )!,
+      totalBalance: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}total_balance'],
+      )!,
       date: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}date'],
@@ -937,6 +964,7 @@ class Report extends DataClass implements Insertable<Report> {
   final int version;
   final String? description;
   final String membersReport;
+  final double totalBalance;
   final DateTime date;
   final DateTime createAt;
   const Report({
@@ -944,6 +972,7 @@ class Report extends DataClass implements Insertable<Report> {
     required this.version,
     this.description,
     required this.membersReport,
+    required this.totalBalance,
     required this.date,
     required this.createAt,
   });
@@ -956,6 +985,7 @@ class Report extends DataClass implements Insertable<Report> {
       map['description'] = Variable<String>(description);
     }
     map['members_report'] = Variable<String>(membersReport);
+    map['total_balance'] = Variable<double>(totalBalance);
     map['date'] = Variable<DateTime>(date);
     map['create_at'] = Variable<DateTime>(createAt);
     return map;
@@ -969,6 +999,7 @@ class Report extends DataClass implements Insertable<Report> {
           ? const Value.absent()
           : Value(description),
       membersReport: Value(membersReport),
+      totalBalance: Value(totalBalance),
       date: Value(date),
       createAt: Value(createAt),
     );
@@ -984,6 +1015,7 @@ class Report extends DataClass implements Insertable<Report> {
       version: serializer.fromJson<int>(json['version']),
       description: serializer.fromJson<String?>(json['description']),
       membersReport: serializer.fromJson<String>(json['membersReport']),
+      totalBalance: serializer.fromJson<double>(json['totalBalance']),
       date: serializer.fromJson<DateTime>(json['date']),
       createAt: serializer.fromJson<DateTime>(json['createAt']),
     );
@@ -996,6 +1028,7 @@ class Report extends DataClass implements Insertable<Report> {
       'version': serializer.toJson<int>(version),
       'description': serializer.toJson<String?>(description),
       'membersReport': serializer.toJson<String>(membersReport),
+      'totalBalance': serializer.toJson<double>(totalBalance),
       'date': serializer.toJson<DateTime>(date),
       'createAt': serializer.toJson<DateTime>(createAt),
     };
@@ -1006,6 +1039,7 @@ class Report extends DataClass implements Insertable<Report> {
     int? version,
     Value<String?> description = const Value.absent(),
     String? membersReport,
+    double? totalBalance,
     DateTime? date,
     DateTime? createAt,
   }) => Report(
@@ -1013,6 +1047,7 @@ class Report extends DataClass implements Insertable<Report> {
     version: version ?? this.version,
     description: description.present ? description.value : this.description,
     membersReport: membersReport ?? this.membersReport,
+    totalBalance: totalBalance ?? this.totalBalance,
     date: date ?? this.date,
     createAt: createAt ?? this.createAt,
   );
@@ -1026,6 +1061,9 @@ class Report extends DataClass implements Insertable<Report> {
       membersReport: data.membersReport.present
           ? data.membersReport.value
           : this.membersReport,
+      totalBalance: data.totalBalance.present
+          ? data.totalBalance.value
+          : this.totalBalance,
       date: data.date.present ? data.date.value : this.date,
       createAt: data.createAt.present ? data.createAt.value : this.createAt,
     );
@@ -1038,6 +1076,7 @@ class Report extends DataClass implements Insertable<Report> {
           ..write('version: $version, ')
           ..write('description: $description, ')
           ..write('membersReport: $membersReport, ')
+          ..write('totalBalance: $totalBalance, ')
           ..write('date: $date, ')
           ..write('createAt: $createAt')
           ..write(')'))
@@ -1045,8 +1084,15 @@ class Report extends DataClass implements Insertable<Report> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, version, description, membersReport, date, createAt);
+  int get hashCode => Object.hash(
+    id,
+    version,
+    description,
+    membersReport,
+    totalBalance,
+    date,
+    createAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1055,6 +1101,7 @@ class Report extends DataClass implements Insertable<Report> {
           other.version == this.version &&
           other.description == this.description &&
           other.membersReport == this.membersReport &&
+          other.totalBalance == this.totalBalance &&
           other.date == this.date &&
           other.createAt == this.createAt);
 }
@@ -1064,6 +1111,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
   final Value<int> version;
   final Value<String?> description;
   final Value<String> membersReport;
+  final Value<double> totalBalance;
   final Value<DateTime> date;
   final Value<DateTime> createAt;
   const ReportsCompanion({
@@ -1071,6 +1119,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
     this.version = const Value.absent(),
     this.description = const Value.absent(),
     this.membersReport = const Value.absent(),
+    this.totalBalance = const Value.absent(),
     this.date = const Value.absent(),
     this.createAt = const Value.absent(),
   });
@@ -1079,15 +1128,18 @@ class ReportsCompanion extends UpdateCompanion<Report> {
     required int version,
     this.description = const Value.absent(),
     required String membersReport,
+    required double totalBalance,
     this.date = const Value.absent(),
     this.createAt = const Value.absent(),
   }) : version = Value(version),
-       membersReport = Value(membersReport);
+       membersReport = Value(membersReport),
+       totalBalance = Value(totalBalance);
   static Insertable<Report> custom({
     Expression<int>? id,
     Expression<int>? version,
     Expression<String>? description,
     Expression<String>? membersReport,
+    Expression<double>? totalBalance,
     Expression<DateTime>? date,
     Expression<DateTime>? createAt,
   }) {
@@ -1096,6 +1148,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
       if (version != null) 'version': version,
       if (description != null) 'description': description,
       if (membersReport != null) 'members_report': membersReport,
+      if (totalBalance != null) 'total_balance': totalBalance,
       if (date != null) 'date': date,
       if (createAt != null) 'create_at': createAt,
     });
@@ -1106,6 +1159,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
     Value<int>? version,
     Value<String?>? description,
     Value<String>? membersReport,
+    Value<double>? totalBalance,
     Value<DateTime>? date,
     Value<DateTime>? createAt,
   }) {
@@ -1114,6 +1168,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
       version: version ?? this.version,
       description: description ?? this.description,
       membersReport: membersReport ?? this.membersReport,
+      totalBalance: totalBalance ?? this.totalBalance,
       date: date ?? this.date,
       createAt: createAt ?? this.createAt,
     );
@@ -1134,6 +1189,9 @@ class ReportsCompanion extends UpdateCompanion<Report> {
     if (membersReport.present) {
       map['members_report'] = Variable<String>(membersReport.value);
     }
+    if (totalBalance.present) {
+      map['total_balance'] = Variable<double>(totalBalance.value);
+    }
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
     }
@@ -1150,6 +1208,7 @@ class ReportsCompanion extends UpdateCompanion<Report> {
           ..write('version: $version, ')
           ..write('description: $description, ')
           ..write('membersReport: $membersReport, ')
+          ..write('totalBalance: $totalBalance, ')
           ..write('date: $date, ')
           ..write('createAt: $createAt')
           ..write(')'))
@@ -1581,6 +1640,7 @@ typedef $$ReportsTableCreateCompanionBuilder =
       required int version,
       Value<String?> description,
       required String membersReport,
+      required double totalBalance,
       Value<DateTime> date,
       Value<DateTime> createAt,
     });
@@ -1590,6 +1650,7 @@ typedef $$ReportsTableUpdateCompanionBuilder =
       Value<int> version,
       Value<String?> description,
       Value<String> membersReport,
+      Value<double> totalBalance,
       Value<DateTime> date,
       Value<DateTime> createAt,
     });
@@ -1620,6 +1681,11 @@ class $$ReportsTableFilterComposer
 
   ColumnFilters<String> get membersReport => $composableBuilder(
     column: $table.membersReport,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get totalBalance => $composableBuilder(
+    column: $table.totalBalance,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1663,6 +1729,11 @@ class $$ReportsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get totalBalance => $composableBuilder(
+    column: $table.totalBalance,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get date => $composableBuilder(
     column: $table.date,
     builder: (column) => ColumnOrderings(column),
@@ -1696,6 +1767,11 @@ class $$ReportsTableAnnotationComposer
 
   GeneratedColumn<String> get membersReport => $composableBuilder(
     column: $table.membersReport,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get totalBalance => $composableBuilder(
+    column: $table.totalBalance,
     builder: (column) => column,
   );
 
@@ -1738,6 +1814,7 @@ class $$ReportsTableTableManager
                 Value<int> version = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<String> membersReport = const Value.absent(),
+                Value<double> totalBalance = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<DateTime> createAt = const Value.absent(),
               }) => ReportsCompanion(
@@ -1745,6 +1822,7 @@ class $$ReportsTableTableManager
                 version: version,
                 description: description,
                 membersReport: membersReport,
+                totalBalance: totalBalance,
                 date: date,
                 createAt: createAt,
               ),
@@ -1754,6 +1832,7 @@ class $$ReportsTableTableManager
                 required int version,
                 Value<String?> description = const Value.absent(),
                 required String membersReport,
+                required double totalBalance,
                 Value<DateTime> date = const Value.absent(),
                 Value<DateTime> createAt = const Value.absent(),
               }) => ReportsCompanion.insert(
@@ -1761,6 +1840,7 @@ class $$ReportsTableTableManager
                 version: version,
                 description: description,
                 membersReport: membersReport,
+                totalBalance: totalBalance,
                 date: date,
                 createAt: createAt,
               ),
