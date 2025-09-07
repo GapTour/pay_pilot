@@ -6,6 +6,8 @@ import 'package:pay_pilot/features/incomes/data/income_db_provider.dart';
 import 'package:pay_pilot/features/incomes/repository/income_repository.dart';
 import 'package:pay_pilot/features/members/data/member_db_provider.dart';
 import 'package:pay_pilot/features/members/repository/member_repository.dart';
+import 'package:pay_pilot/features/report_details/data/report_details_db_provider.dart';
+import 'package:pay_pilot/features/report_details/repository/report_details_repository.dart';
 import 'package:pay_pilot/features/reports/data/report_db_provider.dart';
 import 'package:pay_pilot/features/reports/repository/report_repository.dart';
 
@@ -36,6 +38,9 @@ void _callProviders() {
   locator.registerLazySingleton<ReportDbProvider>(
     () => ReportDbProvider(locator()),
   );
+  locator.registerLazySingleton<ReportDetailsDbProvider>(
+    () => ReportDetailsDbProvider(locator()),
+  );
 }
 
 void _callRepositories() {
@@ -47,6 +52,9 @@ void _callRepositories() {
   );
   locator.registerLazySingleton<ReportRepository>(
     () => ReportRepository(locator()),
+  );
+  locator.registerLazySingleton<ReportDetailsRepository>(
+    () => ReportDetailsRepository(locator()),
   );
 }
 
