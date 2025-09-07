@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/widgets/add_report_dialog_box.dart';
 
@@ -52,7 +55,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
               return InkWell(
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
-                onTap: () {},
+                onTap: () {
+                  context.pushNamed(
+                    AppRoutes.reportDetailsScreen,
+                    pathParameters: {
+                      AppArguments.reportDetails: reports[index].id.toString(),
+                    },
+                  );
+                },
                 child: Card(
                   child: Row(
                     children: [
@@ -66,7 +76,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ),
 
                       Text(
-                        'Version ${reports[index].version.toString()}',
+                        'Version ${reports[index].version}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontSize: 12),
                       ),
