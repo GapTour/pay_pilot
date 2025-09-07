@@ -1,0 +1,32 @@
+# to use package_rename_config.yaml please run `dart run package_rename`
+package_rename_config:
+  android:
+    app_name: Pay Pilot DEV
+    package_name: dev.gapTour.payPilot
+    # lang: # (Optional) (String) The android development language {kotlin(default) or java}
+
+  ios:
+    app_name: Pay Pilot DEV
+    bundle_name: payPilot
+    package_name: dev.gapTour.payPilot
+
+  linux:
+    app_name: Pay Pilot DEV
+    package_name: dev.gapTour.payPilot
+    exe_name: pay-pilot-development
+
+  macos:
+    app_name: Pay Pilot DEV
+    package_name: dev.gapTour.payPilot
+    # copyright_notice: # (String) The product copyright of the macos app
+
+  web:
+    app_name: Pay Pilot DEV
+    short_app_name: Pay Pilot
+    description: Manage Salaries
+
+  windows:
+    app_name: Pay Pilot DEV
+    organization: Gap Tour
+    # copyright_notice: # (String) The legal copyright of the windows app
+    exe_name: payPilot_dev
