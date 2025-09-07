@@ -6,6 +6,7 @@ import 'package:pay_pilot/features/incomes/presentation/screens/incomes_screen.d
 import 'package:pay_pilot/features/main/presentation/screens/main_screen.dart';
 import 'package:pay_pilot/features/members/presentation/cubit/members_cubit.dart';
 import 'package:pay_pilot/features/members/presentation/screens/members_screen.dart';
+import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/screens/reports_screen.dart';
 import 'package:pay_pilot/locator.dart';
 
@@ -36,7 +37,10 @@ class AppRoutes {
       GoRoute(
         name: reportsScreen,
         path: ReportsScreen.routeName,
-        builder: (context, state) => const ReportsScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => ReportsCubit(locator()),
+          child: const ReportsScreen(),
+        ),
       ),
       GoRoute(
         name: incomesScreen,
