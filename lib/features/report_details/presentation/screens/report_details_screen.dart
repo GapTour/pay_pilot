@@ -70,14 +70,11 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                 Divider(),
                 Gap(12),
 
-                GridView.builder(
+                ListView.separated(
                   itemCount: members.length,
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 380,
-                    childAspectRatio: 4.8,
-                  ),
+                  separatorBuilder: (context, index) => Gap(3),
                   itemBuilder: (context, index) {
                     return Card(
                       child: Padding(
