@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/features/incomes/data/income_form.dart';
@@ -96,7 +98,7 @@ class DatabaseService {
             version: Value(report.version),
             description: Value(report.description),
             membersReport: Value(
-              report.membersReport.map((e) => e.toJson()).toList().toString(),
+              jsonEncode(report.membersReport.map((e) => e.toJson()).toList()),
             ),
             date: Value(report.date),
           ),
