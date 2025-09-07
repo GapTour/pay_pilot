@@ -37,12 +37,10 @@ class SelectingMembers extends StatelessWidget {
                 return const Center(child: Text('No members found.'));
               }
 
-              return GridView.builder(
+              return ListView.separated(
                 itemCount: members.length,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 380,
-                  childAspectRatio: 6,
-                ),
+                padding: EdgeInsets.symmetric(vertical: 12),
+                separatorBuilder: (context, index) => Gap(3),
                 itemBuilder: (context, index) {
                   final isSelected = selectedMembers.any(
                     (element) => element.id == members[index].id,
