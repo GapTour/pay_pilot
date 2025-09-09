@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/utils/theme/app_theme.dart';
+import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/features/members/presentation/cubit/members_cubit.dart';
 import 'package:pay_pilot/features/members/presentation/widgets/add_member_dialog_box.dart';
 
@@ -42,13 +44,10 @@ class _MembersScreenState extends State<MembersScreen> {
 
           return ListView.separated(
             itemCount: members.length,
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(8),
             separatorBuilder: (context, index) => Gap(3),
             itemBuilder: (context, index) {
-              return InkWell(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                radius: 15,
+              return AppElevatedButton(
                 onTap: () {
                   showDialog(
                     context: context,
@@ -62,29 +61,27 @@ class _MembersScreenState extends State<MembersScreen> {
                     },
                   );
                 },
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 18.0,
-                      vertical: 8,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            members[index].name,
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(fontSize: 18),
-                          ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18.0,
+                    vertical: 8,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          members[index].name,
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(fontSize: 18),
                         ),
+                      ),
 
-                        Text(
-                          '${members[index].percentage.toString()}%',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
+                      Text(
+                        '${members[index].percentage.toString()}%',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -105,6 +102,8 @@ class _MembersScreenState extends State<MembersScreen> {
             },
           );
         },
+        backgroundColor: kSecondaryColor,
+        splashColor: kPrimaryColor,
         child: const Icon(Icons.add),
       ),
     );

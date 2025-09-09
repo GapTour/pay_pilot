@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
+import 'package:pay_pilot/core/utils/theme/app_theme.dart';
+import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/features/incomes/presentation/cubit/incomes_cubit.dart';
 import 'package:pay_pilot/features/incomes/presentation/widgets/add_income_dialog_box.dart';
 
@@ -26,7 +28,7 @@ class _IncomesScreenState extends State<IncomesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Incomes')),
+      appBar: AppBar(title: const Text('Events')),
       body: BlocBuilder<IncomesCubit, IncomesState>(
         builder: (context, state) {
           final incomes = state.incomes;
@@ -44,12 +46,10 @@ class _IncomesScreenState extends State<IncomesScreen> {
 
           return ListView.separated(
             itemCount: incomes.length,
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(8),
             separatorBuilder: (context, index) => Gap(3),
             itemBuilder: (context, index) {
-              return InkWell(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
+              return AppElevatedButton(
                 onTap: () {
                   showDialog(
                     context: context,
@@ -63,40 +63,38 @@ class _IncomesScreenState extends State<IncomesScreen> {
                     },
                   );
                 },
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0,
-                      vertical: 10,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                incomes[index].title,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 18),
-                              ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 10,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              incomes[index].title,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 18),
                             ),
-                            Text(
-                              DateFormat.yMMMd().format(incomes[index].date),
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ],
-                        ),
-
-                        Gap(8),
-                        Text(
-                          AmountHelper.integerToFormattedPrice(
-                            incomes[index].amount,
                           ),
-                          style: const TextStyle(fontSize: 15),
+                          Text(
+                            DateFormat.yMMMd().format(incomes[index].date),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+
+                      Gap(8),
+                      Text(
+                        AmountHelper.integerToFormattedPrice(
+                          incomes[index].amount,
                         ),
-                      ],
-                    ),
+                        style: const TextStyle(fontSize: 15),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -117,6 +115,8 @@ class _IncomesScreenState extends State<IncomesScreen> {
             },
           );
         },
+        backgroundColor: kSecondaryColor,
+        splashColor: kPrimaryColor,
         child: const Icon(Icons.add),
       ),
     );

@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
+import 'package:pay_pilot/core/utils/theme/app_theme.dart';
+import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/widgets/add_report_dialog_box.dart';
 
@@ -47,12 +49,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
           return ListView.separated(
             itemCount: reports.length,
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(8),
             separatorBuilder: (context, index) => Gap(3),
             itemBuilder: (context, index) {
-              return InkWell(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
+              return AppElevatedButton(
                 onTap: () {
                   context.pushNamed(
                     AppRoutes.reportDetailsScreen,
@@ -61,53 +61,51 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     },
                   );
                 },
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0,
-                      vertical: 8,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                reports[index].title,
-                                style: const TextStyle(fontSize: 16),
-                              ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 8,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              reports[index].title,
+                              style: const TextStyle(fontSize: 16),
                             ),
+                          ),
 
-                            Text(
-                              AmountHelper.integerToFormattedPrice(
-                                reports[index].totalBalance,
-                              ),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 12),
+                          Text(
+                            AmountHelper.integerToFormattedPrice(
+                              reports[index].totalBalance,
                             ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                DateFormat.yMMM().format(reports[index].date),
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(fontSize: 13),
-                              ),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              DateFormat.yMMM().format(reports[index].date),
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(fontSize: 13),
                             ),
+                          ),
 
-                            Text(
-                              'V ${reports[index].version}',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          Text(
+                            'V ${reports[index].version}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -129,6 +127,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
             },
           );
         },
+        backgroundColor: kSecondaryColor,
+        splashColor: kPrimaryColor,
         child: Icon(Icons.add),
       ),
     );
