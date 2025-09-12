@@ -4,6 +4,6 @@ class Members extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
   TextColumn get description => text().nullable()();
-  RealColumn get percentage => real()();
+  DateTimeColumn get joinAt => dateTime().nullable()();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
 }
