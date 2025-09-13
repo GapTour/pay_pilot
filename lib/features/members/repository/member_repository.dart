@@ -1,5 +1,6 @@
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/features/members/data/member_db_provider.dart';
+import 'package:pay_pilot/features/members/data/member_editing_form.dart';
 import 'package:pay_pilot/features/members/data/member_form.dart';
 
 class MemberRepository {
@@ -14,7 +15,7 @@ class MemberRepository {
     return await _dbProvider.insertMember(member);
   }
 
-  Future<void> updateMember(MemberForm member) async {
+  Future<void> updateMember(MemberEditingForm member) async {
     await _dbProvider.updateMember(member);
   }
 }

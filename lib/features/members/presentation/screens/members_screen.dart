@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
-import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
+import 'package:pay_pilot/core/widgets/app_list.dart';
+import 'package:pay_pilot/core/widgets/app_tile.dart';
 import 'package:pay_pilot/features/members/presentation/cubit/members_cubit.dart';
 import 'package:pay_pilot/features/members/presentation/widgets/add_member_dialog_box.dart';
+import 'package:pay_pilot/features/members/presentation/widgets/edit_member_dialog_box.dart';
 
 class MembersScreen extends StatefulWidget {
   static const routeName = '/members';
@@ -38,21 +44,25 @@ class _MembersScreenState extends State<MembersScreen> {
             return const Center(child: CircularProgressIndicator.adaptive());
           }
 
-          if (members.isEmpty) {
-            return const Center(child: Text('No members found.'));
-          }
-
-          return ListView.separated(
+          return AppList(
             itemCount: members.length,
-            padding: const EdgeInsets.all(8),
-            separatorBuilder: (context, index) => Gap(3),
+            emptyInboxMessage: 'There is no member yet!',
             itemBuilder: (context, index) {
-              return AppElevatedButton(
-                onTap: () {
+              return AppTile(
+                height: 66,
+                onPreview: () {
+                  context.pushNamed(
+                    AppRoutes.memberDetailsScreen,
+                    pathParameters: {
+                      AppArguments.memberDetails: '${members[index].id}',
+                    },
+                  );
+                },
+                onEdit: () {
                   showDialog(
                     context: context,
                     builder: (_) {
-                      return AddMemberDialogBox(
+                      return EditMemberDialogBox(
                         member: members[index],
                         onPressedSubmit: (member) {
                           context.read<MembersCubit>().updateMember(member);
@@ -61,28 +71,27 @@ class _MembersScreenState extends State<MembersScreen> {
                     },
                   );
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18.0,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          members[index].name,
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(fontSize: 18),
-                        ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(members[index].name, style: TextStyle(fontSize: 16)),
+                    Gap(3),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(text: 'Join at: '),
+                          if (members[index].joinAt != null)
+                            TextSpan(
+                              text: DateFormat.yMMMEd().format(
+                                members[index].joinAt!,
+                              ),
+                            )
+                          else
+                            TextSpan(text: '-'),
+                        ],
                       ),
-
-                      Text(
-                        '${members[index].percentage.toString()}%',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             },
