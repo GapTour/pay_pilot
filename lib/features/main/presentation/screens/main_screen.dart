@@ -31,12 +31,14 @@ class MainScreen extends StatelessWidget {
                 ),
                 AppElevatedButton(
                   child: Center(child: Text('Teams')),
-                  onTap: () {},
+                  onTap: () {
+                    context.pushNamed(AppRoutes.teamsScreen);
+                  },
                 ),
                 AppElevatedButton(
                   child: Center(child: Text('Events')),
                   onTap: () {
-                    context.pushNamed(AppRoutes.incomesScreen);
+                    context.pushNamed(AppRoutes.eventsScreen);
                   },
                 ),
                 AppElevatedButton(
