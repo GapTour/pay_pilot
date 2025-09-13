@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
-import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
-import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
+import 'package:pay_pilot/core/widgets/app_list.dart';
+import 'package:pay_pilot/core/widgets/app_tile.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/widgets/add_report_dialog_box.dart';
 
@@ -43,17 +43,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
             return const Center(child: CircularProgressIndicator.adaptive());
           }
 
-          if (reports.isEmpty) {
-            return const Center(child: Text('No reports found.'));
-          }
-
-          return ListView.separated(
+          return AppList(
             itemCount: reports.length,
-            padding: const EdgeInsets.all(8),
-            separatorBuilder: (context, index) => Gap(3),
+            emptyInboxMessage: 'There is no report yet!',
             itemBuilder: (context, index) {
-              return AppElevatedButton(
-                onTap: () {
+              return AppTile(
+                height: 70,
+                onPreview: () {
                   context.pushNamed(
                     AppRoutes.reportDetailsScreen,
                     pathParameters: {
@@ -61,52 +57,36 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     },
                   );
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12.0,
-                    vertical: 8,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              reports[index].title,
-                              style: const TextStyle(fontSize: 16),
+                previewButtonTitle: 'Salary\'s Report',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      reports[index].title,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    Gap(3),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            DateFormat.yMMM().format(
+                              reports[index].generateFor,
                             ),
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(fontSize: 13),
                           ),
+                        ),
 
-                          Text(
-                            AmountHelper.integerToFormattedPrice(
-                              reports[index].totalBalance,
-                            ),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              DateFormat.yMMM().format(reports[index].date),
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(fontSize: 13),
-                            ),
-                          ),
-
-                          Text(
-                            'V ${reports[index].version}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        Text(
+                          'V ${reports[index].version}',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               );
             },
