@@ -21,17 +21,28 @@ class CalculatorHelper {
         }
         return previousValue + element.amount;
       });
+
       if (totalBalance < 1) continue;
 
       final members = teamMemberDetails.where(
         (element) => element.team.id == detail.team.id,
       );
+      final deduplicateMembers = members.fold<List<TeamMemberDetailsModel>>(
+        [],
+        (acc, element) {
+          if (!acc.any((existing) => existing.id == element.id)) {
+            acc.add(element);
+          }
+          return acc;
+        },
+      );
 
-      for (var item in members) {
+      for (var item in deduplicateMembers) {
         final double balance = totalBalance * (item.ratio / 100);
         final checkMember = membersBalance.firstWhereOrNull(
           (e) => e.member.id == item.member.id,
         );
+
         if (checkMember != null) {
           membersBalance
             ..remove(checkMember)
