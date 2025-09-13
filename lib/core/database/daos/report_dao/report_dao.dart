@@ -30,17 +30,40 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
   ReportDao(super.db);
 
   Future<FullReportViewModel> getFullReportDetails(int reportID) async {
-    final eventDetailsQuery =
+    final eventDetails = await _collectEventDetailsInfo(reportID);
+    final teamMemberDetails = await _collectTeamMemberDetails(eventDetails);
+
+    final membersBalance = await CalculatorHelper.salaries(
+      teamMemberDetails: teamMemberDetails,
+      eventDetails: eventDetails,
+    );
+
+    final rawReport = await (db.select(
+      db.reports,
+    )..where((tbl) => tbl.id.equals(reportID))).getSingle();
+
+    return FullReportViewModel(
+      id: rawReport.id,
+      title: rawReport.title,
+      version: rawReport.version,
+      generateFor: rawReport.generateFor,
+      events: eventDetails,
+      membersBalance: membersBalance,
+    );
+  }
+
+  Future<List<EventDetailsModel>> _collectEventDetailsInfo(int reportID) async {
+    final query =
         (select(
           db.collectReportEvents,
         )..where((tbl) => tbl.reportID.equals(reportID))).join([
           innerJoin(events, events.id.equalsExp(collectReportEvents.eventID)),
         ]);
-    final eventDetailsRow = await eventDetailsQuery.get();
-    final teamsInfo = await db.select(db.teams).get();
+    final rows = await query.get();
     final List<EventDetailsModel> eventDetails = [];
+    final teamsInfo = await db.select(db.teams).get();
 
-    for (var eventRow in eventDetailsRow) {
+    for (var eventRow in rows) {
       final List<EventTransaction> rawTransactions =
           await (select(eventTransactions)..where(
                 (tbl) => tbl.eventID.equals(eventRow.readTable(events).id),
@@ -71,17 +94,24 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       );
     }
 
+    return eventDetails;
+  }
+
+  Future<List<TeamMemberDetailsModel>> _collectTeamMemberDetails(
+    List<EventDetailsModel> eventDetails,
+  ) async {
     final List<TeamMemberDetailsModel> teamMemberDetails = [];
+
     for (var t in eventDetails) {
-      final teamMembersQuery =
+      final query =
           (select(ratios)..where((tbl) => tbl.teamID.equals(t.team.id))).join([
             innerJoin(members, members.id.equalsExp(ratios.memberID)),
             innerJoin(teams, teams.id.equalsExp(ratios.teamID)),
           ]);
 
-      final teamMembersRow = await teamMembersQuery.get();
+      final rows = await query.get();
 
-      final fetchedTeamMembers = teamMembersRow.map((row) {
+      final fetchedTeamMembers = rows.map((row) {
         return TeamMemberDetailsModel(
           id: row.readTable(ratios).id,
           ratio: row.readTable(ratios).ratio,
@@ -93,23 +123,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       teamMemberDetails.addAll(fetchedTeamMembers);
     }
 
-    final membersBalance = await CalculatorHelper.salaries(
-      teamMemberDetails: teamMemberDetails,
-      eventDetails: eventDetails,
-    );
-
-    final rawReport = await (db.select(
-      db.reports,
-    )..where((tbl) => tbl.id.equals(reportID))).getSingle();
-
-    return FullReportViewModel(
-      id: rawReport.id,
-      title: rawReport.title,
-      version: rawReport.version,
-      generateFor: rawReport.generateFor,
-      events: eventDetails,
-      membersBalance: membersBalance,
-    );
+    return teamMemberDetails;
   }
 
   Future<int> insertReport(ReportForm report) async {
