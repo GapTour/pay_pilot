@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 
 class AppDialogBox extends StatelessWidget {
@@ -35,26 +36,32 @@ class AppDialogBox extends StatelessWidget {
                 bottom: 0,
                 right: 0,
                 left: 0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: AppElevatedButton(
-                          onTap: onPressed,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Submit', textAlign: TextAlign.center),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: kPrimaryColor),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: AppElevatedButton(
+                            onTap: onPressed,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Submit',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      Gap(8),
-                      TextButton(
-                        onPressed: () => context.pop(),
+                        Gap(8),
+                        TextButton(
+                          onPressed: () => context.pop(),
 
-                        child: Text('Cancel'),
-                      ),
-                    ],
+                          child: Text('Cancel'),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
