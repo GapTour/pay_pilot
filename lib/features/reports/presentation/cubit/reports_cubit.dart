@@ -29,9 +29,9 @@ class ReportsCubit extends Cubit<ReportsState> {
     });
   }
 
-  void updateReport(ReportForm report) async {
-    await _repository.updateReport(report).whenComplete(() {
-      loadReports();
-    });
-  }
+  // void updateReport(ReportForm report) async {
+  //   await _repository.updateReport(report).whenComplete(() {
+  //     loadReports();
+  //   });
+  // }
 }
