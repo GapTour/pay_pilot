@@ -28,9 +28,17 @@ class RatiosCubit extends Cubit<RatiosState> {
       fetchedTeam = team ?? await _repository.getTeamDetails(teamID);
       fetchedMembers = members ?? await _repository.getAllMembers();
 
+      final Map<int, double> addedMembers = {};
+      ratios.fold<Map<int, double>>({}, (previousValue, element) {
+        if (!previousValue.containsKey(element.member.id)) {
+          addedMembers[element.member.id] = element.ratio;
+        }
+        return previousValue;
+      });
+
       emit(
         state.copyWith(
-          ratioStatus: RatioSuccess(fetchedTeam, fetchedMembers),
+          ratioStatus: RatioSuccess(fetchedTeam, fetchedMembers, addedMembers),
           ratios: ratios,
         ),
       );
