@@ -1,0 +1,66 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
+import 'package:pay_pilot/core/widgets/app_text_field.dart';
+import 'package:pay_pilot/features/teams/data/team_form.dart';
+
+class AddTeamDialogBox extends StatefulWidget {
+  final Function(TeamForm team) onPressedSubmit;
+  const AddTeamDialogBox({super.key, required this.onPressedSubmit});
+
+  @override
+  State<AddTeamDialogBox> createState() => _AddTeamDialogBoxState();
+}
+
+class _AddTeamDialogBoxState extends State<AddTeamDialogBox> {
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    descriptionController.dispose();
+    titleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppDialogBox(
+      title: 'Add New Team',
+      children: [
+        Form(
+          key: formKey,
+          child: AppTextField(
+            label: 'Title',
+            hint: 'Movie Analyze',
+            autoFocus: true,
+            controller: titleController,
+            keyboardType: TextInputType.name,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return '*Required';
+              }
+              return null;
+            },
+          ),
+        ),
+        AppTextField(
+          label: 'Description (optional)',
+          controller: descriptionController,
+          minLines: 3,
+          maxLines: 4,
+        ),
+      ],
+      onPressed: () {
+        if (!formKey.currentState!.validate()) return;
+        final member = TeamForm(
+          title: titleController.text,
+          description: descriptionController.text,
+        );
+        widget.onPressedSubmit(member);
+        context.pop();
+      },
+    );
+  }
+}
