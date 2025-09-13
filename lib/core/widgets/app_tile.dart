@@ -7,12 +7,16 @@ class AppTile extends StatefulWidget {
   final Widget child;
   final double height;
   final VoidCallback? onPreview;
+  final String? previewButtonTitle;
   final VoidCallback? onEdit;
+  final bool isActive;
   const AppTile({
     required this.child,
     required this.height,
+    this.isActive = true,
     this.onEdit,
     this.onPreview,
+    this.previewButtonTitle,
     super.key,
   });
 
@@ -29,13 +33,15 @@ class _AppTileState extends State<AppTile> {
     return InkWell(
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
-      onTap: () {
-        _isExpanded = !_isExpanded;
-        if (!_isExpanded) {
-          _showButtons = false;
-        }
-        setState(() {});
-      },
+      onTap: widget.isActive
+          ? () {
+              _isExpanded = !_isExpanded;
+              if (!_isExpanded) {
+                _showButtons = false;
+              }
+              setState(() {});
+            }
+          : null,
       child: AnimatedContainer(
         height: !_isExpanded ? widget.height : widget.height + 59,
         decoration: BoxDecoration(
@@ -71,25 +77,32 @@ class _AppTileState extends State<AppTile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: AppElevatedButton(
-                      onTap: widget.onPreview,
+                  if (widget.onPreview != null)
+                    Expanded(
+                      child: AppElevatedButton(
+                        onTap: widget.onPreview,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            widget.previewButtonTitle ?? 'Preview',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    Spacer(),
+                  if (widget.onEdit != null)
+                    AppElevatedButton(
+                      onTap: widget.onEdit,
                       child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('Preview', textAlign: TextAlign.center),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 25.0,
+                          vertical: 5,
+                        ),
+                        child: Text('Edit'),
                       ),
                     ),
-                  ),
-                  AppElevatedButton(
-                    onTap: widget.onEdit,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 25.0,
-                        vertical: 5,
-                      ),
-                      child: Text('Edit'),
-                    ),
-                  ),
                 ],
               ),
             ],
