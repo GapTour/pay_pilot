@@ -37,4 +37,10 @@ class TeamsCubit extends Cubit<TeamsState> {
       loadTeams();
     });
   }
+
+  void deleteTeam(int teamID) async {
+    await _repository.deleteTeam(teamID).whenComplete(() {
+      loadTeams();
+    });
+  }
 }

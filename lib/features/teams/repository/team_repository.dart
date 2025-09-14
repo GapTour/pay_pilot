@@ -18,4 +18,8 @@ class TeamRepository {
   Future<void> updateTeam(TeamEditForm team) async {
     await _dbProvider.updateTeam(team);
   }
+
+  Future<void> deleteTeam(int teamID) async {
+    await _dbProvider.deleteTeam(teamID);
+  }
 }

@@ -33,7 +33,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
       appBar: AppBar(title: const Text('Teams')),
       body: BlocBuilder<TeamsCubit, TeamsState>(
         builder: (context, state) {
-          final members = state.teams;
+          final teams = state.teams;
           final isLoading =
               state.teamsStatus == TeamsStatus.loading ||
               state.teamsStatus == TeamsStatus.initial;
@@ -43,7 +43,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
           }
 
           return AppList(
-            itemCount: members.length,
+            itemCount: teams.length,
             emptyInboxMessage: 'There is no team yet!',
             itemBuilder: (context, index) {
               return AppTile(
@@ -53,7 +53,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
                   context.pushNamed(
                     AppRoutes.teamMembersScreen,
                     pathParameters: {
-                      AppArguments.teamDetails: '${members[index].id}',
+                      AppArguments.teamDetails: '${teams[index].id}',
                     },
                   );
                 },
@@ -62,7 +62,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
                     context: context,
                     builder: (_) {
                       return EditTeamDialogBox(
-                        team: members[index],
+                        team: teams[index],
                         onPressedSubmit: (team) {
                           context.read<TeamsCubit>().updateTeam(team);
                         },
@@ -70,8 +70,11 @@ class _TeamsScreenState extends State<TeamsScreen> {
                     },
                   );
                 },
+                onDelete: () {
+                  context.read<TeamsCubit>().deleteTeam(teams[index].id);
+                },
                 child: Text(
-                  members[index].title,
+                  teams[index].title,
                   textAlign: TextAlign.left,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 18),

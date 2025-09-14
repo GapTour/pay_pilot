@@ -38,7 +38,7 @@ class TeamDao extends DatabaseAccessor<AppDatabase> with _$TeamDaoMixin {
     );
   }
 
-  Future<void> deleteMember(int id) async {
-    await (db.delete(db.members)..where((tbl) => tbl.id.equals(id))).go();
+  Future<void> deleteTeam(int id) async {
+    await (db.delete(db.teams)..where((tbl) => tbl.id.equals(id))).go();
   }
 }
