@@ -57,6 +57,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     },
                   );
                 },
+                onDelete: () {
+                  context.read<ReportsCubit>().deleteReport(reports[index].id);
+                },
                 previewButtonTitle: 'Salary\'s Report',
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

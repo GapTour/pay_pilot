@@ -34,4 +34,10 @@ class ReportsCubit extends Cubit<ReportsState> {
   //     loadReports();
   //   });
   // }
+
+  void deleteReport(int reportID) async {
+    await _repository.deleteReport(reportID).whenComplete(() {
+      loadReports();
+    });
+  }
 }

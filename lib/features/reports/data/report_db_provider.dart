@@ -24,4 +24,8 @@ class ReportDbProvider {
   // Future<void> updateReport(ReportForm report) async {
   //   await _databaseService.updateReport(report);
   // }
+
+  Future<void> deleteReport(int report) async {
+    await _databaseService.deleteReport(report);
+  }
 }

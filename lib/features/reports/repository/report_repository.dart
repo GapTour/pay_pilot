@@ -22,4 +22,8 @@ class ReportRepository {
   // Future<void> updateReport(ReportForm report) async {
   //   await _dbProvider.updateReport(report);
   // }
+
+  Future<void> deleteReport(int report) async {
+    await _dbProvider.deleteReport(report);
+  }
 }
