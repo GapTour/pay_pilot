@@ -33,15 +33,15 @@ Future<void> locatorSetup() async {
 }
 
 void _callServices() {
-  final database = locator.registerSingleton<AppDatabase>(
-    AppDatabase(Platform.createDatabaseConnection('pay_pilot_db')),
+  locator.registerLazySingleton(
+    () => AppDatabase(Platform.createDatabaseConnection('pay-pilot-db')),
   );
 
-  locator.registerSingleton<TeamDao>(TeamDao(database));
-  locator.registerSingleton<ReportDao>(ReportDao(database));
-  locator.registerSingleton<RatioDao>(RatioDao(database));
-  locator.registerSingleton<MemberDao>(MemberDao(database));
-  locator.registerSingleton<EventDao>(EventDao(database));
+  locator.registerSingleton<TeamDao>(TeamDao(locator()));
+  locator.registerSingleton<ReportDao>(ReportDao(locator()));
+  locator.registerSingleton<RatioDao>(RatioDao(locator()));
+  locator.registerSingleton<MemberDao>(MemberDao(locator()));
+  locator.registerSingleton<EventDao>(EventDao(locator()));
 }
 
 void _callProviders() {
