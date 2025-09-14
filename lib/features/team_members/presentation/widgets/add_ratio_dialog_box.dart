@@ -129,7 +129,7 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
         ),
       ],
       onPressed: () {
-        if (!formDropDownKey.currentState!.validate() &&
+        if (formDropDownKey.currentState?.validate() == false &&
             notAddedMembers.isEmpty) {
           return;
         }
