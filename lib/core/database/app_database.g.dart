@@ -351,7 +351,7 @@ class $EventsTable extends Events with TableInfo<$EventsTable, Event> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES teams (id)',
+      'REFERENCES teams (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
@@ -1487,7 +1487,7 @@ class $RatiosTable extends Ratios with TableInfo<$RatiosTable, Ratio> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES members (id)',
+      'REFERENCES members (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _teamIDMeta = const VerificationMeta('teamID');
@@ -1499,7 +1499,7 @@ class $RatiosTable extends Ratios with TableInfo<$RatiosTable, Ratio> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES teams (id)',
+      'REFERENCES teams (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _ratioMeta = const VerificationMeta('ratio');
@@ -1833,7 +1833,7 @@ class $CollectReportEventsTable extends CollectReportEvents
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES events (id)',
+      'REFERENCES events (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _reportIDMeta = const VerificationMeta(
@@ -1847,7 +1847,7 @@ class $CollectReportEventsTable extends CollectReportEvents
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES reports (id)',
+      'REFERENCES reports (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _createAtMeta = const VerificationMeta(
@@ -2170,7 +2170,7 @@ class $EventTransactionsTable extends EventTransactions
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES events (id)',
+      'REFERENCES events (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
@@ -2612,6 +2612,51 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     collectReportEvents,
     eventTransactions,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'teams',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('events', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('ratios', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'teams',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('ratios', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'events',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('collect_report_events', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'reports',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('collect_report_events', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'events',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('event_transactions', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$TeamsTableCreateCompanionBuilder =

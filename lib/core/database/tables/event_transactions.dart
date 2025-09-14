@@ -8,7 +8,8 @@ class EventTransactions extends Table {
   TextColumn get description => text().nullable()();
   RealColumn get amount => real()();
   TextColumn get transactionType => textEnum<TransactionType>()();
-  IntColumn get eventID => integer().references(Events, #id)();
+  IntColumn get eventID =>
+      integer().references(Events, #id, onDelete: KeyAction.cascade)();
   DateTimeColumn get date => dateTime().withDefault(currentDate)();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
 }

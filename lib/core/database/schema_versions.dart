@@ -186,7 +186,7 @@ i1.GeneratedColumn<int> _column_4(String aliasedName) =>
       false,
       type: i1.DriftSqlType.int,
       defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
-        'REFERENCES teams (id)',
+        'REFERENCES teams (id) ON DELETE CASCADE',
       ),
     );
 i1.GeneratedColumn<DateTime> _column_5(String aliasedName) =>
@@ -280,7 +280,7 @@ i1.GeneratedColumn<int> _column_10(String aliasedName) =>
       false,
       type: i1.DriftSqlType.int,
       defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
-        'REFERENCES members (id)',
+        'REFERENCES members (id) ON DELETE CASCADE',
       ),
     );
 i1.GeneratedColumn<double> _column_11(String aliasedName) =>
@@ -310,7 +310,7 @@ i1.GeneratedColumn<int> _column_12(String aliasedName) =>
       false,
       type: i1.DriftSqlType.int,
       defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
-        'REFERENCES events (id)',
+        'REFERENCES events (id) ON DELETE CASCADE',
       ),
     );
 i1.GeneratedColumn<int> _column_13(String aliasedName) =>
@@ -320,7 +320,7 @@ i1.GeneratedColumn<int> _column_13(String aliasedName) =>
       false,
       type: i1.DriftSqlType.int,
       defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
-        'REFERENCES reports (id)',
+        'REFERENCES reports (id) ON DELETE CASCADE',
       ),
     );
 
