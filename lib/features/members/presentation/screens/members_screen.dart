@@ -71,6 +71,9 @@ class _MembersScreenState extends State<MembersScreen> {
                     },
                   );
                 },
+                onDelete: () {
+                  context.read<MembersCubit>().deleteMember(members[index].id);
+                },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

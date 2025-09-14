@@ -18,4 +18,8 @@ class MemberRepository {
   Future<void> updateMember(MemberEditingForm member) async {
     await _dbProvider.updateMember(member);
   }
+
+  Future<void> deleteMember(int id) async {
+    await _dbProvider.deleteMember(id);
+  }
 }

@@ -39,4 +39,10 @@ class MembersCubit extends Cubit<MembersState> {
       loadMembers();
     });
   }
+
+  void deleteMember(int memberID) async {
+    await _repository.deleteMember(memberID).whenComplete(() {
+      loadMembers();
+    });
+  }
 }

@@ -18,4 +18,8 @@ class MemberDbProvider {
   Future<void> updateMember(MemberEditingForm member) async {
     await _dbService.updateMember(member);
   }
+
+  Future<void> deleteMember(int id) async {
+    await _dbService.deleteMember(id);
+  }
 }
