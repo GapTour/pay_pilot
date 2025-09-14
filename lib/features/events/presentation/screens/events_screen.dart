@@ -71,6 +71,9 @@ class _EventsScreenState extends State<EventsScreen> {
                     },
                   );
                 },
+                onDelete: () {
+                  context.read<EventsCubit>().deleteEvent(events[index].id);
+                },
                 previewButtonTitle: 'Event\'s Transactions',
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

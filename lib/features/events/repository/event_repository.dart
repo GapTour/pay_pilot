@@ -24,4 +24,8 @@ class EventRepository {
   Future<void> updateEvent(EventEditForm event) async {
     await _dbProvider.updateEvent(event);
   }
+
+  Future<void> deleteEvent(int event) async {
+    await _dbProvider.deleteEvent(event);
+  }
 }

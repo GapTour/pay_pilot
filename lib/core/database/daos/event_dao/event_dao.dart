@@ -164,7 +164,13 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
     );
   }
 
-  Future<void> deleteIncome(int id) async {
+  Future<void> deleteEvent(int id) async {
     await (db.delete(db.events)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  Future<void> deleteTransaction(int id) async {
+    await (db.delete(
+      db.eventTransactions,
+    )..where((tbl) => tbl.id.equals(id))).go();
   }
 }

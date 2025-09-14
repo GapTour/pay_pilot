@@ -59,4 +59,16 @@ class EventsCubit extends Cubit<EventsState> {
       );
     });
   }
+
+  void deleteEvent(int eventID) async {
+    bool isSuccess = false;
+
+    await _repository.deleteEvent(eventID).whenComplete(() {
+      if (state.eventsStatus is EventSuccess) isSuccess = true;
+
+      loadEvents(
+        teams: isSuccess ? (state.eventsStatus as EventSuccess).teams : null,
+      );
+    });
+  }
 }
