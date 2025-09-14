@@ -96,6 +96,12 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                         },
                       );
                     },
+                    onDelete: () {
+                      context.read<RatiosCubit>().deleteRatio(
+                        int.parse(widget.teamID),
+                        teamMembers[index].id,
+                      );
+                    },
                     child: Row(
                       children: [
                         Expanded(

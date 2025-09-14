@@ -76,7 +76,7 @@ class RatioDao extends DatabaseAccessor<AppDatabase> with _$RatioDaoMixin {
     );
   }
 
-  Future<void> deleteMember(int id) async {
+  Future<void> deleteRatio(int id) async {
     await (db.delete(db.ratios)..where((tbl) => tbl.id.equals(id))).go();
   }
 }

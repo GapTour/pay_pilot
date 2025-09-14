@@ -31,4 +31,8 @@ class TeamMembersDbProvider {
   Future<void> updateRatio(TeamMembersEditForm ratio) async {
     await _dbService.updateRatio(ratio);
   }
+
+  Future<void> deleteRatio(int ratio) async {
+    await _dbService.deleteRatio(ratio);
+  }
 }

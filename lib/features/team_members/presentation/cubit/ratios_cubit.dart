@@ -74,4 +74,18 @@ class RatiosCubit extends Cubit<RatiosState> {
       );
     });
   }
+
+  void deleteRatio(int teamID, int teamMemberID) async {
+    bool isSuccess = false;
+
+    await _repository.deleteRatio(teamMemberID).whenComplete(() {
+      if (state.ratioStatus is RatioSuccess) isSuccess = true;
+
+      loadRatios(
+        teamID,
+        team: isSuccess ? (state.ratioStatus as RatioSuccess).team : null,
+        members: isSuccess ? (state.ratioStatus as RatioSuccess).members : null,
+      );
+    });
+  }
 }
