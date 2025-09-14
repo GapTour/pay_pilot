@@ -77,4 +77,23 @@ class EventTransactionsCubit extends Cubit<EventTransactionsState> {
       eventDetails: fetchedEventDetails.copyWith(transactions: transactions),
     );
   }
+
+  void deleteTransaction(int transactionID) async {
+    final EventDetailsModel fetchedEventDetails =
+        (state as EventTransactionsSuccess).eventDetails;
+    final List<Transactions> transactions = [];
+
+    emit(EventTransactionsLoading());
+    await _repository.deleteTransaction(transactionID);
+    transactions
+      ..addAll(fetchedEventDetails.transactions)
+      ..removeWhere((element) => element.id == transactionID);
+
+    transactions.sort((a, b) => b.date.compareTo(a.date));
+
+    loadTransactions(
+      fetchedEventDetails.id,
+      eventDetails: fetchedEventDetails.copyWith(transactions: transactions),
+    );
+  }
 }

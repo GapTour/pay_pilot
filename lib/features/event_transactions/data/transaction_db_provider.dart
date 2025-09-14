@@ -18,4 +18,8 @@ class TransactionDbProvider {
   Future<void> updateTransaction(TransactionEditForm transaction) async {
     await _dbService.updateTransaction(transaction);
   }
+
+  Future<void> deleteTransaction(int transaction) async {
+    await _dbService.deleteTransaction(transaction);
+  }
 }

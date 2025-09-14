@@ -19,4 +19,8 @@ class TransactionRepository {
   Future<void> updateTransaction(TransactionEditForm transaction) async {
     await _dbProvider.updateTransaction(transaction);
   }
+
+  Future<void> deleteTransaction(int transaction) async {
+    await _dbProvider.deleteTransaction(transaction);
+  }
 }

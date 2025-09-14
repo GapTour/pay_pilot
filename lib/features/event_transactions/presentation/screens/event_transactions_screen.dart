@@ -121,6 +121,11 @@ class _EventTransactionsScreenState extends State<EventTransactionsScreen> {
                         },
                       );
                     },
+                    onDelete: () {
+                      context.read<EventTransactionsCubit>().deleteTransaction(
+                        transactions[index].id,
+                      );
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
