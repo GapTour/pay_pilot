@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/models/team_member_details_model.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
@@ -130,7 +131,7 @@ class _EditRatioDialogBoxState extends State<EditRatioDialogBox> {
         final ratio = TeamMembersEditForm(
           id: ratioID,
           memberID: memberID,
-          ratio: double.parse(ratioController.text),
+          ratio: ratioController.text.parseToDouble,
           teamID: widget.team.id,
         );
         widget.onPressedSubmit(ratio);
