@@ -2,7 +2,7 @@ name: Build Web App
 
 on:
   push:
-    tag:
+    tags:
       - 'web*.*.*'
 
 jobs:

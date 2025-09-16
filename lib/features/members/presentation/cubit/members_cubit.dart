@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/features/members/data/member_editing_form.dart';
 import 'package:pay_pilot/features/members/data/member_form.dart';
 import 'package:pay_pilot/features/members/repository/member_repository.dart';
 
@@ -17,7 +18,7 @@ class MembersCubit extends Cubit<MembersState> {
 
     try {
       final members = await _repository.getAllMembers();
-      members.sort((a, b) => b.percentage.compareTo(a.percentage));
+      members.sort((a, b) => a.name.compareTo(b.name));
 
       emit(
         state.copyWith(membersStatus: MembersStatus.success, members: members),
@@ -33,8 +34,14 @@ class MembersCubit extends Cubit<MembersState> {
     });
   }
 
-  void updateMember(MemberForm member) async {
+  void updateMember(MemberEditingForm member) async {
     await _repository.updateMember(member).whenComplete(() {
+      loadMembers();
+    });
+  }
+
+  void deleteMember(int memberID) async {
+    await _repository.deleteMember(memberID).whenComplete(() {
       loadMembers();
     });
   }

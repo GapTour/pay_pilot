@@ -2,23 +2,35 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
-import 'package:pay_pilot/features/incomes/presentation/cubit/incomes_cubit.dart';
-import 'package:pay_pilot/features/incomes/presentation/screens/incomes_screen.dart';
+import 'package:pay_pilot/features/event_transactions/presentation/cubit/event_transactions_cubit.dart';
+import 'package:pay_pilot/features/event_transactions/presentation/screens/event_transactions_screen.dart';
+import 'package:pay_pilot/features/events/presentation/cubit/events_cubit.dart';
+import 'package:pay_pilot/features/events/presentation/screens/events_screen.dart';
 import 'package:pay_pilot/features/main/presentation/screens/main_screen.dart';
+import 'package:pay_pilot/features/member_details/presentation/cubit/members_details_cubit.dart';
+import 'package:pay_pilot/features/member_details/presentation/screens/member_details_screen.dart';
 import 'package:pay_pilot/features/members/presentation/cubit/members_cubit.dart';
 import 'package:pay_pilot/features/members/presentation/screens/members_screen.dart';
 import 'package:pay_pilot/features/report_details/presentation/cubit/report_details_cubit.dart';
 import 'package:pay_pilot/features/report_details/presentation/screens/report_details_screen.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/screens/reports_screen.dart';
+import 'package:pay_pilot/features/team_members/presentation/cubit/ratios_cubit.dart';
+import 'package:pay_pilot/features/team_members/presentation/screens/team_members_screen.dart';
+import 'package:pay_pilot/features/teams/presentation/cubit/teams_cubit.dart';
+import 'package:pay_pilot/features/teams/presentation/screens/teams_screen.dart';
 import 'package:pay_pilot/locator.dart';
 
 class AppRoutes {
   static const String mainScreen = 'mainScreen';
   static const String membersScreen = 'membersScreen';
+  static const String memberDetailsScreen = 'memberDetailsScreen';
+  static const String eventsScreen = 'eventsScreen';
+  static const String eventTransactionsScreen = 'eventTransactionsScreen';
   static const String reportsScreen = 'reportsScreen';
-  static const String incomesScreen = 'incomesScreen';
   static const String reportDetailsScreen = 'reportDetailsScreen';
+  static const String teamsScreen = 'teamsScreen';
+  static const String teamMembersScreen = 'teamMembersScreen';
 
   static GoRouter router = GoRouter(
     // navigatorKey: navigatorKey,
@@ -39,6 +51,16 @@ class AppRoutes {
         ),
       ),
       GoRoute(
+        name: memberDetailsScreen,
+        path: MemberDetailsScreen.routeName,
+        builder: (context, state) => BlocProvider(
+          create: (context) => MembersDetailsCubit(locator()),
+          child: MemberDetailsScreen(
+            memberID: state.pathParameters[AppArguments.memberDetails]!,
+          ),
+        ),
+      ),
+      GoRoute(
         name: reportsScreen,
         path: ReportsScreen.routeName,
         builder: (context, state) => BlocProvider(
@@ -47,11 +69,21 @@ class AppRoutes {
         ),
       ),
       GoRoute(
-        name: incomesScreen,
-        path: IncomesScreen.routeName,
+        name: eventsScreen,
+        path: EventsScreen.routeName,
         builder: (context, state) => BlocProvider(
-          create: (context) => IncomesCubit(locator()),
-          child: const IncomesScreen(),
+          create: (context) => EventsCubit(locator()),
+          child: const EventsScreen(),
+        ),
+      ),
+      GoRoute(
+        name: eventTransactionsScreen,
+        path: EventTransactionsScreen.routeName,
+        builder: (context, state) => BlocProvider(
+          create: (context) => EventTransactionsCubit(locator()),
+          child: EventTransactionsScreen(
+            eventID: state.pathParameters[AppArguments.eventDetails]!,
+          ),
         ),
       ),
       GoRoute(
@@ -62,6 +94,24 @@ class AppRoutes {
           child: ReportDetailsScreen(
             reportID: state.pathParameters[AppArguments.reportDetails]!,
           ),
+        ),
+      ),
+      GoRoute(
+        name: teamMembersScreen,
+        path: TeamMembersScreen.routeName,
+        builder: (context, state) => BlocProvider(
+          create: (context) => RatiosCubit(locator()),
+          child: TeamMembersScreen(
+            teamID: state.pathParameters[AppArguments.teamDetails]!,
+          ),
+        ),
+      ),
+      GoRoute(
+        name: teamsScreen,
+        path: TeamsScreen.routeName,
+        builder: (context, state) => BlocProvider(
+          create: (context) => TeamsCubit(locator()),
+          child: TeamsScreen(),
         ),
       ),
     ],

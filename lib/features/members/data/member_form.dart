@@ -1,26 +1,14 @@
 class MemberForm {
-  final int? id;
   final String name;
-  final double percentage;
+  final DateTime? joinAt;
   final String? description;
 
-  MemberForm({
-    this.id,
-    required this.name,
-    required this.percentage,
-    this.description,
-  });
+  MemberForm({required this.name, required this.joinAt, this.description});
 
-  MemberForm copyWith({
-    int? id,
-    String? name,
-    double? percentage,
-    String? description,
-  }) {
+  MemberForm copyWith({String? name, DateTime? joinAt, String? description}) {
     return MemberForm(
-      id: id ?? this.id,
       name: name ?? this.name,
-      percentage: percentage ?? this.percentage,
+      joinAt: joinAt ?? this.joinAt,
       description: description ?? this.description,
     );
   }

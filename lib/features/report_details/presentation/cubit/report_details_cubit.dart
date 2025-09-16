@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/data/models/full_report_details_model.dart';
 import 'package:pay_pilot/features/report_details/repository/report_details_repository.dart';
 
 part 'report_details_state.dart';

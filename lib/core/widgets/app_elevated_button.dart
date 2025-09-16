@@ -34,14 +34,14 @@ class _AppElevatedButtonState extends State<AppElevatedButton> {
         setState(() {});
       },
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
         child: ClayAnimatedContainer(
           borderRadius: 15,
           color: kPrimaryColor,
           depth: isPressed ? 8 : 18,
           width: widget.size?.width,
           height: widget.size?.height,
-          duration: Duration(milliseconds: 100),
+          duration: Duration(microseconds: 25),
           child: widget.child,
         ),
       ),

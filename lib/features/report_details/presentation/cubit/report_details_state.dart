@@ -10,7 +10,7 @@ final class ReportDetailsInitial extends ReportDetailsState {}
 final class ReportDetailsLoading extends ReportDetailsState {}
 
 final class ReportDetailsSuccess extends ReportDetailsState {
-  final Report report;
+  final FullReportViewModel report;
   ReportDetailsSuccess({required this.report});
 
   @override

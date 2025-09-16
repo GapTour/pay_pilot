@@ -40,4 +40,7 @@ final ThemeData appTheme = ThemeData(
       ),
     ),
   ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(foregroundColor: kOnPrimaryColor),
+  ),
 );

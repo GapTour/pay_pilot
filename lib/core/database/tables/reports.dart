@@ -5,8 +5,6 @@ class Reports extends Table {
   TextColumn get title => text()();
   IntColumn get version => integer()();
   TextColumn get description => text().nullable()();
-  TextColumn get membersReport => text()();
-  RealColumn get totalBalance => real()();
-  DateTimeColumn get date => dateTime().withDefault(currentDate)();
+  DateTimeColumn get generateFor => dateTime().withDefault(currentDate)();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
 }
