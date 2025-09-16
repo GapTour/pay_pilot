@@ -54,7 +54,7 @@ class MainScreen extends StatelessWidget {
               right: 0,
               left: 0,
               child: Text(
-                'Version 1.0.1',
+                'Version 1.2.0',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey),
               ),
