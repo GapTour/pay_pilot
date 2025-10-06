@@ -17,8 +17,8 @@ class MainScreen extends StatelessWidget {
         child: Stack(
           children: [
             GridView(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 150,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
