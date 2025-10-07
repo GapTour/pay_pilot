@@ -8,7 +8,7 @@ import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/event_transactions/data/transaction_form.dart';
+import 'package:pay_pilot/features/event_details/data/transaction_form.dart';
 
 class AddEventTransactionDialogBox extends StatefulWidget {
   final int eventID;

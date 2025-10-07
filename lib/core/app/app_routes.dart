@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
-import 'package:pay_pilot/features/event_transactions/presentation/cubit/event_transactions_cubit.dart';
-import 'package:pay_pilot/features/event_transactions/presentation/screens/event_transactions_screen.dart';
+import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
+import 'package:pay_pilot/features/event_details/presentation/screens/event_details_screen.dart';
 import 'package:pay_pilot/features/events/presentation/cubit/events_cubit.dart';
 import 'package:pay_pilot/features/events/presentation/screens/events_screen.dart';
 import 'package:pay_pilot/features/main/presentation/screens/main_screen.dart';
@@ -26,7 +26,7 @@ class AppRoutes {
   static const String membersScreen = 'membersScreen';
   static const String memberDetailsScreen = 'memberDetailsScreen';
   static const String eventsScreen = 'eventsScreen';
-  static const String eventTransactionsScreen = 'eventTransactionsScreen';
+  static const String eventDetailsScreen = 'eventDetailsScreen';
   static const String reportsScreen = 'reportsScreen';
   static const String reportDetailsScreen = 'reportDetailsScreen';
   static const String teamsScreen = 'teamsScreen';
@@ -77,11 +77,13 @@ class AppRoutes {
         ),
       ),
       GoRoute(
-        name: eventTransactionsScreen,
-        path: EventTransactionsScreen.routeName,
-        builder: (context, state) => BlocProvider(
-          create: (context) => EventTransactionsCubit(locator()),
-          child: EventTransactionsScreen(
+        name: eventDetailsScreen,
+        path: EventDetailsScreen.routeName,
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => EventDetailsCubit(locator())),
+          ],
+          child: EventDetailsScreen(
             eventID: state.pathParameters[AppArguments.eventDetails]!,
           ),
         ),

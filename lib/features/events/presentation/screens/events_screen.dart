@@ -65,7 +65,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 },
                 onPreview: () {
                   context.pushNamed(
-                    AppRoutes.eventTransactionsScreen,
+                    AppRoutes.eventDetailsScreen,
                     pathParameters: {
                       AppArguments.eventDetails: '${events[index].id}',
                     },
@@ -74,7 +74,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 onDelete: () {
                   context.read<EventsCubit>().deleteEvent(events[index].id);
                 },
-                previewButtonTitle: 'Event\'s Transactions',
+                previewButtonTitle: 'Preview',
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
