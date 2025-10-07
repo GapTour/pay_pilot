@@ -52,7 +52,7 @@ class _AppTileState extends State<AppTile> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: kOnSecondaryColor.withAlpha(80),
+              color: kPrimaryContainerColor,
               spreadRadius: .3,
               blurRadius: 3,
               offset: Offset(1, 1),
