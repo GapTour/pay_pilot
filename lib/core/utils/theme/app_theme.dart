@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-const Color kPrimaryColor = Color(0xFF0D1B2A);
-const Color kOnPrimaryColor = Color(0xFFF5F0E1);
-const Color kSecondaryColor = Color(0xFFE76F51);
+const Color kPrimaryColor = Color(0xFF00192a);
+const Color kPrimaryContainerColor = Color(0xFFdeeaf2);
+const Color kOnPrimaryColor = Color(0xFFf1edbe);
+const Color kSecondaryColor = Color(0xFFf7941d);
 const Color kOnSecondaryColor = Color(0xFFFFFFFF);
-const Color kErrorColor = Color(0xFFD62828);
+const Color kErrorColor = Color(0xFF760d17);
 
 final ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme(
