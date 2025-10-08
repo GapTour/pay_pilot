@@ -1,5 +1,5 @@
+import 'package:pay_pilot/core/data/models/balance_model.dart';
 import 'package:pay_pilot/core/data/models/event_details_model.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
 
 class FullReportViewModel {
   final int id;
@@ -8,7 +8,7 @@ class FullReportViewModel {
   final String? description;
   final DateTime generateFor;
   final List<EventDetailsModel> events;
-  final List<MembersBalance> membersBalance;
+  final List<BalanceModel> membersBalance;
 
   FullReportViewModel({
     required this.id,
@@ -19,11 +19,4 @@ class FullReportViewModel {
     required this.events,
     required this.membersBalance,
   });
-}
-
-class MembersBalance {
-  final Member member;
-  final double totalBalance;
-
-  MembersBalance({required this.member, required this.totalBalance});
 }
