@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/data/models/event_details_model.dart';
+import 'package:pay_pilot/core/data/models/transaction_model.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
@@ -38,7 +39,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       appBar: AppBar(title: Text('Event Details')),
       body: BlocBuilder<EventDetailsCubit, EventDetailsState>(
         builder: (context, state) {
-          final List<Transactions> transactions = [];
+          final List<TransactionModel> transactions = [];
           final isLoading =
               state.eventDetailStatus is EventDetailInitial ||
               state.eventDetailStatus is EventDetailLoading;

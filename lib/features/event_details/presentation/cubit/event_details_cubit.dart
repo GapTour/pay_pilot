@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pay_pilot/core/data/models/event_details_model.dart';
+import 'package:pay_pilot/core/data/models/transaction_model.dart';
 import 'package:pay_pilot/features/event_details/data/transaction_edit_form.dart';
 import 'package:pay_pilot/features/event_details/data/transaction_form.dart';
 import 'package:pay_pilot/features/event_details/repository/event_details_repository.dart';
@@ -41,13 +42,13 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
   void insertTransaction(TransactionForm transaction) async {
     final EventDetailsModel fetchedEventDetails =
         (state.eventDetailStatus as EventDetailSuccess).eventDetails;
-    final List<Transactions> transactions = [];
+    final List<TransactionModel> transactions = [];
 
     emit(state.copyWith(eventDetailStatus: EventDetailLoading()));
     final int transactionID = await _repository.insertTransaction(transaction);
     transactions
       ..add(
-        Transactions(
+        TransactionModel(
           id: transactionID,
           description: transaction.description,
           amount: transaction.amount,
@@ -68,7 +69,7 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
   void updateTransaction(TransactionEditForm transaction) async {
     final EventDetailsModel fetchedEventDetails =
         (state.eventDetailStatus as EventDetailSuccess).eventDetails;
-    final List<Transactions> transactions = [];
+    final List<TransactionModel> transactions = [];
 
     emit(state.copyWith(eventDetailStatus: EventDetailLoading()));
     await _repository.updateTransaction(transaction);
@@ -76,7 +77,7 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
       ..addAll(fetchedEventDetails.transactions)
       ..removeWhere((element) => element.id == transaction.id)
       ..add(
-        Transactions(
+        TransactionModel(
           id: transaction.id,
           description: transaction.description,
           amount: transaction.amount,
@@ -96,7 +97,7 @@ class EventDetailsCubit extends Cubit<EventDetailsState> {
   void deleteTransaction(int transactionID) async {
     final EventDetailsModel fetchedEventDetails =
         (state.eventDetailStatus as EventDetailSuccess).eventDetails;
-    final List<Transactions> transactions = [];
+    final List<TransactionModel> transactions = [];
 
     emit(state.copyWith(eventDetailStatus: EventDetailLoading()));
     await _repository.deleteTransaction(transactionID);

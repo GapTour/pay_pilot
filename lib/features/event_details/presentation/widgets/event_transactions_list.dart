@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-import 'package:pay_pilot/core/data/models/event_details_model.dart';
+import 'package:pay_pilot/core/data/models/transaction_model.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
@@ -11,7 +11,7 @@ import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event
 
 class EventTransactionsList extends StatelessWidget {
   final String eventID;
-  final List<Transactions> transactions;
+  final List<TransactionModel> transactions;
   const EventTransactionsList({
     required this.eventID,
     required this.transactions,

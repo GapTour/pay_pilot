@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:pay_pilot/core/data/models/event_details_model.dart';
+import 'package:pay_pilot/core/data/models/transaction_model.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
@@ -12,7 +12,7 @@ import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/features/event_details/data/transaction_edit_form.dart';
 
 class EditEventTransactionDialogBox extends StatefulWidget {
-  final Transactions transaction;
+  final TransactionModel transaction;
   final int eventID;
   final Function(TransactionEditForm transaction) onPressedSubmit;
   const EditEventTransactionDialogBox({
