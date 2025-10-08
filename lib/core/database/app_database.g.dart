@@ -2582,6 +2582,360 @@ class EventTransactionsCompanion extends UpdateCompanion<EventTransaction> {
   }
 }
 
+class $EventRatiosTable extends EventRatios
+    with TableInfo<$EventRatiosTable, EventRatio> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EventRatiosTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _memberIDMeta = const VerificationMeta(
+    'memberID',
+  );
+  @override
+  late final GeneratedColumn<int> memberID = GeneratedColumn<int>(
+    'member_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES members (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _eventIDMeta = const VerificationMeta(
+    'eventID',
+  );
+  @override
+  late final GeneratedColumn<int> eventID = GeneratedColumn<int>(
+    'event_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES events (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _ratioMeta = const VerificationMeta('ratio');
+  @override
+  late final GeneratedColumn<double> ratio = GeneratedColumn<double>(
+    'ratio',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createAtMeta = const VerificationMeta(
+    'createAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createAt = GeneratedColumn<DateTime>(
+    'create_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDate,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    memberID,
+    eventID,
+    ratio,
+    createAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'event_ratios';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<EventRatio> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('member_i_d')) {
+      context.handle(
+        _memberIDMeta,
+        memberID.isAcceptableOrUnknown(data['member_i_d']!, _memberIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_memberIDMeta);
+    }
+    if (data.containsKey('event_i_d')) {
+      context.handle(
+        _eventIDMeta,
+        eventID.isAcceptableOrUnknown(data['event_i_d']!, _eventIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventIDMeta);
+    }
+    if (data.containsKey('ratio')) {
+      context.handle(
+        _ratioMeta,
+        ratio.isAcceptableOrUnknown(data['ratio']!, _ratioMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ratioMeta);
+    }
+    if (data.containsKey('create_at')) {
+      context.handle(
+        _createAtMeta,
+        createAt.isAcceptableOrUnknown(data['create_at']!, _createAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  EventRatio map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EventRatio(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      memberID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}member_i_d'],
+      )!,
+      eventID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}event_i_d'],
+      )!,
+      ratio: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}ratio'],
+      )!,
+      createAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}create_at'],
+      )!,
+    );
+  }
+
+  @override
+  $EventRatiosTable createAlias(String alias) {
+    return $EventRatiosTable(attachedDatabase, alias);
+  }
+}
+
+class EventRatio extends DataClass implements Insertable<EventRatio> {
+  final int id;
+  final int memberID;
+  final int eventID;
+  final double ratio;
+  final DateTime createAt;
+  const EventRatio({
+    required this.id,
+    required this.memberID,
+    required this.eventID,
+    required this.ratio,
+    required this.createAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['member_i_d'] = Variable<int>(memberID);
+    map['event_i_d'] = Variable<int>(eventID);
+    map['ratio'] = Variable<double>(ratio);
+    map['create_at'] = Variable<DateTime>(createAt);
+    return map;
+  }
+
+  EventRatiosCompanion toCompanion(bool nullToAbsent) {
+    return EventRatiosCompanion(
+      id: Value(id),
+      memberID: Value(memberID),
+      eventID: Value(eventID),
+      ratio: Value(ratio),
+      createAt: Value(createAt),
+    );
+  }
+
+  factory EventRatio.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EventRatio(
+      id: serializer.fromJson<int>(json['id']),
+      memberID: serializer.fromJson<int>(json['memberID']),
+      eventID: serializer.fromJson<int>(json['eventID']),
+      ratio: serializer.fromJson<double>(json['ratio']),
+      createAt: serializer.fromJson<DateTime>(json['createAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'memberID': serializer.toJson<int>(memberID),
+      'eventID': serializer.toJson<int>(eventID),
+      'ratio': serializer.toJson<double>(ratio),
+      'createAt': serializer.toJson<DateTime>(createAt),
+    };
+  }
+
+  EventRatio copyWith({
+    int? id,
+    int? memberID,
+    int? eventID,
+    double? ratio,
+    DateTime? createAt,
+  }) => EventRatio(
+    id: id ?? this.id,
+    memberID: memberID ?? this.memberID,
+    eventID: eventID ?? this.eventID,
+    ratio: ratio ?? this.ratio,
+    createAt: createAt ?? this.createAt,
+  );
+  EventRatio copyWithCompanion(EventRatiosCompanion data) {
+    return EventRatio(
+      id: data.id.present ? data.id.value : this.id,
+      memberID: data.memberID.present ? data.memberID.value : this.memberID,
+      eventID: data.eventID.present ? data.eventID.value : this.eventID,
+      ratio: data.ratio.present ? data.ratio.value : this.ratio,
+      createAt: data.createAt.present ? data.createAt.value : this.createAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EventRatio(')
+          ..write('id: $id, ')
+          ..write('memberID: $memberID, ')
+          ..write('eventID: $eventID, ')
+          ..write('ratio: $ratio, ')
+          ..write('createAt: $createAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, memberID, eventID, ratio, createAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EventRatio &&
+          other.id == this.id &&
+          other.memberID == this.memberID &&
+          other.eventID == this.eventID &&
+          other.ratio == this.ratio &&
+          other.createAt == this.createAt);
+}
+
+class EventRatiosCompanion extends UpdateCompanion<EventRatio> {
+  final Value<int> id;
+  final Value<int> memberID;
+  final Value<int> eventID;
+  final Value<double> ratio;
+  final Value<DateTime> createAt;
+  const EventRatiosCompanion({
+    this.id = const Value.absent(),
+    this.memberID = const Value.absent(),
+    this.eventID = const Value.absent(),
+    this.ratio = const Value.absent(),
+    this.createAt = const Value.absent(),
+  });
+  EventRatiosCompanion.insert({
+    this.id = const Value.absent(),
+    required int memberID,
+    required int eventID,
+    required double ratio,
+    this.createAt = const Value.absent(),
+  }) : memberID = Value(memberID),
+       eventID = Value(eventID),
+       ratio = Value(ratio);
+  static Insertable<EventRatio> custom({
+    Expression<int>? id,
+    Expression<int>? memberID,
+    Expression<int>? eventID,
+    Expression<double>? ratio,
+    Expression<DateTime>? createAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (memberID != null) 'member_i_d': memberID,
+      if (eventID != null) 'event_i_d': eventID,
+      if (ratio != null) 'ratio': ratio,
+      if (createAt != null) 'create_at': createAt,
+    });
+  }
+
+  EventRatiosCompanion copyWith({
+    Value<int>? id,
+    Value<int>? memberID,
+    Value<int>? eventID,
+    Value<double>? ratio,
+    Value<DateTime>? createAt,
+  }) {
+    return EventRatiosCompanion(
+      id: id ?? this.id,
+      memberID: memberID ?? this.memberID,
+      eventID: eventID ?? this.eventID,
+      ratio: ratio ?? this.ratio,
+      createAt: createAt ?? this.createAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (memberID.present) {
+      map['member_i_d'] = Variable<int>(memberID.value);
+    }
+    if (eventID.present) {
+      map['event_i_d'] = Variable<int>(eventID.value);
+    }
+    if (ratio.present) {
+      map['ratio'] = Variable<double>(ratio.value);
+    }
+    if (createAt.present) {
+      map['create_at'] = Variable<DateTime>(createAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EventRatiosCompanion(')
+          ..write('id: $id, ')
+          ..write('memberID: $memberID, ')
+          ..write('eventID: $eventID, ')
+          ..write('ratio: $ratio, ')
+          ..write('createAt: $createAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2594,6 +2948,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $CollectReportEventsTable(this);
   late final $EventTransactionsTable eventTransactions =
       $EventTransactionsTable(this);
+  late final $EventRatiosTable eventRatios = $EventRatiosTable(this);
   late final ReportDao reportDao = ReportDao(this as AppDatabase);
   late final RatioDao ratioDao = RatioDao(this as AppDatabase);
   late final EventDao eventDao = EventDao(this as AppDatabase);
@@ -2611,6 +2966,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     ratios,
     collectReportEvents,
     eventTransactions,
+    eventRatios,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -2655,6 +3011,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('event_transactions', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('event_ratios', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'events',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('event_ratios', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -3102,6 +3472,24 @@ final class $$EventsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$EventRatiosTable, List<EventRatio>>
+  _eventRatiosRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.eventRatios,
+    aliasName: $_aliasNameGenerator(db.events.id, db.eventRatios.eventID),
+  );
+
+  $$EventRatiosTableProcessedTableManager get eventRatiosRefs {
+    final manager = $$EventRatiosTableTableManager(
+      $_db,
+      $_db.eventRatios,
+    ).filter((f) => f.eventID.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_eventRatiosRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$EventsTableFilterComposer
@@ -3202,6 +3590,31 @@ class $$EventsTableFilterComposer
           }) => $$EventTransactionsTableFilterComposer(
             $db: $db,
             $table: $db.eventTransactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> eventRatiosRefs(
+    Expression<bool> Function($$EventRatiosTableFilterComposer f) f,
+  ) {
+    final $$EventRatiosTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.eventRatios,
+      getReferencedColumn: (t) => t.eventID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventRatiosTableFilterComposer(
+            $db: $db,
+            $table: $db.eventRatios,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3370,6 +3783,31 @@ class $$EventsTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> eventRatiosRefs<T extends Object>(
+    Expression<T> Function($$EventRatiosTableAnnotationComposer a) f,
+  ) {
+    final $$EventRatiosTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.eventRatios,
+      getReferencedColumn: (t) => t.eventID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventRatiosTableAnnotationComposer(
+            $db: $db,
+            $table: $db.eventRatios,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$EventsTableTableManager
@@ -3389,6 +3827,7 @@ class $$EventsTableTableManager
             bool teamID,
             bool collectReportEventsRefs,
             bool eventTransactionsRefs,
+            bool eventRatiosRefs,
           })
         > {
   $$EventsTableTableManager(_$AppDatabase db, $EventsTable table)
@@ -3445,12 +3884,14 @@ class $$EventsTableTableManager
                 teamID = false,
                 collectReportEventsRefs = false,
                 eventTransactionsRefs = false,
+                eventRatiosRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (collectReportEventsRefs) db.collectReportEvents,
                     if (eventTransactionsRefs) db.eventTransactions,
+                    if (eventRatiosRefs) db.eventRatios,
                   ],
                   addJoins:
                       <
@@ -3528,6 +3969,27 @@ class $$EventsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (eventRatiosRefs)
+                        await $_getPrefetchedData<
+                          Event,
+                          $EventsTable,
+                          EventRatio
+                        >(
+                          currentTable: table,
+                          referencedTable: $$EventsTableReferences
+                              ._eventRatiosRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$EventsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).eventRatiosRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.eventID == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -3552,6 +4014,7 @@ typedef $$EventsTableProcessedTableManager =
         bool teamID,
         bool collectReportEventsRefs,
         bool eventTransactionsRefs,
+        bool eventRatiosRefs,
       })
     >;
 typedef $$MembersTableCreateCompanionBuilder =
@@ -3589,6 +4052,24 @@ final class $$MembersTableReferences
     ).filter((f) => f.memberID.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_ratiosRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$EventRatiosTable, List<EventRatio>>
+  _eventRatiosRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.eventRatios,
+    aliasName: $_aliasNameGenerator(db.members.id, db.eventRatios.memberID),
+  );
+
+  $$EventRatiosTableProcessedTableManager get eventRatiosRefs {
+    final manager = $$EventRatiosTableTableManager(
+      $_db,
+      $_db.eventRatios,
+    ).filter((f) => f.memberID.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_eventRatiosRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -3645,6 +4126,31 @@ class $$MembersTableFilterComposer
           }) => $$RatiosTableFilterComposer(
             $db: $db,
             $table: $db.ratios,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> eventRatiosRefs(
+    Expression<bool> Function($$EventRatiosTableFilterComposer f) f,
+  ) {
+    final $$EventRatiosTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.eventRatios,
+      getReferencedColumn: (t) => t.memberID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventRatiosTableFilterComposer(
+            $db: $db,
+            $table: $db.eventRatios,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3740,6 +4246,31 @@ class $$MembersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> eventRatiosRefs<T extends Object>(
+    Expression<T> Function($$EventRatiosTableAnnotationComposer a) f,
+  ) {
+    final $$EventRatiosTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.eventRatios,
+      getReferencedColumn: (t) => t.memberID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventRatiosTableAnnotationComposer(
+            $db: $db,
+            $table: $db.eventRatios,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$MembersTableTableManager
@@ -3755,7 +4286,7 @@ class $$MembersTableTableManager
           $$MembersTableUpdateCompanionBuilder,
           (Member, $$MembersTableReferences),
           Member,
-          PrefetchHooks Function({bool ratiosRefs})
+          PrefetchHooks Function({bool ratiosRefs, bool eventRatiosRefs})
         > {
   $$MembersTableTableManager(_$AppDatabase db, $MembersTable table)
     : super(
@@ -3804,28 +4335,59 @@ class $$MembersTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({ratiosRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (ratiosRefs) db.ratios],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (ratiosRefs)
-                    await $_getPrefetchedData<Member, $MembersTable, Ratio>(
-                      currentTable: table,
-                      referencedTable: $$MembersTableReferences
-                          ._ratiosRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$MembersTableReferences(db, table, p0).ratiosRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.memberID == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({ratiosRefs = false, eventRatiosRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (ratiosRefs) db.ratios,
+                    if (eventRatiosRefs) db.eventRatios,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (ratiosRefs)
+                        await $_getPrefetchedData<Member, $MembersTable, Ratio>(
+                          currentTable: table,
+                          referencedTable: $$MembersTableReferences
+                              ._ratiosRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).ratiosRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.memberID == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (eventRatiosRefs)
+                        await $_getPrefetchedData<
+                          Member,
+                          $MembersTable,
+                          EventRatio
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MembersTableReferences
+                              ._eventRatiosRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).eventRatiosRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.memberID == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -3842,7 +4404,7 @@ typedef $$MembersTableProcessedTableManager =
       $$MembersTableUpdateCompanionBuilder,
       (Member, $$MembersTableReferences),
       Member,
-      PrefetchHooks Function({bool ratiosRefs})
+      PrefetchHooks Function({bool ratiosRefs, bool eventRatiosRefs})
     >;
 typedef $$ReportsTableCreateCompanionBuilder =
     ReportsCompanion Function({
@@ -5342,6 +5904,406 @@ typedef $$EventTransactionsTableProcessedTableManager =
       EventTransaction,
       PrefetchHooks Function({bool eventID})
     >;
+typedef $$EventRatiosTableCreateCompanionBuilder =
+    EventRatiosCompanion Function({
+      Value<int> id,
+      required int memberID,
+      required int eventID,
+      required double ratio,
+      Value<DateTime> createAt,
+    });
+typedef $$EventRatiosTableUpdateCompanionBuilder =
+    EventRatiosCompanion Function({
+      Value<int> id,
+      Value<int> memberID,
+      Value<int> eventID,
+      Value<double> ratio,
+      Value<DateTime> createAt,
+    });
+
+final class $$EventRatiosTableReferences
+    extends BaseReferences<_$AppDatabase, $EventRatiosTable, EventRatio> {
+  $$EventRatiosTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $MembersTable _memberIDTable(_$AppDatabase db) =>
+      db.members.createAlias(
+        $_aliasNameGenerator(db.eventRatios.memberID, db.members.id),
+      );
+
+  $$MembersTableProcessedTableManager get memberID {
+    final $_column = $_itemColumn<int>('member_i_d')!;
+
+    final manager = $$MembersTableTableManager(
+      $_db,
+      $_db.members,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_memberIDTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $EventsTable _eventIDTable(_$AppDatabase db) => db.events.createAlias(
+    $_aliasNameGenerator(db.eventRatios.eventID, db.events.id),
+  );
+
+  $$EventsTableProcessedTableManager get eventID {
+    final $_column = $_itemColumn<int>('event_i_d')!;
+
+    final manager = $$EventsTableTableManager(
+      $_db,
+      $_db.events,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_eventIDTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$EventRatiosTableFilterComposer
+    extends Composer<_$AppDatabase, $EventRatiosTable> {
+  $$EventRatiosTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get ratio => $composableBuilder(
+    column: $table.ratio,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createAt => $composableBuilder(
+    column: $table.createAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$MembersTableFilterComposer get memberID {
+    final $$MembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberID,
+      referencedTable: $db.members,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MembersTableFilterComposer(
+            $db: $db,
+            $table: $db.members,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$EventsTableFilterComposer get eventID {
+    final $$EventsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.eventID,
+      referencedTable: $db.events,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventsTableFilterComposer(
+            $db: $db,
+            $table: $db.events,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$EventRatiosTableOrderingComposer
+    extends Composer<_$AppDatabase, $EventRatiosTable> {
+  $$EventRatiosTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get ratio => $composableBuilder(
+    column: $table.ratio,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createAt => $composableBuilder(
+    column: $table.createAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$MembersTableOrderingComposer get memberID {
+    final $$MembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberID,
+      referencedTable: $db.members,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.members,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$EventsTableOrderingComposer get eventID {
+    final $$EventsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.eventID,
+      referencedTable: $db.events,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventsTableOrderingComposer(
+            $db: $db,
+            $table: $db.events,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$EventRatiosTableAnnotationComposer
+    extends Composer<_$AppDatabase, $EventRatiosTable> {
+  $$EventRatiosTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<double> get ratio =>
+      $composableBuilder(column: $table.ratio, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createAt =>
+      $composableBuilder(column: $table.createAt, builder: (column) => column);
+
+  $$MembersTableAnnotationComposer get memberID {
+    final $$MembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberID,
+      referencedTable: $db.members,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.members,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$EventsTableAnnotationComposer get eventID {
+    final $$EventsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.eventID,
+      referencedTable: $db.events,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.events,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$EventRatiosTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $EventRatiosTable,
+          EventRatio,
+          $$EventRatiosTableFilterComposer,
+          $$EventRatiosTableOrderingComposer,
+          $$EventRatiosTableAnnotationComposer,
+          $$EventRatiosTableCreateCompanionBuilder,
+          $$EventRatiosTableUpdateCompanionBuilder,
+          (EventRatio, $$EventRatiosTableReferences),
+          EventRatio,
+          PrefetchHooks Function({bool memberID, bool eventID})
+        > {
+  $$EventRatiosTableTableManager(_$AppDatabase db, $EventRatiosTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EventRatiosTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EventRatiosTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$EventRatiosTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> memberID = const Value.absent(),
+                Value<int> eventID = const Value.absent(),
+                Value<double> ratio = const Value.absent(),
+                Value<DateTime> createAt = const Value.absent(),
+              }) => EventRatiosCompanion(
+                id: id,
+                memberID: memberID,
+                eventID: eventID,
+                ratio: ratio,
+                createAt: createAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int memberID,
+                required int eventID,
+                required double ratio,
+                Value<DateTime> createAt = const Value.absent(),
+              }) => EventRatiosCompanion.insert(
+                id: id,
+                memberID: memberID,
+                eventID: eventID,
+                ratio: ratio,
+                createAt: createAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$EventRatiosTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({memberID = false, eventID = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (memberID) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.memberID,
+                                referencedTable: $$EventRatiosTableReferences
+                                    ._memberIDTable(db),
+                                referencedColumn: $$EventRatiosTableReferences
+                                    ._memberIDTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+                    if (eventID) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.eventID,
+                                referencedTable: $$EventRatiosTableReferences
+                                    ._eventIDTable(db),
+                                referencedColumn: $$EventRatiosTableReferences
+                                    ._eventIDTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$EventRatiosTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $EventRatiosTable,
+      EventRatio,
+      $$EventRatiosTableFilterComposer,
+      $$EventRatiosTableOrderingComposer,
+      $$EventRatiosTableAnnotationComposer,
+      $$EventRatiosTableCreateCompanionBuilder,
+      $$EventRatiosTableUpdateCompanionBuilder,
+      (EventRatio, $$EventRatiosTableReferences),
+      EventRatio,
+      PrefetchHooks Function({bool memberID, bool eventID})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -5360,4 +6322,6 @@ class $AppDatabaseManager {
       $$CollectReportEventsTableTableManager(_db, _db.collectReportEvents);
   $$EventTransactionsTableTableManager get eventTransactions =>
       $$EventTransactionsTableTableManager(_db, _db.eventTransactions);
+  $$EventRatiosTableTableManager get eventRatios =>
+      $$EventRatiosTableTableManager(_db, _db.eventRatios);
 }
