@@ -12,6 +12,7 @@ import 'package:pay_pilot/core/database/tables/ratios.dart';
 import 'package:pay_pilot/core/database/tables/teams.dart';
 import 'package:pay_pilot/core/utils/helpers/calculator_helper.dart';
 import 'package:pay_pilot/features/event_details/data/models/event_ratio_edit_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/event_ratio_form.dart';
 import 'package:pay_pilot/features/event_details/data/transaction_edit_form.dart';
 import 'package:pay_pilot/features/event_details/data/transaction_form.dart';
 import 'package:pay_pilot/features/events/data/event_edit_form.dart';
@@ -283,13 +284,25 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
     )..where((tbl) => tbl.id.equals(id))).go();
   }
 
+  Future<int> insertRatio(EventRatioForm eventRatio) async {
+    return await db
+        .into(eventRatios)
+        .insert(
+          EventRatiosCompanion(
+            ratio: Value(eventRatio.ratio),
+            memberID: Value(eventRatio.member.id),
+            eventID: Value(eventRatio.eventID),
+          ),
+        );
+  }
+
   Future<void> updateRatio(EventRatioEditForm eventRatio) async {
     await (db.update(
       eventRatios,
     )..where((tbl) => tbl.id.equals(eventRatio.id))).write(
       EventRatiosCompanion(
         ratio: Value(eventRatio.ratio),
-        memberID: Value(eventRatio.memberID),
+        memberID: Value(eventRatio.member.id),
         eventID: Value(eventRatio.eventID),
       ),
     );
