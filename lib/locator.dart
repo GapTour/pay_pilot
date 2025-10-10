@@ -55,7 +55,7 @@ void _callProviders() {
     () => EventDbProvider(locator(), locator()),
   );
   locator.registerLazySingleton<EventDetailsDbProvider>(
-    () => EventDetailsDbProvider(locator()),
+    () => EventDetailsDbProvider(locator(), locator()),
   );
   locator.registerLazySingleton<TeamsDbProvider>(
     () => TeamsDbProvider(locator()),
