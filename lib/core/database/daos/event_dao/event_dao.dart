@@ -90,9 +90,13 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
           innerJoin(teams, teams.id.equalsExp(events.teamID)),
         ])).getSingle();
 
-    final rawEventRatios = await (select(eventRatios).join([
-      innerJoin(members, members.id.equalsExp(eventRatios.memberID)),
-    ])).get();
+    final rawEventRatios =
+        await ((select(
+              eventRatios,
+            )..where((tbl) => tbl.eventID.equals(id))).join([
+              innerJoin(members, members.id.equalsExp(eventRatios.memberID)),
+            ]))
+            .get();
 
     final List<MemberRatioModel> ratiosList = rawEventRatios.map((e) {
       return MemberRatioModel(
