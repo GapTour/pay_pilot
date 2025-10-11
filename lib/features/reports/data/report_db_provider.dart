@@ -14,7 +14,7 @@ class ReportDbProvider {
   }
 
   Future<List<EventDetailsModel>> getAllEvents() async {
-    return await _eventDao.getAllEventDetails();
+    return await _eventDao.getEventsWithoutMembersBalanceAndRatios();
   }
 
   Future<int> insertReport(ReportForm report) async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
@@ -48,7 +49,7 @@ class _EventsScreenState extends State<EventsScreen> {
             emptyInboxMessage: 'There is no event yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 68,
+                height: 60,
                 onEdit: () {
                   showDialog(
                     context: context,
@@ -65,7 +66,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 },
                 onPreview: () {
                   context.pushNamed(
-                    AppRoutes.eventTransactionsScreen,
+                    AppRoutes.eventDetailsScreen,
                     pathParameters: {
                       AppArguments.eventDetails: '${events[index].id}',
                     },
@@ -74,18 +75,31 @@ class _EventsScreenState extends State<EventsScreen> {
                 onDelete: () {
                   context.read<EventsCubit>().deleteEvent(events[index].id);
                 },
-                previewButtonTitle: 'Event\'s Transactions',
+                previewButtonTitle: 'Preview',
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       events[index].title,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 18),
+                      style: Theme.of(context).textTheme.displayLarge,
                     ),
-                    Text(
-                      'on ${DateFormat.yMMMd().format(events[index].date)}',
-                      style: const TextStyle(fontSize: 12),
+                    Gap(3),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'on: ',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          TextSpan(
+                            text: DateFormat.yMMMEd().format(
+                              events[index].date,
+                            ),
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

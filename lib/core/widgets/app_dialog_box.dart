@@ -27,7 +27,7 @@ class AppDialogBox extends StatelessWidget {
             children: [
               ListView(
                 children: [
-                  Text(title, style: TextStyle(fontSize: 22)),
+                  Text(title, style: Theme.of(context).textTheme.displayLarge),
                   Gap(18),
                   ...children,
                 ],
@@ -50,6 +50,7 @@ class AppDialogBox extends StatelessWidget {
                               child: Text(
                                 'Submit',
                                 textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.displayLarge,
                               ),
                             ),
                           ),
@@ -58,7 +59,10 @@ class AppDialogBox extends StatelessWidget {
                         TextButton(
                           onPressed: () => context.pop(),
 
-                          child: Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
                         ),
                       ],
                     ),

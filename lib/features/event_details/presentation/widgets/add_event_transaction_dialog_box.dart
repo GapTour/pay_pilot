@@ -2,40 +2,37 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:pay_pilot/core/data/models/event_details_model.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/event_transactions/data/transaction_edit_form.dart';
+import 'package:pay_pilot/features/event_details/data/transaction_form.dart';
 
-class EditEventTransactionDialogBox extends StatefulWidget {
-  final Transactions transaction;
+class AddEventTransactionDialogBox extends StatefulWidget {
   final int eventID;
-  final Function(TransactionEditForm transaction) onPressedSubmit;
-  const EditEventTransactionDialogBox({
+  final Function(TransactionForm transaction) onPressedSubmit;
+  const AddEventTransactionDialogBox({
     super.key,
-    required this.transaction,
     required this.eventID,
     required this.onPressedSubmit,
   });
 
   @override
-  State<EditEventTransactionDialogBox> createState() =>
-      _EditEventTransactionDialogBoxState();
+  State<AddEventTransactionDialogBox> createState() =>
+      _AddEventTransactionDialogBoxState();
 }
 
-class _EditEventTransactionDialogBoxState
-    extends State<EditEventTransactionDialogBox> {
+class _AddEventTransactionDialogBoxState
+    extends State<AddEventTransactionDialogBox> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  late TransactionType transactionType;
-  late DateTime? selectedDate;
+  TransactionType? transactionType;
+  DateTime? selectedDate;
   bool isNotSelected = false;
 
   final transactionTypes = [TransactionType.expense, TransactionType.income];
@@ -49,29 +46,16 @@ class _EditEventTransactionDialogBoxState
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    descriptionController.text = widget.transaction.description ?? '';
-    amountController.text = AmountHelper.integerToFormattedPrice(
-      widget.transaction.amount,
-    );
-    dateController.text = DateFormat.MEd().format(widget.transaction.date);
-    selectedDate = widget.transaction.date;
-    transactionType = widget.transaction.transactionType;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return AppDialogBox(
-      title: 'Edit Transaction',
+      title: 'Add New Transaction',
       children: [
         AppDropDownButton<TransactionType>(
           label: 'Transaction Type',
           hint: 'Select a type',
           showWarning: isNotSelected,
           value: transactionTypes.firstWhereOrNull((element) {
-            return element.name == transactionType.name;
+            return element.name == transactionType?.name;
           }),
           onChanged: (value) {
             if (value != null) {
@@ -141,10 +125,14 @@ class _EditEventTransactionDialogBoxState
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final transaction = TransactionEditForm(
-          id: widget.transaction.id,
+        if (transactionType == null) {
+          isNotSelected = true;
+          setState(() {});
+          return;
+        }
+        final transaction = TransactionForm(
           eventID: widget.eventID,
-          transactionType: transactionType,
+          transactionType: transactionType!,
           amount: AmountHelper.formattedPriceToInteger(amountController.text),
           description: descriptionController.text,
           date: selectedDate!,

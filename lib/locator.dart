@@ -6,8 +6,8 @@ import 'package:pay_pilot/core/database/daos/ratio_dao/ratio_dao.dart';
 import 'package:pay_pilot/core/database/daos/report_dao/report_dao.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
 import 'package:pay_pilot/core/database/platform/platfrom.dart';
-import 'package:pay_pilot/features/event_transactions/data/transaction_db_provider.dart';
-import 'package:pay_pilot/features/event_transactions/repository/transaction_repository.dart';
+import 'package:pay_pilot/features/event_details/data/event_details_db_provider.dart';
+import 'package:pay_pilot/features/event_details/repository/event_details_repository.dart';
 import 'package:pay_pilot/features/events/data/event_db_provider.dart';
 import 'package:pay_pilot/features/events/repository/event_repository.dart';
 import 'package:pay_pilot/features/member_details/data/member_details_db_provider.dart';
@@ -54,8 +54,8 @@ void _callProviders() {
   locator.registerLazySingleton<EventDbProvider>(
     () => EventDbProvider(locator(), locator()),
   );
-  locator.registerLazySingleton<TransactionDbProvider>(
-    () => TransactionDbProvider(locator()),
+  locator.registerLazySingleton<EventDetailsDbProvider>(
+    () => EventDetailsDbProvider(locator(), locator()),
   );
   locator.registerLazySingleton<TeamsDbProvider>(
     () => TeamsDbProvider(locator()),
@@ -81,8 +81,8 @@ void _callRepositories() {
   locator.registerLazySingleton<EventRepository>(
     () => EventRepository(locator()),
   );
-  locator.registerLazySingleton<TransactionRepository>(
-    () => TransactionRepository(locator()),
+  locator.registerLazySingleton<EventDetailsRepository>(
+    () => EventDetailsRepository(locator()),
   );
   locator.registerLazySingleton<TeamRepository>(
     () => TeamRepository(locator()),

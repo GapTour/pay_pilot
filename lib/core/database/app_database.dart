@@ -6,6 +6,7 @@ import 'package:pay_pilot/core/database/daos/report_dao/report_dao.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
 import 'package:pay_pilot/core/database/schema_versions.dart';
 import 'package:pay_pilot/core/database/tables/collect_report_events.dart';
+import 'package:pay_pilot/core/database/tables/event_ratios.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/database/tables/events.dart';
 import 'package:pay_pilot/core/database/tables/members.dart';
@@ -24,6 +25,7 @@ part 'app_database.g.dart';
     Teams,
     CollectReportEvents,
     EventTransactions,
+    EventRatios,
   ],
   daos: [ReportDao, RatioDao, EventDao, TeamDao, MemberDao],
 )
@@ -31,7 +33,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -74,6 +76,9 @@ class AppDatabase extends _$AppDatabase {
           if (await columnExists('reports', 'totalBalance')) {
             await m.dropColumn(schema.reports, 'totalBalance');
           }
+        },
+        from2To3: (m, schema) async {
+          await m.createTable(schema.eventRatios);
         },
       ),
       beforeOpen: (openingDetails) async {

@@ -75,7 +75,10 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
             children: [
               Column(
                 children: [
-                  Text('Create new report', style: TextStyle(fontSize: 22)),
+                  Text(
+                    'Create new report',
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
                   Gap(18),
                   Expanded(
                     child: PageView(
@@ -157,7 +160,7 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                           Text(
                             'Select event please!',
                             textAlign: TextAlign.left,
-                            style: TextStyle(color: Colors.red),
+                            style: TextStyle(color: kErrorColor),
                           ),
                         Gap(5),
                         Row(
@@ -182,6 +185,9 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                               },
                               child: Text(
                                 pageIndex == 0 ? 'Cancel' : 'Previous',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.displayMedium,
                               ),
                             ),
                             Gap(8),
@@ -237,6 +243,9 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                   child: Text(
                                     pageIndex == 2 ? 'Generate' : 'Next',
                                     textAlign: TextAlign.center,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.displayLarge,
                                   ),
                                 ),
                               ),

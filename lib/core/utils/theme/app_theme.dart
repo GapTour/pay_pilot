@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-const Color kPrimaryColor = Color(0xFF0D1B2A);
-const Color kOnPrimaryColor = Color(0xFFF5F0E1);
-const Color kSecondaryColor = Color(0xFFE76F51);
+const Color kPrimaryColor = Color(0xFF00192a);
+const Color kPrimaryContainerColor = Color(0xFFdeeaf2);
+const Color kOnPrimaryColor = Color(0xFFf1edbe);
+const Color kSecondaryColor = Color(0xFFf7941d);
 const Color kOnSecondaryColor = Color(0xFFFFFFFF);
-const Color kErrorColor = Color(0xFFD62828);
+const Color kErrorColor = Color(0xFF760d17);
 
 final ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme(
@@ -23,8 +24,22 @@ final ThemeData appTheme = ThemeData(
     headlineLarge: TextStyle(
       fontWeight: FontWeight.bold,
       color: kOnPrimaryColor,
+      fontSize: 15,
     ),
-    bodyMedium: TextStyle(color: kOnPrimaryColor),
+    headlineSmall: TextStyle(
+      color: kOnPrimaryColor,
+      fontSize: 11,
+      fontWeight: FontWeight.bold,
+    ),
+    bodyMedium: TextStyle(
+      color: kSecondaryColor,
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+    ),
+    bodySmall: TextStyle(color: kSecondaryColor, fontSize: 11),
+    displayLarge: TextStyle(color: kPrimaryContainerColor, fontSize: 16),
+    displayMedium: TextStyle(color: kPrimaryContainerColor, fontSize: 12.5),
+    labelMedium: TextStyle(color: kPrimaryContainerColor, fontSize: 11),
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: kPrimaryColor,

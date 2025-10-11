@@ -17,32 +17,52 @@ class MainScreen extends StatelessWidget {
         child: Stack(
           children: [
             GridView(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 150,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
               children: [
                 AppElevatedButton(
-                  child: Center(child: Text('Members')),
+                  child: Center(
+                    child: Text(
+                      'Members',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
                   onTap: () {
                     context.pushNamed(AppRoutes.membersScreen);
                   },
                 ),
                 AppElevatedButton(
-                  child: Center(child: Text('Teams')),
+                  child: Center(
+                    child: Text(
+                      'Teams',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
                   onTap: () {
                     context.pushNamed(AppRoutes.teamsScreen);
                   },
                 ),
                 AppElevatedButton(
-                  child: Center(child: Text('Events')),
+                  child: Center(
+                    child: Text(
+                      'Events',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
                   onTap: () {
                     context.pushNamed(AppRoutes.eventsScreen);
                   },
                 ),
                 AppElevatedButton(
-                  child: Center(child: Text('Reports')),
+                  child: Center(
+                    child: Text(
+                      'Reports',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
                   onTap: () {
                     context.pushNamed(AppRoutes.reportsScreen);
                   },
@@ -50,13 +70,13 @@ class MainScreen extends StatelessWidget {
               ],
             ),
             Positioned(
-              bottom: 0,
+              bottom: 15,
               right: 0,
               left: 0,
               child: Text(
-                'Version 1.2.0',
+                'Version 1.3.0',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.grey, fontSize: 9),
               ),
             ),
           ],

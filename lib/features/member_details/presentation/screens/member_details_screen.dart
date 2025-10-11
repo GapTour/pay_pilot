@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
+import 'package:pay_pilot/core/utils/extensions/empty_text.dart';
 import 'package:pay_pilot/features/member_details/presentation/cubit/members_details_cubit.dart';
 
 class MemberDetailsScreen extends StatefulWidget {
@@ -37,29 +38,39 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               children: [
                 Text(
                   memberDetail.name,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
-                Gap(12),
+                Gap(8),
                 Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: 'Join at: '),
+                      TextSpan(
+                        text: 'Join at:  ',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
                       TextSpan(
                         text: memberDetail.joinAt == null
                             ? '-'
                             : DateFormat.MMMMEEEEd().format(
                                 memberDetail.joinAt!,
                               ),
+                        style: Theme.of(context).textTheme.displayMedium,
                       ),
                     ],
                   ),
                 ),
-                Gap(12),
+                Gap(5),
                 Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: 'Description: '),
-                      TextSpan(text: memberDetail.description ?? '-'),
+                      TextSpan(
+                        text: 'Description:  ',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      TextSpan(
+                        text: memberDetail.description.defaultEmptyText(),
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
                     ],
                   ),
                 ),

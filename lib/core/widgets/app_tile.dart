@@ -52,7 +52,7 @@ class _AppTileState extends State<AppTile> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: kOnSecondaryColor.withAlpha(80),
+              color: kPrimaryContainerColor,
               spreadRadius: .3,
               blurRadius: 3,
               offset: Offset(1, 1),
@@ -94,6 +94,7 @@ class _AppTileState extends State<AppTile> {
                             child: Text(
                               widget.previewButtonTitle ?? 'Preview',
                               textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.labelMedium,
                             ),
                           ),
                         ),
@@ -108,7 +109,10 @@ class _AppTileState extends State<AppTile> {
                             horizontal: 25.0,
                             vertical: 5,
                           ),
-                          child: Text('Edit'),
+                          child: Text(
+                            'Edit',
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
                         ),
                       ),
                     if (widget.onDelete != null) ...[
@@ -119,16 +123,29 @@ class _AppTileState extends State<AppTile> {
                             builder: (context) {
                               return AlertDialog(
                                 backgroundColor: kPrimaryColor,
-                                title: Text('Are sure about this action?'),
+                                title: Text(
+                                  'Are sure about this action?',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.displayLarge,
+                                ),
                                 content: Text(
                                   'Notice that if you used this item, it effects those and delete all data that related to this item too.',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.displayMedium,
                                 ),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       context.pop();
                                     },
-                                    child: Text('Cancel'),
+                                    child: Text(
+                                      'Cancel',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.displayMedium,
+                                    ),
                                   ),
                                   AppElevatedButton(
                                     onTap: () {
@@ -143,6 +160,10 @@ class _AppTileState extends State<AppTile> {
                                       child: Text(
                                         'Delete',
                                         textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium!
+                                            .copyWith(color: kErrorColor),
                                       ),
                                     ),
                                   ),
@@ -156,7 +177,7 @@ class _AppTileState extends State<AppTile> {
                           child: Icon(
                             Icons.delete_outline_rounded,
                             color: kErrorColor,
-                            size: 20,
+                            size: 16,
                           ),
                         ),
                       ),

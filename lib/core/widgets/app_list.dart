@@ -21,7 +21,12 @@ class AppList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (itemCount == 0) {
-      return Center(child: Text(emptyInboxMessage));
+      return Center(
+        child: Text(
+          emptyInboxMessage,
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+      );
     }
     return ListView.separated(
       itemCount: itemCount,

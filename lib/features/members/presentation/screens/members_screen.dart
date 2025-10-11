@@ -49,7 +49,7 @@ class _MembersScreenState extends State<MembersScreen> {
             emptyInboxMessage: 'There is no member yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 66,
+                height: 56,
                 onPreview: () {
                   context.pushNamed(
                     AppRoutes.memberDetailsScreen,
@@ -77,20 +77,30 @@ class _MembersScreenState extends State<MembersScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(members[index].name, style: TextStyle(fontSize: 16)),
+                    Text(
+                      members[index].name,
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
                     Gap(3),
                     Text.rich(
                       TextSpan(
                         children: [
-                          TextSpan(text: 'Join at: '),
+                          TextSpan(
+                            text: 'Join at: ',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
                           if (members[index].joinAt != null)
                             TextSpan(
                               text: DateFormat.yMMMEd().format(
                                 members[index].joinAt!,
                               ),
+                              style: Theme.of(context).textTheme.displayMedium,
                             )
                           else
-                            TextSpan(text: '-'),
+                            TextSpan(
+                              text: '-',
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
                         ],
                       ),
                     ),

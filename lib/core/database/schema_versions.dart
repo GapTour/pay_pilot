@@ -356,8 +356,149 @@ i1.GeneratedColumn<String> _column_15(String aliasedName) =>
       false,
       type: i1.DriftSqlType.string,
     );
+
+final class Schema3 extends i0.VersionedSchema {
+  Schema3({required super.database}) : super(version: 3);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    teams,
+    events,
+    members,
+    reports,
+    ratios,
+    collectReportEvents,
+    eventTransactions,
+    eventRatios,
+  ];
+  late final Shape0 teams = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'teams',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_0, _column_1, _column_2, _column_3],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 events = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_4,
+        _column_5,
+        _column_3,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 members = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'members',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_0, _column_6, _column_2, _column_7, _column_3],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape3 reports = Shape3(
+    source: i0.VersionedTable(
+      entityName: 'reports',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_8,
+        _column_2,
+        _column_9,
+        _column_3,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 ratios = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'ratios',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_0, _column_10, _column_4, _column_11, _column_3],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 collectReportEvents = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'collect_report_events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_0, _column_12, _column_13, _column_3],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape6 eventTransactions = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'event_transactions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_2,
+        _column_14,
+        _column_15,
+        _column_12,
+        _column_5,
+        _column_3,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape7 eventRatios = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'event_ratios',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_0, _column_10, _column_12, _column_11, _column_3],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape7 extends i0.VersionedTable {
+  Shape7({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get memberID =>
+      columnsByName['member_i_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get eventID =>
+      columnsByName['event_i_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<double> get ratio =>
+      columnsByName['ratio']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<DateTime> get createAt =>
+      columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+}
+
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -366,6 +507,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from1To2(migrator, schema);
         return 2;
+      case 2:
+        final schema = Schema3(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from2To3(migrator, schema);
+        return 3;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -374,6 +520,7 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) => i0.VersionedSchema.stepByStepHelper(
-  step: migrationSteps(from1To2: from1To2),
+  step: migrationSteps(from1To2: from1To2, from2To3: from2To3),
 );
