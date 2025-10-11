@@ -70,9 +70,13 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
               ))
               .get();
 
-      final ratioQuery = select(
-        eventRatios,
-      ).join([innerJoin(members, members.id.equalsExp(eventRatios.memberID))]);
+      final ratioQuery =
+          (select(eventRatios)..where(
+                (tbl) => tbl.eventID.equals(eventRow.readTable(events).id),
+              ))
+              .join([
+                innerJoin(members, members.id.equalsExp(eventRatios.memberID)),
+              ]);
       final rawRatios = await ratioQuery.get();
 
       final List<TransactionModel> transactions = rawTransactions.map((e) {
@@ -105,6 +109,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
     final membersBalance = await CalculatorHelper.salaries(
       eventDetails: eventDetails,
     );
+    membersBalance.sort((a, b) => b.totalBalance.compareTo(a.totalBalance));
 
     return membersBalance;
   }
