@@ -24,8 +24,22 @@ final ThemeData appTheme = ThemeData(
     headlineLarge: TextStyle(
       fontWeight: FontWeight.bold,
       color: kOnPrimaryColor,
+      fontSize: 15,
     ),
-    bodyMedium: TextStyle(color: kOnPrimaryColor),
+    headlineSmall: TextStyle(
+      color: kOnPrimaryColor,
+      fontSize: 11,
+      fontWeight: FontWeight.bold,
+    ),
+    bodyMedium: TextStyle(
+      color: kSecondaryColor,
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+    ),
+    bodySmall: TextStyle(color: kSecondaryColor, fontSize: 11),
+    displayLarge: TextStyle(color: kPrimaryContainerColor, fontSize: 16),
+    displayMedium: TextStyle(color: kPrimaryContainerColor, fontSize: 12.5),
+    labelMedium: TextStyle(color: kPrimaryContainerColor, fontSize: 11),
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: kPrimaryColor,
