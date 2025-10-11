@@ -101,7 +101,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
                       Positioned(
                         right: 12,
                         left: 12,
-                        top: 18,
+                        top: 16,
                         child: DecoratedBox(
                           decoration: BoxDecoration(
                             color: Colors.black12,
@@ -129,7 +129,12 @@ class _SelectingEventsState extends State<SelectingEvents> {
                                   setState(() {});
                                 },
                                 children: months.entries.map((e) {
-                                  return Text(e.value);
+                                  return Text(
+                                    e.value,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.displayLarge,
+                                  );
                                 }).toList(),
                               ),
                             ),
@@ -144,7 +149,12 @@ class _SelectingEventsState extends State<SelectingEvents> {
                                 physics: FixedExtentScrollPhysics(),
                                 controller: yearController,
                                 children: years.map((e) {
-                                  return Text(e.toString());
+                                  return Text(
+                                    e.toString(),
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.displayLarge,
+                                  );
                                 }).toList(),
                                 onSelectedItemChanged: (value) {
                                   selectedYear = value + 2024;
@@ -189,6 +199,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
                       child: Center(
                         child: Text(
                           'No events found on ${months[selectedMonth]}, $selectedYear',
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                       ),
                     );
@@ -223,7 +234,9 @@ class _SelectingEventsState extends State<SelectingEvents> {
                         return DecoratedBox(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            border: BoxBorder.all(color: kOnPrimaryColor),
+                            border: BoxBorder.all(
+                              color: kPrimaryContainerColor,
+                            ),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -245,7 +258,9 @@ class _SelectingEventsState extends State<SelectingEvents> {
                                     child: Text(
                                       events[index].title,
                                       textAlign: TextAlign.left,
-                                      style: const TextStyle(fontSize: 18),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.displayLarge,
                                     ),
                                   ),
                                 ],
@@ -264,17 +279,28 @@ class _SelectingEventsState extends State<SelectingEvents> {
                                       DateFormat.MMMEd().format(
                                         events[index].date,
                                       ),
-                                      style: const TextStyle(fontSize: 14),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.displayMedium,
                                     ),
+                                    Gap(5),
                                     Text.rich(
                                       TextSpan(
                                         children: [
-                                          TextSpan(text: 'Income: '),
+                                          TextSpan(
+                                            text: 'Income:  ',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.headlineSmall,
+                                          ),
                                           TextSpan(
                                             text:
                                                 AmountHelper.integerToFormattedPrice(
                                                   totalIncome,
                                                 ),
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.displayLarge,
                                           ),
                                         ],
                                       ),
@@ -282,12 +308,20 @@ class _SelectingEventsState extends State<SelectingEvents> {
                                     Text.rich(
                                       TextSpan(
                                         children: [
-                                          TextSpan(text: 'Expense: '),
+                                          TextSpan(
+                                            text: 'Expense:  ',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.headlineSmall,
+                                          ),
                                           TextSpan(
                                             text:
                                                 AmountHelper.integerToFormattedPrice(
                                                   totalExpense,
                                                 ),
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.displayLarge,
                                           ),
                                         ],
                                       ),

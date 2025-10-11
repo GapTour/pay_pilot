@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/features/teams/data/team_edit_form.dart';
 
@@ -43,71 +44,43 @@ class _EditTeamDialogBoxState extends State<EditTeamDialogBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: SizedBox(
-        width: 780,
-        height: 507,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Edit Team', style: TextStyle(fontSize: 22)),
-              Gap(18),
-
-              Form(
-                key: formKey,
-                child: AppTextField(
-                  label: 'Title',
-                  hint: 'Movie Analyze',
-                  controller: titleController,
-                  keyboardType: TextInputType.name,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '*Required';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Gap(12),
-
-              AppTextField(
-                label: 'Description (optional)',
-                controller: descriptionController,
-                minLines: 3,
-                maxLines: 4,
-              ),
-              Spacer(),
-              Gap(16),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (!formKey.currentState!.validate()) return;
-                        final member = TeamEditForm(
-                          id: teamID,
-                          title: titleController.text,
-                          description: descriptionController.text,
-                        );
-                        widget.onPressedSubmit(member);
-                        context.pop();
-                      },
-                      child: Text('Submit'),
-                    ),
-                  ),
-                  Gap(8),
-                  TextButton(
-                    onPressed: () => context.pop(),
-                    child: Text('Cancel'),
-                  ),
-                ],
-              ),
-            ],
+    return AppDialogBox(
+      title: 'Edit Team',
+      children: [
+        Form(
+          key: formKey,
+          child: AppTextField(
+            label: 'Title',
+            hint: 'Movie Analyze',
+            controller: titleController,
+            keyboardType: TextInputType.name,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return '*Required';
+              }
+              return null;
+            },
           ),
         ),
-      ),
+        Gap(12),
+
+        AppTextField(
+          label: 'Description (optional)',
+          controller: descriptionController,
+          minLines: 3,
+          maxLines: 4,
+        ),
+      ],
+      onPressed: () {
+        if (!formKey.currentState!.validate()) return;
+        final member = TeamEditForm(
+          id: teamID,
+          title: titleController.text,
+          description: descriptionController.text,
+        );
+        widget.onPressedSubmit(member);
+        context.pop();
+      },
     );
   }
 }

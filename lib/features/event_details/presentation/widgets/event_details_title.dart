@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/data/models/event_details_model.dart';
+import 'package:pay_pilot/core/utils/extensions/empty_text.dart';
 import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
 
 class EventDetailsTitle extends StatelessWidget {
@@ -32,14 +33,20 @@ class EventDetailsTitle extends StatelessWidget {
           children: [
             Text(
               eventDetails.title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
             Gap(12),
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: 'Engaged Team: '),
-                  TextSpan(text: eventDetails.team.title),
+                  TextSpan(
+                    text: 'Engaged Team:  ',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  TextSpan(
+                    text: eventDetails.team.title,
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
                 ],
               ),
             ),
@@ -47,17 +54,29 @@ class EventDetailsTitle extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: 'Date: '),
-                  TextSpan(text: DateFormat.yMEd().format(eventDetails.date)),
+                  TextSpan(
+                    text: 'Date:  ',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  TextSpan(
+                    text: DateFormat.yMEd().format(eventDetails.date),
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
                 ],
               ),
             ),
-            Gap(12),
+            Gap(5),
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: 'Description: '),
-                  TextSpan(text: eventDetails.description ?? '-'),
+                  TextSpan(
+                    text: 'Description:  ',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  TextSpan(
+                    text: eventDetails.description.defaultEmptyText(),
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
                 ],
               ),
             ),

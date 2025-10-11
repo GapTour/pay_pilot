@@ -55,10 +55,12 @@ class _BalanceBannerState extends State<BalanceBanner> {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: kSecondaryColor.withAlpha(200),
+        color: kSecondaryColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -67,17 +69,24 @@ class _BalanceBannerState extends State<BalanceBanner> {
               children: [
                 Text(
                   'Selected Events',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.displayLarge!.copyWith(color: kPrimaryColor),
                 ),
                 Gap(8),
                 Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: 'Total Income: '),
+                      TextSpan(
+                        text: 'Total Income:  ',
+                        style: Theme.of(context).textTheme.headlineSmall!
+                            .copyWith(color: kPrimaryColor),
+                      ),
                       TextSpan(
                         text: AmountHelper.integerToFormattedPrice(
                           totalIncomes,
                         ),
+                        style: Theme.of(context).textTheme.displayMedium,
                       ),
                     ],
                   ),
@@ -85,11 +94,16 @@ class _BalanceBannerState extends State<BalanceBanner> {
                 Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: 'Total Expense: '),
+                      TextSpan(
+                        text: 'Total Expense:  ',
+                        style: Theme.of(context).textTheme.headlineSmall!
+                            .copyWith(color: kPrimaryColor),
+                      ),
                       TextSpan(
                         text: AmountHelper.integerToFormattedPrice(
                           totalExpenses,
                         ),
+                        style: Theme.of(context).textTheme.displayMedium,
                       ),
                     ],
                   ),
@@ -97,11 +111,16 @@ class _BalanceBannerState extends State<BalanceBanner> {
                 Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: 'Total Balance: '),
+                      TextSpan(
+                        text: 'Total Balance:  ',
+                        style: Theme.of(context).textTheme.headlineSmall!
+                            .copyWith(color: kPrimaryColor),
+                      ),
                       TextSpan(
                         text: AmountHelper.integerToFormattedPrice(
                           totalIncomes - totalExpenses,
                         ),
+                        style: Theme.of(context).textTheme.displayMedium,
                       ),
                     ],
                   ),
@@ -113,7 +132,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
           Gap(2),
 
           SizedBox(
-            height: 78,
+            height: 65,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 9),
@@ -124,7 +143,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
                 final event = widget.events[index];
 
                 return SizedBox(
-                  width: 130,
+                  width: 158,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: kPrimaryColor,
@@ -141,14 +160,18 @@ class _BalanceBannerState extends State<BalanceBanner> {
                           Text(
                             event.title,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: kSecondaryColor),
+                            style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           Gap(5),
                           Text(
                             event.team.title,
                             overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.displayMedium,
                           ),
-                          Text(DateFormat.MMMEd().format(event.date)),
+                          Text(
+                            DateFormat.MMMEd().format(event.date),
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
                         ],
                       ),
                     ),

@@ -29,19 +29,12 @@ class AppDropDownButton<T> extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (label != null) ...[
-            Text(
-              label!,
-              style: TextStyle(
-                // color: _hasFocus ? Colors.white : Colors.green,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            Text(label!, style: Theme.of(context).textTheme.labelMedium),
             const Gap(6),
           ],
           DecoratedBox(
             decoration: BoxDecoration(
-              border: BoxBorder.all(color: kOnPrimaryColor),
+              border: BoxBorder.all(color: kPrimaryContainerColor),
               borderRadius: BorderRadius.circular(8),
             ),
             child: DropdownButton<T>(
@@ -55,8 +48,16 @@ class AppDropDownButton<T> extends StatelessWidget {
               menuWidth: 320,
               underline: const SizedBox(),
               isExpanded: true,
-              hint: Text(hint ?? 'Select a item'),
+              hint: Text(
+                hint ?? 'Select a item',
+                style: TextStyle(
+                  color: kOnPrimaryColor.withAlpha(100),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
               padding: EdgeInsets.symmetric(horizontal: 14),
+              style: Theme.of(context).textTheme.displayLarge,
               icon: Icon(
                 Icons.arrow_drop_down_circle_rounded,
                 color: kSecondaryColor,

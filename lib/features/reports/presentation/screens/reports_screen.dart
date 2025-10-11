@@ -48,7 +48,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             emptyInboxMessage: 'There is no report yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 70,
+                height: 56,
                 onPreview: () {
                   context.pushNamed(
                     AppRoutes.reportDetailsScreen,
@@ -67,7 +67,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     Text(
                       reports[index].title,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 16),
+                      style: Theme.of(context).textTheme.displayLarge,
                     ),
                     Gap(3),
                     Row(
@@ -78,14 +78,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               reports[index].generateFor,
                             ),
                             textAlign: TextAlign.left,
-                            style: const TextStyle(fontSize: 13),
+                            style: Theme.of(context).textTheme.headlineSmall,
                           ),
                         ),
 
                         Text(
                           'V ${reports[index].version}',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 12),
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),

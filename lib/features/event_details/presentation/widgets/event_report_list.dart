@@ -40,7 +40,7 @@ class _EventReportListState extends State<EventReportList> {
           emptyInboxMessage: 'There is no ratios yet!',
           itemBuilder: (context, index) {
             return AppTile(
-              height: 70,
+              height: 56,
               isActive: false,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,16 +48,21 @@ class _EventReportListState extends State<EventReportList> {
                   Text(
                     memberBalances[index].member.name,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 18),
+                    style: Theme.of(context).textTheme.displayLarge,
                   ),
                   Row(
                     children: [
-                      Expanded(child: Text('Salary ')),
+                      Expanded(
+                        child: Text(
+                          'Salary ',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ),
                       Text(
                         AmountHelper.integerToFormattedPrice(
                           memberBalances[index].totalBalance,
                         ),
-                        style: const TextStyle(fontSize: 15),
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ],
                   ),

@@ -33,7 +33,7 @@ class EventRatiosList extends StatelessWidget {
           emptyInboxMessage: 'There is no ratios yet!',
           itemBuilder: (context, index) {
             return AppTile(
-              height: 75,
+              height: 38,
               onEdit: () {
                 showDialog(
                   context: context,
@@ -62,12 +62,12 @@ class EventRatiosList extends StatelessWidget {
                       ratios[index].member.name,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 18),
+                      style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),
                   Text(
-                    '%${ratios[index].ratio}',
-                    style: const TextStyle(fontSize: 18),
+                    '% ${ratios[index].ratio}',
+                    style: Theme.of(context).textTheme.displayLarge,
                   ),
                 ],
               ),

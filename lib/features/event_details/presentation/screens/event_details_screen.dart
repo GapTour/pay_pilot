@@ -65,7 +65,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           late IconData icon;
 
           if (state.currentPage.isTransactions) icon = Icons.add_card_rounded;
-          if (state.currentPage.isMembers) icon = Icons.rate_review_rounded;
+          if (state.currentPage.isMembers) icon = Icons.edit_document;
           if (state.currentPage.isReport) {
             return SizedBox.shrink();
           }

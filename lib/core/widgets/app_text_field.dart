@@ -89,14 +89,7 @@ class _AppTextFieldState extends State<AppTextField> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.label!,
-            style: TextStyle(
-              // color: _hasFocus ? Colors.white : Colors.green,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          Text(widget.label!, style: Theme.of(context).textTheme.labelMedium),
           const Gap(6),
           if (widget.validatorText == null)
             _customTextFormField(context)
@@ -126,11 +119,7 @@ class _AppTextFieldState extends State<AppTextField> {
             (s) {
               FocusScope.of(ctx).requestFocus(widget.nextFocusNode);
             },
-        style: TextStyle(
-          // color: AppColors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.w400,
-        ),
+        style: Theme.of(context).textTheme.displayLarge,
 
         maxLength: widget.maxLength,
         readOnly: widget.readOnly,
@@ -172,13 +161,13 @@ class _AppTextFieldState extends State<AppTextField> {
           //       : AppColors.accentWarning900,
           // ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.outlineVariant,
-            ),
+            borderSide: BorderSide(color: kPrimaryContainerColor),
             borderRadius: const BorderRadius.all(Radius.circular(8)),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: kOnPrimaryColor.withAlpha(100)),
+            borderSide: BorderSide(
+              color: kPrimaryContainerColor.withAlpha(100),
+            ),
             borderRadius: const BorderRadius.all(Radius.circular(8)),
           ),
           errorBorder: OutlineInputBorder(
@@ -196,7 +185,11 @@ class _AppTextFieldState extends State<AppTextField> {
               ? null
               : Padding(
                   padding: const EdgeInsets.only(left: 10.0),
-                  child: Icon(widget.prefixIcon, size: 15),
+                  child: Icon(
+                    widget.prefixIcon,
+                    size: 15,
+                    color: kPrimaryContainerColor,
+                  ),
                 ),
           // prefixIconColor: AppColors.mediumGray,
           prefixIconConstraints: const BoxConstraints(

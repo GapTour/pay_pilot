@@ -36,7 +36,7 @@ class EventTransactionsList extends StatelessWidget {
           emptyInboxMessage: 'There is no transaction yet!',
           itemBuilder: (context, index) {
             return AppTile(
-              height: 75,
+              height: 62,
               onEdit: () {
                 showDialog(
                   context: context,
@@ -69,16 +69,31 @@ class EventTransactionsList extends StatelessWidget {
                             transactions[index].amount,
                           ),
                           textAlign: TextAlign.left,
-                          style: const TextStyle(fontSize: 18),
+                          style: Theme.of(context).textTheme.headlineLarge,
                         ),
                       ),
-                      Text(transactions[index].transactionType.name),
+                      Text(
+                        transactions[index].transactionType.name,
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
                     ],
                   ),
                   Gap(5),
-                  Text(
-                    'on ${DateFormat.MMMEd().format(transactions[index].date)}',
-                    style: const TextStyle(fontSize: 14),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'on  ',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        TextSpan(
+                          text: DateFormat.yMMMEd().format(
+                            transactions[index].date,
+                          ),
+                          style: Theme.of(context).textTheme.displayMedium,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

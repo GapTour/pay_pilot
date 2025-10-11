@@ -47,7 +47,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
             emptyInboxMessage: 'There is no team yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 46,
+                height: 40,
                 previewButtonTitle: 'Team\'s Members',
                 onPreview: () {
                   context.pushNamed(
@@ -77,7 +77,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
                   teams[index].title,
                   textAlign: TextAlign.left,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 18),
+                  style: Theme.of(context).textTheme.displayLarge,
                 ),
               );
             },

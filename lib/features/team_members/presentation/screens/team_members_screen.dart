@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
+import 'package:pay_pilot/core/utils/extensions/empty_text.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
@@ -54,14 +55,20 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
             children: [
               Text(
                 teamInfo.title,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
               Gap(12),
               Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: 'Description: '),
-                    TextSpan(text: teamInfo.description ?? '-'),
+                    TextSpan(
+                      text: 'Description:  ',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    TextSpan(
+                      text: teamInfo.description.defaultEmptyText(),
+                      style: Theme.of(context).textTheme.displayMedium,
+                    ),
                   ],
                 ),
               ),
@@ -77,7 +84,7 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                 emptyInboxMessage: 'There is no member yet!',
                 itemBuilder: (context, index) {
                   return AppTile(
-                    height: 46,
+                    height: 38,
                     onEdit: () {
                       showDialog(
                         context: context,
@@ -109,12 +116,12 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                             teamMembers[index].member.name,
                             textAlign: TextAlign.left,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 18),
+                            style: Theme.of(context).textTheme.displayLarge,
                           ),
                         ),
                         Text(
                           '%${teamMembers[index].ratio}',
-                          style: const TextStyle(fontSize: 18),
+                          style: Theme.of(context).textTheme.displayLarge,
                         ),
                       ],
                     ),

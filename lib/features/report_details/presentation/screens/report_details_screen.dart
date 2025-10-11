@@ -4,7 +4,6 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
-import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
 import 'package:pay_pilot/features/report_details/presentation/cubit/report_details_cubit.dart';
@@ -44,25 +43,28 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
               children: [
                 Text(
                   reportDetails.title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 Gap(12),
                 Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: 'This report generated for '),
+                      TextSpan(
+                        text: 'This report generated for ',
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
                       TextSpan(
                         text: DateFormat.yMMMM().format(
                           reportDetails.generateFor,
                         ),
-                        style: TextStyle(fontSize: 14),
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ],
                   ),
                 ),
                 Text(
                   'Version ${reportDetails.version}',
-                  style: TextStyle(fontSize: 14, color: kSecondaryColor),
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
                 Gap(12),
                 BalanceBanner(events: reportDetails.events),
@@ -76,7 +78,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                   emptyInboxMessage: '',
                   itemBuilder: (context, index) {
                     return AppTile(
-                      height: 70,
+                      height: 56,
                       isActive: false,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,18 +86,25 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                           Text(
                             reportDetails.membersBalance[index].member.name,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 18),
+                            style: Theme.of(context).textTheme.displayLarge,
                           ),
                           Row(
                             children: [
-                              Expanded(child: Text('Salary ')),
+                              Expanded(
+                                child: Text(
+                                  'Salary ',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineSmall,
+                                ),
+                              ),
                               Text(
                                 AmountHelper.integerToFormattedPrice(
                                   reportDetails
                                       .membersBalance[index]
                                       .totalBalance,
                                 ),
-                                style: const TextStyle(fontSize: 15),
+                                style: Theme.of(context).textTheme.displayLarge,
                               ),
                             ],
                           ),

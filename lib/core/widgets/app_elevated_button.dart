@@ -7,11 +7,13 @@ class AppElevatedButton extends StatefulWidget {
   final Size? size;
   final VoidCallback? onTap;
   final Widget child;
+  final bool isSelected;
   const AppElevatedButton({
     super.key,
     this.size,
     required this.onTap,
     required this.child,
+    this.isSelected = false,
   });
 
   @override
@@ -24,7 +26,7 @@ class _AppElevatedButtonState extends State<AppElevatedButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: widget.isSelected ? null : widget.onTap,
       onTapDown: (details) {
         isPressed = true;
         setState(() {});
@@ -38,7 +40,7 @@ class _AppElevatedButtonState extends State<AppElevatedButton> {
         child: ClayAnimatedContainer(
           borderRadius: 15,
           color: kPrimaryColor,
-          depth: isPressed ? 8 : 18,
+          depth: widget.isSelected || isPressed ? 8 : 18,
           width: widget.size?.width,
           height: widget.size?.height,
           duration: Duration(microseconds: 25),
