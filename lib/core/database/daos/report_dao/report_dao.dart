@@ -78,6 +78,23 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
                 innerJoin(members, members.id.equalsExp(eventRatios.memberID)),
               ]);
       final rawRatios = await ratioQuery.get();
+      final List<MemberRatioModel> memberRatios = [
+        ...rawRatios.map((e) {
+          return MemberRatioModel(
+            id: e.readTable(eventRatios).id,
+            ratio: e.readTable(eventRatios).ratio,
+            member: e.readTable(members),
+          );
+        }),
+      ];
+
+      if (memberRatios.isEmpty) {
+        memberRatios.addAll(
+          await _fetchMemberRatioFromTeamInfo(
+            eventRow.readTable(events).teamID,
+          ),
+        );
+      }
 
       final List<TransactionModel> transactions = rawTransactions.map((e) {
         return TransactionModel(
@@ -96,13 +113,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
           team: teamsInfo.firstWhere(
             (element) => element.id == eventRow.readTable(events).teamID,
           ),
-          memberRatios: rawRatios.map((e) {
-            return MemberRatioModel(
-              id: e.readTable(eventRatios).id,
-              ratio: e.readTable(eventRatios).ratio,
-              member: e.readTable(members),
-            );
-          }).toList(),
+          memberRatios: memberRatios,
         ),
       );
     }
@@ -112,6 +123,32 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
     membersBalance.sort((a, b) => b.totalBalance.compareTo(a.totalBalance));
 
     return membersBalance;
+  }
+
+  Future<List<MemberRatioModel>> _fetchMemberRatioFromTeamInfo(
+    int teamID,
+  ) async {
+    final teamQuery = (select(teams)..where((tbl) => tbl.id.equals(teamID)))
+        .join([innerJoin(ratios, ratios.teamID.equals(teamID))]);
+    final rawTeamRatios = await teamQuery.get();
+    final List<MemberRatioModel> memberRatios = [];
+
+    for (var row in rawTeamRatios) {
+      final Member memberInfo =
+          await (select(members)
+                ..where((tbl) => tbl.id.equals(row.readTable(ratios).memberID)))
+              .getSingle();
+
+      memberRatios.add(
+        MemberRatioModel(
+          id: row.readTable(ratios).id,
+          ratio: row.readTable(ratios).ratio,
+          member: memberInfo,
+        ),
+      );
+    }
+
+    return memberRatios;
   }
 
   Future<List<EventDetailsModel>> _collectTotalEvents(int reportID) async {
