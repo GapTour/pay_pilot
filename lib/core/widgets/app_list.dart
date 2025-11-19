@@ -33,7 +33,8 @@ class AppList extends StatelessWidget {
       shrinkWrap: shrinkWrap ?? false,
       physics: physics,
       padding:
-          padding ?? const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+          padding ??
+          const EdgeInsets.only(right: 18, left: 18, top: 12, bottom: 150),
       separatorBuilder: (context, index) => Gap(12),
       itemBuilder: itemBuilder,
     );
