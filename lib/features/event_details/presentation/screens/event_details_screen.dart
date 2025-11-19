@@ -38,27 +38,50 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Event Details')),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-        children: [
-          EventDetailsTitle(),
-          Gap(30),
-          BlocBuilder<EventDetailsCubit, EventDetailsState>(
-            buildWhen: (p, c) => p.currentPage != c.currentPage,
-            builder: (context, state) {
-              return Column(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+        child: Column(
+          children: [
+            EventDetailsTitle(),
+            Gap(30),
+            BlocBuilder<EventDetailsCubit, EventDetailsState>(
+              buildWhen: (p, c) => p.currentPage != c.currentPage,
+              builder: (context, state) {
+                return EventTabBar(state: state);
+              },
+            ),
+            Gap(25),
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 340,
+              child: ListView(
+                padding: EdgeInsets.only(
+                  bottom: 150,
+                  right: 5,
+                  left: 5,
+                  top: 8,
+                ),
                 children: [
-                  EventTabBar(state: state),
-                  Gap(25),
-                  if (state.currentPage.isTransactions)
-                    EventTransactionsList(eventID),
-                  if (state.currentPage.isMembers) EventRatiosList(eventID),
-                  if (state.currentPage.isReport) EventReportList(eventID),
+                  BlocBuilder<EventDetailsCubit, EventDetailsState>(
+                    buildWhen: (p, c) => p.currentPage != c.currentPage,
+                    builder: (context, state) {
+                      if (state.currentPage.isTransactions) {
+                        return EventTransactionsList(eventID);
+                      }
+                      if (state.currentPage.isMembers) {
+                        return EventRatiosList(eventID);
+                      }
+                      if (state.currentPage.isReport) {
+                        return EventReportList(eventID);
+                      }
+
+                      return SizedBox.shrink();
+                    },
+                  ),
                 ],
-              );
-            },
-          ),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: BlocBuilder<EventDetailsCubit, EventDetailsState>(
         builder: (context, state) {
