@@ -18,7 +18,9 @@ class MembersCubit extends Cubit<MembersState> {
 
     try {
       final members = await _repository.getAllMembers();
-      members.sort((a, b) => a.name.compareTo(b.name));
+      members.sort(
+        (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
 
       emit(
         state.copyWith(membersStatus: MembersStatus.success, members: members),
