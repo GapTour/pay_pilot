@@ -128,6 +128,7 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                   );
                 },
               ),
+              Gap(150),
             ],
           );
         },

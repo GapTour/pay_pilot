@@ -113,6 +113,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                     );
                   },
                 ),
+                Gap(45),
               ],
             );
           }
