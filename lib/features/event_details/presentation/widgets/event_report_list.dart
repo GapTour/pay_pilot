@@ -27,6 +27,7 @@ class _EventReportListState extends State<EventReportList> {
     return BlocBuilder<EventDetailsCubit, EventDetailsState>(
       builder: (context, state) {
         final List<BalanceModel> memberBalances = state.membersBalance;
+        memberBalances.sort((a, b) => b.totalBalance.compareTo(a.totalBalance));
 
         if (state.eventTabsStatus.isLoading) {
           return const Center(child: CircularProgressIndicator.adaptive());
