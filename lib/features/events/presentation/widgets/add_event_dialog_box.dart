@@ -1,11 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
+import 'package:pay_pilot/core/widgets/pick_date.dart';
 import 'package:pay_pilot/features/events/data/event_form.dart';
 
 class AddEventDialogBox extends StatefulWidget {
@@ -77,22 +78,19 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
               ),
               AppTextField(
                 label: 'Date',
-                hint: DateFormat.yMMMEd().format(DateTime.now()),
+                hint: DateTime.now().formattedToJalali_yearMonthDay,
                 controller: dateController,
                 keyboardType: TextInputType.datetime,
                 readOnly: true,
                 onTap: (focusNode) async {
-                  selectedDate = await showDatePicker(
-                    context: context,
-                    initialDate: selectedDate ?? DateTime.now(),
-                    firstDate: DateTime(2025),
-                    lastDate: DateTime(2100),
+                  PickDate.yearMonthAndDay(
+                    context,
+                    initDate: selectedDate,
+                    onSubmit: (pickedDate, formattedDate) {
+                      selectedDate = pickedDate;
+                      dateController.text = formattedDate;
+                    },
                   );
-                  if (selectedDate != null) {
-                    dateController.text = DateFormat.yMMMEd().format(
-                      selectedDate!,
-                    );
-                  }
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {

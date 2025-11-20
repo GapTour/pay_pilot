@@ -1,13 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
+import 'package:pay_pilot/core/widgets/pick_date.dart';
 import 'package:pay_pilot/features/event_details/data/transaction_form.dart';
 
 class AddEventTransactionDialogBox extends StatefulWidget {
@@ -89,22 +90,19 @@ class _AddEventTransactionDialogBoxState
               ),
               AppTextField(
                 label: 'Date',
-                hint: DateFormat.yMMMEd().format(DateTime.now()),
+                hint: DateTime.now().formattedToJalali_yearMonthDay,
                 controller: dateController,
                 keyboardType: TextInputType.datetime,
                 readOnly: true,
                 onTap: (focusNode) async {
-                  selectedDate = await showDatePicker(
-                    context: context,
-                    initialDate: selectedDate ?? DateTime.now(),
-                    firstDate: DateTime(2025),
-                    lastDate: DateTime(2100),
+                  PickDate.yearMonthAndDay(
+                    context,
+                    initDate: selectedDate,
+                    onSubmit: (pickedDate, formattedDate) {
+                      selectedDate = pickedDate;
+                      dateController.text = formattedDate;
+                    },
                   );
-                  if (selectedDate != null) {
-                    dateController.text = DateFormat.yMMMEd().format(
-                      selectedDate!,
-                    );
-                  }
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
