@@ -10,6 +10,7 @@ import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/features/reports/data/report_form.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/widgets/selecting_events.dart';
+import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class AddReportDialogBox extends StatefulWidget {
   final Report? report;
@@ -41,11 +42,10 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
 
   void generateVersion(BuildContext innerContext) {
     final reports = innerContext.read<ReportsCubit>().state.reports;
-
     final int reportLength =
         reports.where((element) {
-          return element.generateFor.month == selectedDate!.month &&
-              element.generateFor.year == selectedDate!.year;
+          return element.generateFor.toJalali().month == selectedDate!.month &&
+              element.generateFor.toJalali().year == selectedDate!.year;
         }).length +
         1;
 
@@ -212,10 +212,10 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                           versionController.text,
                                         ),
                                         description: descriptionController.text,
-                                        generateFor: DateTime(
+                                        generateFor: Jalali(
                                           selectedDate!.year,
                                           selectedDate!.month,
-                                        ),
+                                        ).toDateTime(),
                                         events: selectedEvents,
                                       ),
                                     );

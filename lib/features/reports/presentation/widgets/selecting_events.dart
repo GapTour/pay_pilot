@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/data/models/event_details_model.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/selecting_events_cubit.dart';
 import 'package:pay_pilot/locator.dart';
+import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class SelectingEvents extends StatefulWidget {
   final List<EventDetailsModel> selectedEvents;
@@ -37,28 +38,44 @@ class _SelectingEventsState extends State<SelectingEvents> {
 
   bool isSortingMonth = false;
 
+  // final Map<int, String> months = {
+  //   DateTime.january: 'January',
+  //   DateTime.february: 'February',
+  //   DateTime.march: 'March',
+  //   DateTime.april: 'April',
+  //   DateTime.may: 'May',
+  //   DateTime.june: 'June',
+  //   DateTime.july: 'July',
+  //   DateTime.august: 'August',
+  //   DateTime.september: 'September',
+  //   DateTime.october: 'October',
+  //   DateTime.november: 'November',
+  //   DateTime.december: 'December',
+  // };
+
   final Map<int, String> months = {
-    DateTime.january: 'January',
-    DateTime.february: 'February',
-    DateTime.march: 'March',
-    DateTime.april: 'April',
-    DateTime.may: 'May',
-    DateTime.june: 'June',
-    DateTime.july: 'July',
-    DateTime.august: 'August',
-    DateTime.september: 'September',
-    DateTime.october: 'October',
-    DateTime.november: 'November',
-    DateTime.december: 'December',
+    1: 'Farvardin',
+    2: 'Ordibehesht',
+    3: 'Khordad',
+    4: 'Tir',
+    5: 'Mordad',
+    6: 'Shahrivar',
+    7: 'Mehr',
+    8: 'Aban',
+    9: 'Azar',
+    10: 'Day',
+    11: 'Bahman',
+    12: 'Esfand',
   };
 
-  final List<int> years = List.generate(5, (index) => index + 2024);
+  final List<int> years = List.generate(5, (index) => index + 1403);
 
   List<EventDetailsModel> sortedEvents(List<EventDetailsModel> allEvents) {
     if (allEvents.isEmpty) return [];
     return allEvents.where((element) {
-      return element.date.month == (selectedMonth) &&
-          element.date.year == (selectedYear);
+      final Jalali elementDate = element.date.toJalali();
+      return elementDate.month == (selectedMonth) &&
+          elementDate.year == (selectedYear);
     }).toList();
   }
 
@@ -66,7 +83,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
   void initState() {
     super.initState();
 
-    final now = DateTime.now();
+    final now = DateTime.now().toJalali();
     selectedMonth = widget.selectedDate?.month ?? now.month;
     selectedYear = widget.selectedDate?.year ?? now.year;
 
@@ -77,7 +94,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
         curve: Curves.linear,
       );
       yearController.animateToItem(
-        selectedYear - 2024,
+        selectedYear - 1403,
         duration: Duration(milliseconds: 850),
         curve: Curves.linear,
       );
@@ -157,7 +174,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
                                   );
                                 }).toList(),
                                 onSelectedItemChanged: (value) {
-                                  selectedYear = value + 2024;
+                                  selectedYear = value + 1403;
 
                                   setState(() {});
                                 },
@@ -276,9 +293,9 @@ class _SelectingEventsState extends State<SelectingEvents> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     Text(
-                                      DateFormat.MMMEd().format(
-                                        events[index].date,
-                                      ),
+                                      events[index]
+                                          .date
+                                          .formattedToJalali_yearMonthDayWeekDay,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.displayMedium,
