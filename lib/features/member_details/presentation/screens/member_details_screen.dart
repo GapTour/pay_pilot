@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/empty_text.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/features/member_details/presentation/cubit/members_details_cubit.dart';
 
 class MemberDetailsScreen extends StatefulWidget {
@@ -51,9 +51,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                       TextSpan(
                         text: memberDetail.joinAt == null
                             ? '-'
-                            : DateFormat.MMMMEEEEd().format(
-                                memberDetail.joinAt!,
-                              ),
+                            : memberDetail.joinAt!.formattedToJalali_yearMonth,
                         style: Theme.of(context).textTheme.displayMedium,
                       ),
                     ],

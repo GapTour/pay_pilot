@@ -1,9 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
+import 'package:pay_pilot/core/widgets/pick_date.dart';
 import 'package:pay_pilot/features/members/data/member_form.dart';
 
 class AddMemberDialogBox extends StatefulWidget {
@@ -53,22 +54,19 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
         ),
         AppTextField(
           label: 'Join at',
-          hint: DateFormat.yMMMEd().format(DateTime.now()),
+          hint: DateTime.now().formattedToJalali_yearMonth,
           controller: joinAtDateController,
           keyboardType: TextInputType.datetime,
           readOnly: true,
           onTap: (focusNode) async {
-            selectedDate = await showDatePicker(
-              context: context,
-              initialDate: selectedDate ?? DateTime.now(),
-              firstDate: DateTime(2025),
-              lastDate: DateTime(2100),
+            PickDate.yearAndMonth(
+              context,
+              initDate: selectedDate,
+              onSubmit: (pickedDate, formattedDate) {
+                selectedDate = pickedDate;
+                joinAtDateController.text = formattedDate;
+              },
             );
-            if (selectedDate != null) {
-              joinAtDateController.text = DateFormat.yMMMEd().format(
-                selectedDate!,
-              );
-            }
           },
         ),
         AppTextField(
