@@ -1,6 +1,6 @@
 name: pay_pilot
 description: "an app to manage your member's payments"
-version: 1.3.0
+version: 1.4.0
 
 environment:
   sdk: ^3.8.1
@@ -21,6 +21,7 @@ dependencies:
   intl: ^0.20.2
   clay_containers: ^0.3.4
   collection: ^1.19.1
+  persian_calendar_widget: ^0.7.0
 
 dev_dependencies:
   flutter_test:

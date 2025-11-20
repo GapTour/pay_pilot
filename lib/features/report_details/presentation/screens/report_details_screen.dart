@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
@@ -54,9 +54,9 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                         style: Theme.of(context).textTheme.displayMedium,
                       ),
                       TextSpan(
-                        text: DateFormat.yMMMM().format(
-                          reportDetails.generateFor,
-                        ),
+                        text: reportDetails
+                            .generateFor
+                            .formattedToJalali_yearMonth,
                         style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ],
@@ -113,6 +113,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                     );
                   },
                 ),
+                Gap(45),
               ],
             );
           }

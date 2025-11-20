@@ -15,6 +15,7 @@ class ReportsCubit extends Cubit<ReportsState> {
     emit(state.copyWith(reportsStatus: ReportsStatus.loading));
     try {
       final reports = await _repository.getAllReports();
+      reports.sort((a, b) => b.createAt.compareTo(a.createAt));
       emit(
         state.copyWith(reportsStatus: ReportsStatus.success, reports: reports),
       );

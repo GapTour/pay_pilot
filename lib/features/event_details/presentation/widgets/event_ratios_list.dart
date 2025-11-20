@@ -20,6 +20,7 @@ class EventRatiosList extends StatelessWidget {
       },
       builder: (context, state) {
         final List<MemberRatioModel> ratios = state.memberRatios;
+        ratios.sort((a, b) => b.ratio.compareTo(a.ratio));
 
         if (state.eventTabsStatus.isLoading) {
           return const Center(child: CircularProgressIndicator.adaptive());

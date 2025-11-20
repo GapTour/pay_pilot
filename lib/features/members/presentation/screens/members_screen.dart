@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
@@ -91,9 +91,9 @@ class _MembersScreenState extends State<MembersScreen> {
                           ),
                           if (members[index].joinAt != null)
                             TextSpan(
-                              text: DateFormat.yMMMEd().format(
-                                members[index].joinAt!,
-                              ),
+                              text: members[index]
+                                  .joinAt!
+                                  .formattedToJalali_yearMonth,
                               style: Theme.of(context).textTheme.displayMedium,
                             )
                           else

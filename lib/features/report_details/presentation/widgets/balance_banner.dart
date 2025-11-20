@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/data/models/event_details_model.dart';
 import 'package:pay_pilot/core/data/models/transaction_model.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 
@@ -169,7 +169,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
-                            DateFormat.MMMEd().format(event.date),
+                            event.date.formattedToJalali_yearMonthDay,
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                         ],

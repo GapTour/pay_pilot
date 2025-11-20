@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:pay_pilot/core/data/models/transaction_model.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
@@ -87,9 +87,9 @@ class EventTransactionsList extends StatelessWidget {
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         TextSpan(
-                          text: DateFormat.yMMMEd().format(
-                            transactions[index].date,
-                          ),
+                          text: transactions[index]
+                              .date
+                              .formattedToJalali_yearMonthDay,
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                       ],

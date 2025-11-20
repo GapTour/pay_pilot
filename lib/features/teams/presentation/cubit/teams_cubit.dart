@@ -18,7 +18,9 @@ class TeamsCubit extends Cubit<TeamsState> {
 
     try {
       final members = await _repository.getAllTeams();
-      members.sort((a, b) => a.title.compareTo(b.title));
+      members.sort(
+        (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+      );
 
       emit(state.copyWith(teamsStatus: TeamsStatus.success, teams: members));
     } catch (_) {
