@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
@@ -21,6 +22,8 @@ import 'package:pay_pilot/features/teams/presentation/cubit/teams_cubit.dart';
 import 'package:pay_pilot/features/teams/presentation/screens/teams_screen.dart';
 import 'package:pay_pilot/locator.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 class AppRoutes {
   static const String mainScreen = 'mainScreen';
   static const String membersScreen = 'membersScreen';
@@ -33,7 +36,7 @@ class AppRoutes {
   static const String teamMembersScreen = 'teamMembersScreen';
 
   static GoRouter router = GoRouter(
-    // navigatorKey: navigatorKey,
+    navigatorKey: navigatorKey,
     debugLogDiagnostics: kDebugMode,
     initialLocation: MainScreen.routeName,
     routes: [
