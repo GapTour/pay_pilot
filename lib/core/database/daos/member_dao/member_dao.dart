@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/tables/members.dart';
-import 'package:pay_pilot/features/members/data/member_editing_form.dart';
-import 'package:pay_pilot/features/members/data/member_form.dart';
+import 'package:pay_pilot/features/members/data/models/member_editing_form.dart';
+import 'package:pay_pilot/features/members/data/models/member_form.dart';
 
 part 'member_dao.g.dart';
 
