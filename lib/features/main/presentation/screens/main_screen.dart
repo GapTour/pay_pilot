@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/utils/constants/app_settings.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 
 class MainScreen extends StatelessWidget {
@@ -74,7 +75,7 @@ class MainScreen extends StatelessWidget {
               right: 0,
               left: 0,
               child: Text(
-                'Version 1.4.0',
+                'Version ${AppSettings.version}',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey, fontSize: 9),
               ),
