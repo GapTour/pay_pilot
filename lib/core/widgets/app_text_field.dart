@@ -129,7 +129,9 @@ class _AppTextFieldState extends State<AppTextField> {
         textInputAction: widget.textInputAction,
         keyboardType: widget.keyboardType,
         obscureText: widget.keyboardType == TextInputType.visiblePassword,
-        maxLines: widget.maxLines,
+        maxLines: widget.keyboardType == TextInputType.visiblePassword
+            ? 1
+            : widget.maxLines,
         minLines: widget.minLines,
         inputFormatters: widget.inputFormatters,
         validator: widget.validatorText == null

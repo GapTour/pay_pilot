@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pay_pilot/features/auth/presentation/screens/login_screen.dart';
 import 'package:pay_pilot/features/auth/presentation/screens/splash_screen.dart';
 import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
 import 'package:pay_pilot/features/event_details/presentation/screens/event_details_screen.dart';
@@ -28,6 +29,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRoutes {
   static const String mainScreen = 'mainScreen';
+  static const String loginScreen = 'loginScreen';
   static const String splashScreen = 'splashScreen';
   static const String membersScreen = 'membersScreen';
   static const String memberDetailsScreen = 'memberDetailsScreen';
@@ -49,6 +51,14 @@ class AppRoutes {
         builder: (context, state) => BlocProvider(
           create: (context) => AuthBloc(locator()),
           child: const SplashScreen(),
+        ),
+      ),
+      GoRoute(
+        name: loginScreen,
+        path: LoginScreen.routeName,
+        builder: (context, state) => BlocProvider(
+          create: (context) => AuthBloc(locator()),
+          child: const LoginScreen(),
         ),
       ),
       GoRoute(

@@ -67,9 +67,7 @@ Future<void> _callServices() async {
 }
 
 void _callProviders() {
-  locator.registerLazySingleton<LoginApiProvider>(
-    () => LoginApiProvider(locator()),
-  );
+  locator.registerLazySingleton<LoginApiProvider>(() => LoginApiProvider());
   locator.registerLazySingleton<MemberDbProvider>(
     () => MemberDbProvider(locator()),
   );
