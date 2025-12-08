@@ -4,7 +4,7 @@ import 'package:pay_pilot/core/app/app_routes.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 
 class MainScreen extends StatelessWidget {
-  static const routeName = '/';
+  static const routeName = '/main';
 
   const MainScreen({super.key});
 
