@@ -18,6 +18,7 @@ import 'package:pay_pilot/features/events/data/event_db_provider.dart';
 import 'package:pay_pilot/features/events/repository/event_repository.dart';
 import 'package:pay_pilot/features/member_details/data/member_details_db_provider.dart';
 import 'package:pay_pilot/features/member_details/repository/member_details_repository.dart';
+import 'package:pay_pilot/features/members/data/member_api_provider.dart';
 import 'package:pay_pilot/features/members/data/member_db_provider.dart';
 import 'package:pay_pilot/features/members/repository/member_repository.dart';
 import 'package:pay_pilot/features/report_details/data/report_details_db_provider.dart';
@@ -68,6 +69,9 @@ Future<void> _callServices() async {
 
 void _callProviders() {
   locator.registerLazySingleton<LoginApiProvider>(() => LoginApiProvider());
+  locator.registerLazySingleton<MemberApiProvider>(
+    () => MemberApiProvider(locator()),
+  );
   locator.registerLazySingleton<MemberDbProvider>(
     () => MemberDbProvider(locator()),
   );

@@ -34,11 +34,11 @@ class ErrorResponse {
     );
   }
 
-  factory ErrorResponse.defaultError(String? message) {
+  factory ErrorResponse.defaultError(String? message, [int? statusCode]) {
     return ErrorResponse(
       message: 'default error response',
       status: 'Failure',
-      code: 600,
+      code: statusCode ?? 600,
       data: message ?? 'Something went wrong!',
     );
   }

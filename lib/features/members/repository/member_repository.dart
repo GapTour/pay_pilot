@@ -1,25 +1,82 @@
-import 'package:pay_pilot/core/database/app_database.dart';
-import 'package:pay_pilot/features/members/data/member_db_provider.dart';
-import 'package:pay_pilot/features/members/data/member_editing_form.dart';
-import 'package:pay_pilot/features/members/data/member_form.dart';
+import 'package:dio/dio.dart';
+import 'package:pay_pilot/core/data/params/member_params.dart';
+import 'package:pay_pilot/core/data/response/error_response.dart';
+import 'package:pay_pilot/core/utils/resource/data_state.dart';
+import 'package:pay_pilot/features/members/data/member_api_provider.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
 class MemberRepository {
-  final MemberDbProvider _dbProvider;
-  MemberRepository(this._dbProvider);
+  // final MemberDbProvider _dbProvider;
+  final MemberApiProvider _apiProvider;
+  MemberRepository(
+    // this._dbProvider,
+    this._apiProvider,
+  );
 
-  Future<List<Member>> getAllMembers() async {
-    return await _dbProvider.getAllMembers();
+  Future<DataState<List<ResponseMember>>> getAllMembers() async {
+    try {
+      final Response response = await _apiProvider.getAllMembers();
+
+      if (response.statusCode == 200) {
+        final rawData = response.data['data'] as List<Map<String, dynamic>>;
+        final members = rawData.map((e) {
+          return ResponseMember.fromMap(e);
+        }).toList();
+
+        return DataSuccess(members);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<int> insertMember(MemberForm member) async {
-    return await _dbProvider.insertMember(member);
+  Future<DataState<ResponseMember>> addMember(MemberParams params) async {
+    try {
+      final Response response = await _apiProvider.addMember(params);
+
+      if (response.statusCode == 201) {
+        final rawData = response.data['data'] as Map<String, dynamic>;
+        final member = ResponseMember.fromMap(rawData);
+
+        return DataSuccess(member);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<void> updateMember(MemberEditingForm member) async {
-    await _dbProvider.updateMember(member);
+  Future<DataState<ResponseMember>> editMember(MemberParams params) async {
+    try {
+      final Response response = await _apiProvider.editMember(params);
+
+      if (response.statusCode == 201) {
+        final rawData = response.data['data'] as Map<String, dynamic>;
+        final member = ResponseMember.fromMap(rawData);
+
+        return DataSuccess(member);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<void> deleteMember(int id) async {
-    await _dbProvider.deleteMember(id);
+  Future<DataState<int>> deleteMember(int id) async {
+    try {
+      final Response response = await _apiProvider.deleteMember(id);
+
+      if (response.statusCode == 204) {
+        return DataSuccess(id);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 }

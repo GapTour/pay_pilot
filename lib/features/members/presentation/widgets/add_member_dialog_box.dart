@@ -1,14 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/data/params/member_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
-import 'package:pay_pilot/features/members/data/member_form.dart';
 
 class AddMemberDialogBox extends StatefulWidget {
-  final Function(MemberForm member) onPressedSubmit;
+  final Function(MemberParams member) onPressedSubmit;
   const AddMemberDialogBox({super.key, required this.onPressedSubmit});
 
   @override
@@ -19,15 +19,17 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController joinAtDateController = TextEditingController();
+  final TextEditingController birthdayController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  int? memberID;
-  DateTime? selectedDate;
+  DateTime? selectedJainAtDate;
+  DateTime? selectedBirthdayDate;
 
   @override
   void dispose() {
     descriptionController.dispose();
     nameController.dispose();
     joinAtDateController.dispose();
+    birthdayController.dispose();
     super.dispose();
   }
 
@@ -61,10 +63,27 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
           onTap: (focusNode) async {
             PickDate.yearAndMonth(
               context,
-              initDate: selectedDate,
+              initDate: selectedJainAtDate,
               onSubmit: (pickedDate, formattedDate) {
-                selectedDate = pickedDate;
+                selectedJainAtDate = pickedDate;
                 joinAtDateController.text = formattedDate;
+              },
+            );
+          },
+        ),
+        AppTextField(
+          label: 'Birthday',
+          hint: DateTime.now().formattedToJalali_yearMonth,
+          controller: birthdayController,
+          keyboardType: TextInputType.datetime,
+          readOnly: true,
+          onTap: (focusNode) async {
+            PickDate.yearMonthAndDay(
+              context,
+              initDate: selectedBirthdayDate,
+              onSubmit: (pickedDate, formattedDate) {
+                selectedBirthdayDate = pickedDate;
+                birthdayController.text = formattedDate;
               },
             );
           },
@@ -78,9 +97,13 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final member = MemberForm(
+        final member = MemberParams(
+          id: null,
           name: nameController.text,
-          joinAt: selectedDate,
+          joinAt: selectedJainAtDate,
+          birthday: selectedBirthdayDate,
+          isActive: true,
+          profileImage: null,
           description: descriptionController.text,
         );
         widget.onPressedSubmit(member);
