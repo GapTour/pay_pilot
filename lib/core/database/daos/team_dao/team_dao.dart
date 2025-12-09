@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/tables/teams.dart';
-import 'package:pay_pilot/features/teams/data/team_edit_form.dart';
-import 'package:pay_pilot/features/teams/data/team_form.dart';
+import 'package:pay_pilot/features/teams/data/models/team_edit_form.dart';
+import 'package:pay_pilot/features/teams/data/models/team_form.dart';
 
 part 'team_dao.g.dart';
 

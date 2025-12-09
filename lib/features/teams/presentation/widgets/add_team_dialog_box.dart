@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/data/params/team_params.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/teams/data/team_form.dart';
 
 class AddTeamDialogBox extends StatefulWidget {
-  final Function(TeamForm team) onPressedSubmit;
+  final Function(TeamParams team) onPressedSubmit;
   const AddTeamDialogBox({super.key, required this.onPressedSubmit});
 
   @override
@@ -54,11 +54,15 @@ class _AddTeamDialogBoxState extends State<AddTeamDialogBox> {
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final member = TeamForm(
+        final team = TeamParams(
+          id: null,
           title: titleController.text,
-          description: descriptionController.text,
+          description: descriptionController.text.isNotEmpty
+              ? descriptionController.text
+              : null,
+          isActive: true,
         );
-        widget.onPressedSubmit(member);
+        widget.onPressedSubmit(team);
         context.pop();
       },
     );

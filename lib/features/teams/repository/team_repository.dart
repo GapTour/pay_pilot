@@ -1,25 +1,82 @@
-import 'package:pay_pilot/core/database/app_database.dart';
-import 'package:pay_pilot/features/teams/data/team_edit_form.dart';
-import 'package:pay_pilot/features/teams/data/team_form.dart';
-import 'package:pay_pilot/features/teams/data/teams_db_provider.dart';
+import 'package:dio/dio.dart';
+import 'package:pay_pilot/core/data/params/team_params.dart';
+import 'package:pay_pilot/core/data/response/error_response.dart';
+import 'package:pay_pilot/core/utils/resource/data_state.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
+import 'package:pay_pilot/features/teams/data/teams_api_provider.dart';
 
 class TeamRepository {
-  final TeamsDbProvider _dbProvider;
-  TeamRepository(this._dbProvider);
+  // final TeamsDbProvider _dbProvider;
+  final TeamsApiProvider _apiProvider;
+  TeamRepository(
+    // this._dbProvider
+    this._apiProvider,
+  );
 
-  Future<List<Team>> getAllTeams() async {
-    return await _dbProvider.getAllTeams();
+  Future<DataState<List<ResponseTeam>>> getAllTeams() async {
+    try {
+      final Response response = await _apiProvider.getAllTeams();
+
+      if (response.statusCode == 200) {
+        final rawData = response.data['data'] as List<dynamic>;
+        final teams = rawData.map((e) {
+          return ResponseTeam.fromMap(e);
+        }).toList();
+
+        return DataSuccess(teams);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<int> insertTeam(TeamForm team) async {
-    return await _dbProvider.insertTeam(team);
+  Future<DataState<ResponseTeam>> addTeam(TeamParams params) async {
+    try {
+      final Response response = await _apiProvider.addTeam(params);
+
+      if (response.statusCode == 201) {
+        final rawData = response.data['data'] as dynamic;
+        final team = ResponseTeam.fromMap(rawData);
+
+        return DataSuccess(team);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<void> updateTeam(TeamEditForm team) async {
-    await _dbProvider.updateTeam(team);
+  Future<DataState<ResponseTeam>> editTeam(TeamParams params) async {
+    try {
+      final Response response = await _apiProvider.editTeam(params);
+
+      if (response.statusCode == 201) {
+        final rawData = response.data['data'] as dynamic;
+        final member = ResponseTeam.fromMap(rawData);
+
+        return DataSuccess(member);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<void> deleteTeam(int teamID) async {
-    await _dbProvider.deleteTeam(teamID);
+  Future<DataState<int>> deleteTeam(int id) async {
+    try {
+      final Response response = await _apiProvider.deleteTeam(id);
+
+      if (response.statusCode == 204) {
+        return DataSuccess(id);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 }
