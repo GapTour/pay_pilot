@@ -37,6 +37,7 @@ class MembersCubit extends Cubit<MembersState> {
 
   void addMember(MemberParams params) async {
     final members = state.members;
+    emit(state.copyWith(membersStatus: MembersStatus.loading));
 
     final dataState = await _repository.addMember(params);
 
@@ -59,8 +60,9 @@ class MembersCubit extends Cubit<MembersState> {
 
   void updateMember(MemberParams params) async {
     final members = state.members;
+    emit(state.copyWith(membersStatus: MembersStatus.loading));
 
-    final dataState = await _repository.addMember(params);
+    final dataState = await _repository.editMember(params);
 
     if (dataState is DataSuccess) {
       final newMember = dataState.data!;
@@ -82,6 +84,7 @@ class MembersCubit extends Cubit<MembersState> {
 
   void deleteMember(int memberID) async {
     final members = state.members;
+    emit(state.copyWith(membersStatus: MembersStatus.loading));
 
     final dataState = await _repository.deleteMember(memberID);
 

@@ -42,12 +42,6 @@ class MemberApiProvider {
     return response;
   }
 
-  Future<dynamic> getMember(int id) async {
-    final response = await _dio.get('${dotenv.env[AppApiUrls.member]}$id');
-
-    return response;
-  }
-
   Future<dynamic> getAllMembers() async {
     final response = await _dio.get('${dotenv.env[AppApiUrls.member]}');
 
