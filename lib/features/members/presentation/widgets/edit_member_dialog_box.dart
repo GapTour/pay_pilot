@@ -128,7 +128,9 @@ class _EditMemberDialogBoxState extends State<EditMemberDialogBox> {
           name: nameController.text,
           joinAt: selectedJainAtDate,
           birthday: selectedBirthdayDate,
-          description: descriptionController.text,
+          description: descriptionController.text.isNotEmpty
+              ? descriptionController.text
+              : null,
           isActive: true,
           profileImage: null,
         );

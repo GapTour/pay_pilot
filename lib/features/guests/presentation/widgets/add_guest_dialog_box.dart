@@ -1,34 +1,35 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/data/params/member_params.dart';
+import 'package:pay_pilot/core/data/params/guest_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
 
-class AddMemberDialogBox extends StatefulWidget {
-  final Function(MemberParams member) onPressedSubmit;
-  const AddMemberDialogBox({super.key, required this.onPressedSubmit});
+class AddGuestDialogBox extends StatefulWidget {
+  final Function(GuestParams guest) onPressedSubmit;
+  const AddGuestDialogBox({super.key, required this.onPressedSubmit});
 
   @override
-  State<AddMemberDialogBox> createState() => _AddMemberDialogBoxState();
+  State<AddGuestDialogBox> createState() => _AddGuestDialogBoxState();
 }
 
-class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
-  final TextEditingController descriptionController = TextEditingController();
+class _AddGuestDialogBoxState extends State<AddGuestDialogBox> {
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController joinAtDateController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController telegramIdController = TextEditingController();
+  final TextEditingController instagramIdController = TextEditingController();
   final TextEditingController birthdayController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  DateTime? selectedJainAtDate;
   DateTime? selectedBirthdayDate;
 
   @override
   void dispose() {
     descriptionController.dispose();
     nameController.dispose();
-    joinAtDateController.dispose();
+    telegramIdController.dispose();
+    instagramIdController.dispose();
     birthdayController.dispose();
     super.dispose();
   }
@@ -36,7 +37,7 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AppDialogBox(
-      title: 'Add New Member',
+      title: 'Add New Guest',
       children: [
         Form(
           key: formKey,
@@ -55,21 +56,16 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
           ),
         ),
         AppTextField(
-          label: 'Join at',
-          hint: DateTime.now().formattedToJalali_yearMonth,
-          controller: joinAtDateController,
-          keyboardType: TextInputType.datetime,
-          readOnly: true,
-          onTap: (focusNode) async {
-            PickDate.yearAndMonth(
-              context,
-              initDate: selectedJainAtDate,
-              onSubmit: (pickedDate, formattedDate) {
-                selectedJainAtDate = pickedDate;
-                joinAtDateController.text = formattedDate;
-              },
-            );
-          },
+          label: 'Telegram ID',
+          hint: '@mahdiyarz',
+          controller: telegramIdController,
+          keyboardType: TextInputType.emailAddress,
+        ),
+        AppTextField(
+          label: 'Instagram ID',
+          hint: '@mahdiyarz',
+          controller: instagramIdController,
+          keyboardType: TextInputType.emailAddress,
         ),
         AppTextField(
           label: 'Birthday',
@@ -97,10 +93,15 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final member = MemberParams(
+        final guest = GuestParams(
           id: null,
           name: nameController.text,
-          joinAt: selectedJainAtDate,
+          telegramID: telegramIdController.text.isNotEmpty
+              ? telegramIdController.text
+              : null,
+          instagramID: instagramIdController.text.isNotEmpty
+              ? instagramIdController.text
+              : null,
           birthday: selectedBirthdayDate,
           isActive: true,
           profileImage: null,
@@ -108,7 +109,7 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
               ? descriptionController.text
               : null,
         );
-        widget.onPressedSubmit(member);
+        widget.onPressedSubmit(guest);
         context.pop();
       },
     );

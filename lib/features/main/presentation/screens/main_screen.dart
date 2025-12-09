@@ -38,6 +38,17 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
+                      'Guests',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
+                  onTap: () {
+                    context.pushNamed(AppRoutes.guestsScreen);
+                  },
+                ),
+                AppElevatedButton(
+                  child: Center(
+                    child: Text(
                       'Teams',
                       style: Theme.of(context).textTheme.displayLarge,
                     ),

@@ -10,6 +10,8 @@ import 'package:pay_pilot/features/event_details/presentation/cubit/event_detail
 import 'package:pay_pilot/features/event_details/presentation/screens/event_details_screen.dart';
 import 'package:pay_pilot/features/events/presentation/cubit/events_cubit.dart';
 import 'package:pay_pilot/features/events/presentation/screens/events_screen.dart';
+import 'package:pay_pilot/features/guests/presentation/cubit/guests_cubit.dart';
+import 'package:pay_pilot/features/guests/presentation/screens/guests_screen.dart';
 import 'package:pay_pilot/features/main/presentation/screens/main_screen.dart';
 import 'package:pay_pilot/features/member_details/presentation/cubit/members_details_cubit.dart';
 import 'package:pay_pilot/features/member_details/presentation/screens/member_details_screen.dart';
@@ -33,6 +35,8 @@ class AppRoutes {
   static const String splashScreen = 'splashScreen';
   static const String membersScreen = 'membersScreen';
   static const String memberDetailsScreen = 'memberDetailsScreen';
+  static const String guestsScreen = 'guestsScreen';
+  static const String guestDetailsScreen = 'guestDetailsScreen';
   static const String eventsScreen = 'eventsScreen';
   static const String eventDetailsScreen = 'eventDetailsScreen';
   static const String reportsScreen = 'reportsScreen';
@@ -82,6 +86,14 @@ class AppRoutes {
           child: MemberDetailsScreen(
             memberID: state.pathParameters[AppArguments.memberDetails]!,
           ),
+        ),
+      ),
+      GoRoute(
+        name: guestsScreen,
+        path: GuestsScreen.routeName,
+        builder: (context, state) => BlocProvider(
+          create: (context) => GuestsCubit(locator()),
+          child: const GuestsScreen(),
         ),
       ),
       GoRoute(
