@@ -18,7 +18,7 @@ class MemberRepository {
       final Response response = await _apiProvider.getAllMembers();
 
       if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<Map<String, dynamic>>;
+        final rawData = response.data['data'] as List<dynamic>;
         final members = rawData.map((e) {
           return ResponseMember.fromMap(e);
         }).toList();
@@ -37,7 +37,7 @@ class MemberRepository {
       final Response response = await _apiProvider.addMember(params);
 
       if (response.statusCode == 201) {
-        final rawData = response.data['data'] as Map<String, dynamic>;
+        final rawData = response.data['data'] as dynamic;
         final member = ResponseMember.fromMap(rawData);
 
         return DataSuccess(member);
@@ -54,7 +54,7 @@ class MemberRepository {
       final Response response = await _apiProvider.editMember(params);
 
       if (response.statusCode == 201) {
-        final rawData = response.data['data'] as Map<String, dynamic>;
+        final rawData = response.data['data'] as dynamic;
         final member = ResponseMember.fromMap(rawData);
 
         return DataSuccess(member);
