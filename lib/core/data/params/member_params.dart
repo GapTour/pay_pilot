@@ -21,10 +21,10 @@ class MemberParams {
     return <String, dynamic>{
       'name': name,
       'description': description,
-      'joined_at': joinAt?.millisecondsSinceEpoch,
+      'joined_at': joinAt?.toIso8601String(),
       'is_active': isActive,
       'profile_image': profileImage,
-      'birthday': birthday?.millisecondsSinceEpoch,
+      'birthday': birthday?.toIso8601String(),
     };
   }
 }
