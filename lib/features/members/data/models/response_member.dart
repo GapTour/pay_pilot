@@ -19,7 +19,7 @@ class ResponseMember {
 
   factory ResponseMember.fromMap(Map<String, dynamic> map) {
     return ResponseMember(
-      id: map['id'] as int,
+      id: int.parse(map['id'] as String),
       name: map['name'] as String,
       description: map['description'] != null
           ? map['description'] as String
@@ -27,7 +27,7 @@ class ResponseMember {
       joinAt: map['joined_at'] != null
           ? DateTime.parse(map['joined_at'] as String)
           : null,
-      isActive: map['is_active'] as bool,
+      isActive: map['is_active'] as String == 'true',
       profileImage: map['profile_image'] != null
           ? map['profile_image'] as String
           : null,
