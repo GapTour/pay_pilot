@@ -10,6 +10,8 @@ import 'package:pay_pilot/features/event_details/presentation/cubit/event_detail
 import 'package:pay_pilot/features/event_details/presentation/screens/event_details_screen.dart';
 import 'package:pay_pilot/features/events/presentation/cubit/events_cubit.dart';
 import 'package:pay_pilot/features/events/presentation/screens/events_screen.dart';
+import 'package:pay_pilot/features/guest_details/presentation/cubit/guests_details_cubit.dart';
+import 'package:pay_pilot/features/guest_details/presentation/screens/guest_details_screen.dart';
 import 'package:pay_pilot/features/guests/presentation/cubit/guests_cubit.dart';
 import 'package:pay_pilot/features/guests/presentation/screens/guests_screen.dart';
 import 'package:pay_pilot/features/main/presentation/screens/main_screen.dart';
@@ -94,6 +96,16 @@ class AppRoutes {
         builder: (context, state) => BlocProvider(
           create: (context) => GuestsCubit(locator()),
           child: const GuestsScreen(),
+        ),
+      ),
+      GoRoute(
+        name: guestDetailsScreen,
+        path: GuestDetailsScreen.routeName,
+        builder: (context, state) => BlocProvider(
+          create: (context) => GuestsDetailsCubit(locator()),
+          child: GuestDetailsScreen(
+            guestID: state.pathParameters[AppArguments.guestDetails]!,
+          ),
         ),
       ),
       GoRoute(

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
@@ -46,12 +49,12 @@ class _GuestsScreenState extends State<GuestsScreen> {
               return AppTile(
                 height: 56,
                 onPreview: () {
-                  // context.pushNamed(
-                  //   AppRoutes.memberDetailsScreen,
-                  //   pathParameters: {
-                  //     AppArguments.guestDetails: '${guests[index].id}',
-                  //   },
-                  // );
+                  context.pushNamed(
+                    AppRoutes.guestDetailsScreen,
+                    pathParameters: {
+                      AppArguments.guestDetails: '${guests[index].id}',
+                    },
+                  );
                 },
                 onEdit: () {
                   showDialog(

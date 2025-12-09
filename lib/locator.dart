@@ -16,6 +16,8 @@ import 'package:pay_pilot/features/event_details/data/event_details_db_provider.
 import 'package:pay_pilot/features/event_details/repository/event_details_repository.dart';
 import 'package:pay_pilot/features/events/data/event_db_provider.dart';
 import 'package:pay_pilot/features/events/repository/event_repository.dart';
+import 'package:pay_pilot/features/guest_details/data/guest_details_api_provider.dart';
+import 'package:pay_pilot/features/guest_details/repository/guest_details_repository.dart';
 import 'package:pay_pilot/features/guests/data/guest_api_provider.dart';
 import 'package:pay_pilot/features/guests/repository/guest_repository.dart';
 import 'package:pay_pilot/features/member_details/data/member_details_api_provider.dart';
@@ -87,6 +89,9 @@ void _callProviders() {
   locator.registerLazySingleton<GuestApiProvider>(
     () => GuestApiProvider(locator()),
   );
+  locator.registerLazySingleton<GuestDetailsApiProvider>(
+    () => GuestDetailsApiProvider(locator()),
+  );
   locator.registerLazySingleton<EventDbProvider>(
     () => EventDbProvider(locator(), locator()),
   );
@@ -119,6 +124,9 @@ void _callRepositories() {
   );
   locator.registerLazySingleton<GuestRepository>(
     () => GuestRepository(locator()),
+  );
+  locator.registerLazySingleton<GuestDetailsRepository>(
+    () => GuestDetailsRepository(locator()),
   );
   locator.registerLazySingleton<EventRepository>(
     () => EventRepository(locator()),
