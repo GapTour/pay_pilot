@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 
 class AppList extends StatelessWidget {
   final int itemCount;
-  final Widget? Function(BuildContext, int) itemBuilder;
+  final Widget? Function(BuildContext context, int index) itemBuilder;
   final bool? shrinkWrap;
   final ScrollPhysics? physics;
   final EdgeInsetsGeometry? padding;
