@@ -60,6 +60,17 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
+                      'Menu Items',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
+                  onTap: () {
+                    context.pushNamed(AppRoutes.menuItemsScreen);
+                  },
+                ),
+                AppElevatedButton(
+                  child: Center(
+                    child: Text(
                       'Events',
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
