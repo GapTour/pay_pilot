@@ -34,7 +34,6 @@ class EventRatiosList extends StatelessWidget {
           emptyInboxMessage: 'There is no ratios yet!',
           itemBuilder: (context, index) {
             return AppTile(
-              height: 38,
               onEdit: () {
                 showDialog(
                   context: context,

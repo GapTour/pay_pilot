@@ -41,7 +41,6 @@ class _EventReportListState extends State<EventReportList> {
           emptyInboxMessage: 'There is no ratios yet!',
           itemBuilder: (context, index) {
             return AppTile(
-              height: 56,
               isActive: false,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

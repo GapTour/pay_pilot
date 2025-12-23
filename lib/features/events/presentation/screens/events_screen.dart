@@ -49,7 +49,6 @@ class _EventsScreenState extends State<EventsScreen> {
             emptyInboxMessage: 'There is no event yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 60,
                 onEdit: () {
                   showDialog(
                     context: context,

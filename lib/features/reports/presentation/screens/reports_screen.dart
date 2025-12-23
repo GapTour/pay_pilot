@@ -48,7 +48,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
             emptyInboxMessage: 'There is no report yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 56,
                 onPreview: () {
                   context.pushNamed(
                     AppRoutes.reportDetailsScreen,

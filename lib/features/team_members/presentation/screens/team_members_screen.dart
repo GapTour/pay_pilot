@@ -98,7 +98,6 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                 emptyInboxMessage: 'There is no member yet!',
                 itemBuilder: (context, index) {
                   return AppTile(
-                    height: 38,
                     onEdit: () {
                       showDialog(
                         context: context,

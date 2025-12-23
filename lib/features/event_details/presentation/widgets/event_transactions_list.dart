@@ -36,7 +36,6 @@ class EventTransactionsList extends StatelessWidget {
           emptyInboxMessage: 'There is no transaction yet!',
           itemBuilder: (context, index) {
             return AppTile(
-              height: 62,
               onEdit: () {
                 showDialog(
                   context: context,

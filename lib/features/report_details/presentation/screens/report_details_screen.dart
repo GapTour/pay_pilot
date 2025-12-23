@@ -78,7 +78,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                   emptyInboxMessage: '',
                   itemBuilder: (context, index) {
                     return AppTile(
-                      height: 56,
                       isActive: false,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

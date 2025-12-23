@@ -47,7 +47,6 @@ class _GuestsScreenState extends State<GuestsScreen> {
             emptyInboxMessage: 'There is no guest yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 56,
                 onPreview: () {
                   context.pushNamed(
                     AppRoutes.guestDetailsScreen,
