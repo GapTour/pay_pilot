@@ -4,8 +4,8 @@ import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/tables/members.dart';
 import 'package:pay_pilot/core/database/tables/ratios.dart';
 import 'package:pay_pilot/core/database/tables/teams.dart';
-import 'package:pay_pilot/features/team_members/data/team_members_edit_form.dart';
-import 'package:pay_pilot/features/team_members/data/team_members_form.dart';
+import 'package:pay_pilot/features/team_members/data/models/team_members_edit_form.dart';
+import 'package:pay_pilot/features/team_members/data/models/team_members_form.dart';
 
 part 'ratio_dao.g.dart';
 

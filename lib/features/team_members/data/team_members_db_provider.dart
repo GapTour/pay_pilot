@@ -3,8 +3,8 @@ import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/daos/member_dao/member_dao.dart';
 import 'package:pay_pilot/core/database/daos/ratio_dao/ratio_dao.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
-import 'package:pay_pilot/features/team_members/data/team_members_edit_form.dart';
-import 'package:pay_pilot/features/team_members/data/team_members_form.dart';
+import 'package:pay_pilot/features/team_members/data/models/team_members_edit_form.dart';
+import 'package:pay_pilot/features/team_members/data/models/team_members_form.dart';
 
 class TeamMembersDbProvider {
   final RatioDao _dbService;
