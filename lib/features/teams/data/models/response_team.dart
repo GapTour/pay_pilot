@@ -18,7 +18,7 @@ class ResponseTeam {
       description: map['description'] != null
           ? map['description'] as String
           : null,
-      isActive: map['is_active'] as String == 'true',
+      isActive: map['is_active'] as String == '1',
     );
   }
 }

@@ -32,7 +32,7 @@ class ResponseGuest {
       instagramID: map['instagram_id'] != null
           ? map['instagram_id'] as String
           : null,
-      isActive: map['is_active'] as String == 'true',
+      isActive: map['is_active'] as String == '1',
       profileImage: map['profile_image'] != null
           ? map['profile_image'] as String
           : null,

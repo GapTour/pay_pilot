@@ -27,7 +27,7 @@ class ResponseMemberDetails {
       joinAt: map['joined_at'] != null
           ? DateTime.parse(map['joined_at'] as String)
           : null,
-      isActive: map['is_active'] as String == 'true',
+      isActive: map['is_active'] as String == '1',
       profileImage: map['profile_image'] != null
           ? map['profile_image'] as String
           : null,
