@@ -1,18 +1,20 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/data/params/team_member_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/team_members/data/team_members_form.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 class AddRatioDialogBox extends StatefulWidget {
-  final Team team;
-  final List<Member> members;
+  final ResponseTeam team;
+  final List<ResponseMember> members;
   final Map<int, double> addedMembers;
-  final Function(TeamMembersForm teamMember) onPressedSubmit;
+  final Function(TeamMemberParams teamMember) onPressedSubmit;
   const AddRatioDialogBox({
     super.key,
     required this.addedMembers,
@@ -30,7 +32,7 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
   final TextEditingController teamController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final formDropDownKey = GlobalKey<FormState>();
-  final List<Member> notAddedMembers = [];
+  final List<ResponseMember> notAddedMembers = [];
   double remindedRatio = 100;
   int? memberID;
   bool isNotSelected = false;
@@ -69,11 +71,11 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
       children: [
         AppTextField(label: 'Team', controller: teamController, readOnly: true),
         if (notAddedMembers.isNotEmpty)
-          AppDropDownButton<Member>(
+          AppDropDownButton<ResponseMember>(
             label: 'Members',
             hint: 'Select a member',
             showWarning: isNotSelected,
-            value: widget.members.firstWhereOrNull(
+            value: notAddedMembers.firstWhereOrNull(
               (element) => element.id == memberID,
             ),
             onChanged: (value) {
@@ -81,7 +83,10 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
               setState(() {});
             },
             items: notAddedMembers.map((e) {
-              return DropdownMenuItem<Member>(value: e, child: Text(e.name));
+              return DropdownMenuItem<ResponseMember>(
+                value: e,
+                child: Text(e.name),
+              );
             }).toList(),
           )
         else
@@ -140,7 +145,8 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
           setState(() {});
           return;
         }
-        final ratio = TeamMembersForm(
+        final ratio = TeamMemberParams(
+          id: null,
           memberID: memberID!,
           ratio: ratioController.text.parseToDouble,
           teamID: widget.team.id,

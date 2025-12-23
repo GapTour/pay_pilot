@@ -2,20 +2,20 @@ part of 'ratios_cubit.dart';
 
 @immutable
 class RatiosState extends Equatable {
-  final RatiosStatus ratioStatus;
-  final List<TeamMemberDetailsModel> ratios;
+  final TeamMemberStatus teamMemberStatus;
+  final List<ResponseTeamMember> ratios;
 
-  const RatiosState({required this.ratioStatus, required this.ratios});
+  const RatiosState({required this.teamMemberStatus, required this.ratios});
 
   @override
-  List<Object?> get props => [ratioStatus, ratios];
+  List<Object?> get props => [ratios, teamMemberStatus];
 
   RatiosState copyWith({
-    RatiosStatus? ratioStatus,
-    List<TeamMemberDetailsModel>? ratios,
+    TeamMemberStatus? teamMemberStatus,
+    List<ResponseTeamMember>? ratios,
   }) {
     return RatiosState(
-      ratioStatus: ratioStatus ?? this.ratioStatus,
+      teamMemberStatus: teamMemberStatus ?? this.teamMemberStatus,
       ratios: ratios ?? this.ratios,
     );
   }
