@@ -26,6 +26,8 @@ import 'package:pay_pilot/features/member_details/repository/member_details_repo
 import 'package:pay_pilot/features/members/data/member_api_provider.dart';
 import 'package:pay_pilot/features/members/data/member_db_provider.dart';
 import 'package:pay_pilot/features/members/repository/member_repository.dart';
+import 'package:pay_pilot/features/menu/data/menu_api_provider.dart';
+import 'package:pay_pilot/features/menu/repository/menu_repository.dart';
 import 'package:pay_pilot/features/report_details/data/report_details_db_provider.dart';
 import 'package:pay_pilot/features/report_details/repository/report_details_repository.dart';
 import 'package:pay_pilot/features/reports/data/report_db_provider.dart';
@@ -112,6 +114,9 @@ void _callProviders() {
   locator.registerLazySingleton<TeamMemberApiProvider>(
     () => TeamMemberApiProvider(locator()),
   );
+  locator.registerLazySingleton<MenuApiProvider>(
+    () => MenuApiProvider(locator()),
+  );
   locator.registerLazySingleton<ReportDbProvider>(
     () => ReportDbProvider(locator(), locator()),
   );
@@ -147,6 +152,9 @@ void _callRepositories() {
   );
   locator.registerLazySingleton<TeamMembersRepository>(
     () => TeamMembersRepository(locator()),
+  );
+  locator.registerLazySingleton<MenuRepository>(
+    () => MenuRepository(locator()),
   );
   locator.registerLazySingleton<ReportRepository>(
     () => ReportRepository(locator()),
