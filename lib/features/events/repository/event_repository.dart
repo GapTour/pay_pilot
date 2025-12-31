@@ -1,8 +1,8 @@
 import 'package:pay_pilot/core/data/models/event_model.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/features/events/data/event_db_provider.dart';
-import 'package:pay_pilot/features/events/data/event_edit_form.dart';
-import 'package:pay_pilot/features/events/data/event_form.dart';
+import 'package:pay_pilot/features/events/data/models/event_edit_form.dart';
+import 'package:pay_pilot/features/events/data/models/event_form.dart';
 
 class EventRepository {
   final EventDbProvider _dbProvider;

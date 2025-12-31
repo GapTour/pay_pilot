@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pay_pilot/core/data/models/event_model.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
-import 'package:pay_pilot/features/events/data/event_edit_form.dart';
-import 'package:pay_pilot/features/events/data/event_form.dart';
+import 'package:pay_pilot/features/events/data/models/event_edit_form.dart';
+import 'package:pay_pilot/features/events/data/models/event_form.dart';
 import 'package:pay_pilot/features/events/repository/event_repository.dart';
 
 part 'events_state.dart';

@@ -2,8 +2,8 @@ import 'package:pay_pilot/core/data/models/event_model.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/daos/event_dao/event_dao.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
-import 'package:pay_pilot/features/events/data/event_edit_form.dart';
-import 'package:pay_pilot/features/events/data/event_form.dart';
+import 'package:pay_pilot/features/events/data/models/event_edit_form.dart';
+import 'package:pay_pilot/features/events/data/models/event_form.dart';
 
 class EventDbProvider {
   final EventDao _dbService;

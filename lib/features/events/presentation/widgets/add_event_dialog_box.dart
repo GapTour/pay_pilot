@@ -7,7 +7,7 @@ import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
-import 'package:pay_pilot/features/events/data/event_form.dart';
+import 'package:pay_pilot/features/events/data/models/event_form.dart';
 
 class AddEventDialogBox extends StatefulWidget {
   final List<Team> teams;

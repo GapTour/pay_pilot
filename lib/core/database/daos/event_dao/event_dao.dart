@@ -15,8 +15,8 @@ import 'package:pay_pilot/features/event_details/data/models/event_ratio_edit_fo
 import 'package:pay_pilot/features/event_details/data/models/event_ratio_form.dart';
 import 'package:pay_pilot/features/event_details/data/transaction_edit_form.dart';
 import 'package:pay_pilot/features/event_details/data/transaction_form.dart';
-import 'package:pay_pilot/features/events/data/event_edit_form.dart';
-import 'package:pay_pilot/features/events/data/event_form.dart';
+import 'package:pay_pilot/features/events/data/models/event_edit_form.dart';
+import 'package:pay_pilot/features/events/data/models/event_form.dart';
 
 part 'event_dao.g.dart';
 
