@@ -7,8 +7,8 @@ import 'package:pay_pilot/core/data/models/transaction_model.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/features/event_details/data/models/event_ratio_edit_form.dart';
 import 'package:pay_pilot/features/event_details/data/models/event_ratio_form.dart';
-import 'package:pay_pilot/features/event_details/data/transaction_edit_form.dart';
-import 'package:pay_pilot/features/event_details/data/transaction_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/transaction_edit_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/transaction_form.dart';
 import 'package:pay_pilot/features/event_details/repository/event_details_repository.dart';
 
 part 'event_details_state.dart';

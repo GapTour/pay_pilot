@@ -4,8 +4,8 @@ import 'package:pay_pilot/core/database/daos/event_dao/event_dao.dart';
 import 'package:pay_pilot/core/database/daos/member_dao/member_dao.dart';
 import 'package:pay_pilot/features/event_details/data/models/event_ratio_edit_form.dart';
 import 'package:pay_pilot/features/event_details/data/models/event_ratio_form.dart';
-import 'package:pay_pilot/features/event_details/data/transaction_edit_form.dart';
-import 'package:pay_pilot/features/event_details/data/transaction_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/transaction_edit_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/transaction_form.dart';
 
 class EventDetailsDbProvider {
   final EventDao _dbService;

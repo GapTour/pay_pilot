@@ -13,8 +13,8 @@ import 'package:pay_pilot/core/database/tables/teams.dart';
 import 'package:pay_pilot/core/utils/helpers/calculator_helper.dart';
 import 'package:pay_pilot/features/event_details/data/models/event_ratio_edit_form.dart';
 import 'package:pay_pilot/features/event_details/data/models/event_ratio_form.dart';
-import 'package:pay_pilot/features/event_details/data/transaction_edit_form.dart';
-import 'package:pay_pilot/features/event_details/data/transaction_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/transaction_edit_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/transaction_form.dart';
 import 'package:pay_pilot/features/events/data/models/event_edit_form.dart';
 import 'package:pay_pilot/features/events/data/models/event_form.dart';
 

@@ -10,7 +10,7 @@ import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
-import 'package:pay_pilot/features/event_details/data/transaction_edit_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/transaction_edit_form.dart';
 
 class EditEventTransactionDialogBox extends StatefulWidget {
   final TransactionModel transaction;
