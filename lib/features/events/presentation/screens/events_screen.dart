@@ -55,9 +55,9 @@ class _EventsScreenState extends State<EventsScreen> {
                     builder: (_) {
                       return EditEventDialogBox(
                         eventDetails: events[index],
-                        teams: (state.eventsStatus as EventSuccess).teams,
+                        teams: state.teams,
                         onPressedSubmit: (event) {
-                          context.read<EventsCubit>().updateIncome(event);
+                          context.read<EventsCubit>().editEvent(event);
                         },
                       );
                     },
@@ -122,9 +122,9 @@ class _EventsScreenState extends State<EventsScreen> {
                       context: context,
                       builder: (_) {
                         return AddEventDialogBox(
-                          teams: (state.eventsStatus as EventSuccess).teams,
-                          onPressedSubmit: (income) {
-                            context.read<EventsCubit>().addIncome(income);
+                          teams: state.teams,
+                          onPressedSubmit: (event) {
+                            context.read<EventsCubit>().addEvent(event);
                           },
                         );
                       },

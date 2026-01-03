@@ -1,31 +1,103 @@
-import 'package:pay_pilot/core/data/models/event_model.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
-import 'package:pay_pilot/features/events/data/event_db_provider.dart';
-import 'package:pay_pilot/features/events/data/models/event_edit_form.dart';
-import 'package:pay_pilot/features/events/data/models/event_form.dart';
+import 'package:dio/dio.dart';
+import 'package:pay_pilot/core/data/params/event_params.dart';
+import 'package:pay_pilot/core/data/response/error_response.dart';
+import 'package:pay_pilot/core/utils/resource/data_state.dart';
+import 'package:pay_pilot/features/events/data/event_api_provider.dart';
+import 'package:pay_pilot/features/events/data/models/response_event.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 class EventRepository {
-  final EventDbProvider _dbProvider;
+  // final EventDbProvider _dbProvider;
+  final EventApiProvider _apiProvider;
 
-  EventRepository(this._dbProvider);
+  EventRepository(
+    // this._dbProvider,
+    this._apiProvider,
+  );
 
-  Future<List<EventModel>> getAllEvents() async {
-    return await _dbProvider.getAllEvents();
+  Future<DataState<List<ResponseEvent>>> getAllEvents() async {
+    try {
+      final Response response = await _apiProvider.getAllEvents();
+
+      if (response.statusCode == 200) {
+        final rawData = response.data['data'] as List<dynamic>;
+        final events = rawData.map((e) {
+          return ResponseEvent.fromMap(e);
+        }).toList();
+
+        return DataSuccess(events);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<List<Team>> getAllTeams() async {
-    return await _dbProvider.getAllTeams();
+  Future<DataState<List<ResponseTeam>>> getAllTeams() async {
+    try {
+      final Response response = await _apiProvider.getAllTeams();
+
+      if (response.statusCode == 200) {
+        final rawData = response.data['data'] as List<dynamic>;
+        final teams = rawData.map((e) {
+          return ResponseTeam.fromMap(e);
+        }).toList();
+
+        return DataSuccess(teams);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<int> insertEvent(EventForm event) async {
-    return await _dbProvider.insertEvent(event);
+  Future<DataState<ResponseEvent>> addEvent(EventParams params) async {
+    try {
+      final Response response = await _apiProvider.addEvent(params);
+
+      if (response.statusCode == 201) {
+        final rawData = response.data['data'] as dynamic;
+        final event = ResponseEvent.fromMap(rawData);
+
+        return DataSuccess(event);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<void> updateEvent(EventEditForm event) async {
-    await _dbProvider.updateEvent(event);
+  Future<DataState<ResponseEvent>> editEvent(EventParams params) async {
+    try {
+      final Response response = await _apiProvider.editEvent(params);
+
+      if (response.statusCode == 201) {
+        final rawData = response.data['data'] as dynamic;
+        final event = ResponseEvent.fromMap(rawData);
+
+        return DataSuccess(event);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 
-  Future<void> deleteEvent(int event) async {
-    await _dbProvider.deleteEvent(event);
+  Future<DataState<int>> deleteEvent(int id) async {
+    try {
+      final Response response = await _apiProvider.deleteEvent(id);
+
+      if (response.statusCode == 204) {
+        return DataSuccess(id);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
   }
 }

@@ -1,17 +1,17 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/data/params/event_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
-import 'package:pay_pilot/features/events/data/models/event_form.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 class AddEventDialogBox extends StatefulWidget {
-  final List<Team> teams;
-  final Function(EventForm event) onPressedSubmit;
+  final List<ResponseTeam> teams;
+  final Function(EventParams event) onPressedSubmit;
   const AddEventDialogBox({
     super.key,
     required this.teams,
@@ -45,7 +45,7 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
     return AppDialogBox(
       title: 'Add New Event',
       children: [
-        AppDropDownButton<Team>(
+        AppDropDownButton<ResponseTeam>(
           label: 'Teams',
           hint: 'Select a team',
           showWarning: isNotSelected,
@@ -57,7 +57,10 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
             setState(() {});
           },
           items: widget.teams.map((e) {
-            return DropdownMenuItem<Team>(value: e, child: Text(e.title));
+            return DropdownMenuItem<ResponseTeam>(
+              value: e,
+              child: Text(e.title),
+            );
           }).toList(),
         ),
         Form(
@@ -116,11 +119,15 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
           setState(() {});
           return;
         }
-        final event = EventForm(
+        final event = EventParams(
+          id: null,
           title: titleController.text,
-          description: descriptionController.text,
+          description: descriptionController.text.isEmpty
+              ? null
+              : descriptionController.text,
           date: selectedDate!,
           teamID: teamID!,
+          isActive: true,
         );
         widget.onPressedSubmit(event);
         context.pop();

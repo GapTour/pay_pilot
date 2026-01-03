@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:pay_pilot/core/data/models/event_model.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
-import 'package:pay_pilot/features/events/data/models/event_edit_form.dart';
-import 'package:pay_pilot/features/events/data/models/event_form.dart';
+import 'package:pay_pilot/core/data/params/event_params.dart';
+import 'package:pay_pilot/core/utils/resource/data_state.dart';
+import 'package:pay_pilot/features/events/data/models/response_event.dart';
 import 'package:pay_pilot/features/events/repository/event_repository.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 part 'events_state.dart';
 part 'status/events_status.dart';
@@ -12,63 +12,96 @@ part 'status/events_status.dart';
 class EventsCubit extends Cubit<EventsState> {
   final EventRepository _repository;
   EventsCubit(this._repository)
-    : super(EventsState(eventsStatus: EventInitial(), events: []));
+    : super(EventsState(eventsStatus: EventInitial(), events: [], teams: []));
 
-  void loadEvents({List<Team>? teams}) async {
-    late List<Team> fetchedTeams;
-
+  void loadEvents() async {
     emit(state.copyWith(eventsStatus: EventLoading()));
 
-    try {
-      final events = await _repository.getAllEvents();
-      events.sort((a, b) => b.date.compareTo(a.date));
+    final eventsDataState = await _repository.getAllEvents();
 
-      fetchedTeams = teams ??= await _repository.getAllTeams();
+    if (eventsDataState is DataSuccess) {
+      final events = eventsDataState.data!
+        ..sort((a, b) => b.date.compareTo(a.date));
 
-      emit(
-        state.copyWith(
-          eventsStatus: EventSuccess(fetchedTeams),
-          events: events,
-        ),
-      );
-    } catch (_) {
+      emit(state.copyWith(eventsStatus: EventSuccess(), events: events));
+
+      final teamsDataState = await _repository.getAllTeams();
+
+      if (teamsDataState is DataSuccess) {
+        emit(
+          state.copyWith(
+            teams: teamsDataState.data!
+              ..sort(
+                (a, b) =>
+                    a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+              ),
+          ),
+        );
+      }
+    }
+
+    if (eventsDataState is DataFailed) {
       emit(state.copyWith(eventsStatus: EventFailure()));
     }
   }
 
-  void addIncome(EventForm event) async {
-    bool isSuccess = false;
+  void addEvent(EventParams params) async {
+    emit(state.copyWith(eventsStatus: EventLoading()));
 
-    await _repository.insertEvent(event).whenComplete(() {
-      if (state.eventsStatus is EventSuccess) isSuccess = true;
+    final dataState = await _repository.addEvent(params);
 
-      loadEvents(
-        teams: isSuccess ? (state.eventsStatus as EventSuccess).teams : null,
+    if (dataState is DataSuccess) {
+      emit(
+        state.copyWith(
+          eventsStatus: EventSuccess(),
+          events: state.events
+            ..add(dataState.data!)
+            ..sort((a, b) => b.date.compareTo(a.date)),
+        ),
       );
-    });
+    }
+    if (dataState is DataFailed) {
+      emit(state.copyWith(eventsStatus: EventFailure()));
+    }
   }
 
-  void updateIncome(EventEditForm event) async {
-    bool isSuccess = false;
+  void editEvent(EventParams params) async {
+    emit(state.copyWith(eventsStatus: EventLoading()));
 
-    await _repository.updateEvent(event).whenComplete(() {
-      if (state.eventsStatus is EventSuccess) isSuccess = true;
+    final dataState = await _repository.editEvent(params);
 
-      loadEvents(
-        teams: isSuccess ? (state.eventsStatus as EventSuccess).teams : null,
-      );
-    });
+    if (dataState is DataSuccess) {
+      final updatedEvent = dataState.data!;
+
+      final events = state.events;
+      final index = events.indexWhere((event) => event.id == updatedEvent.id);
+
+      if (index != -1) {
+        events[index] = updatedEvent;
+        events.sort((a, b) => b.date.compareTo(a.date));
+      }
+
+      emit(state.copyWith(eventsStatus: EventSuccess(), events: events));
+    }
+
+    if (dataState is DataFailed) {
+      emit(state.copyWith(eventsStatus: EventFailure()));
+    }
   }
 
   void deleteEvent(int eventID) async {
-    bool isSuccess = false;
+    emit(state.copyWith(eventsStatus: EventLoading()));
 
-    await _repository.deleteEvent(eventID).whenComplete(() {
-      if (state.eventsStatus is EventSuccess) isSuccess = true;
+    final dataState = await _repository.deleteEvent(eventID);
 
-      loadEvents(
-        teams: isSuccess ? (state.eventsStatus as EventSuccess).teams : null,
-      );
-    });
+    if (dataState is DataSuccess) {
+      final events = state.events..removeWhere((event) => event.id == eventID);
+
+      emit(state.copyWith(eventsStatus: EventSuccess(), events: events));
+    }
+
+    if (dataState is DataFailed) {
+      emit(state.copyWith(eventsStatus: EventFailure()));
+    }
   }
 }

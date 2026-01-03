@@ -1,19 +1,19 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/data/models/event_model.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/data/params/event_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
-import 'package:pay_pilot/features/events/data/models/event_edit_form.dart';
+import 'package:pay_pilot/features/events/data/models/response_event.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 class EditEventDialogBox extends StatefulWidget {
-  final EventModel eventDetails;
-  final List<Team> teams;
-  final Function(EventEditForm event) onPressedSubmit;
+  final ResponseEvent eventDetails;
+  final List<ResponseTeam> teams;
+  final Function(EventParams event) onPressedSubmit;
   const EditEventDialogBox({
     super.key,
     required this.eventDetails,
@@ -53,7 +53,7 @@ class _EditEventDialogBoxState extends State<EditEventDialogBox> {
     dateController.text =
         widget.eventDetails.date.formattedToJalali_yearMonthDay;
     selectedDate = widget.eventDetails.date;
-    teamID = widget.eventDetails.team.id;
+    teamID = widget.eventDetails.teamID;
   }
 
   @override
@@ -61,7 +61,7 @@ class _EditEventDialogBoxState extends State<EditEventDialogBox> {
     return AppDialogBox(
       title: 'Edit Event',
       children: [
-        AppDropDownButton<Team>(
+        AppDropDownButton<ResponseTeam>(
           label: 'Teams',
           hint: 'Select a team',
           showWarning: isNotSelected,
@@ -75,7 +75,10 @@ class _EditEventDialogBoxState extends State<EditEventDialogBox> {
             }
           },
           items: widget.teams.map((e) {
-            return DropdownMenuItem<Team>(value: e, child: Text(e.title));
+            return DropdownMenuItem<ResponseTeam>(
+              value: e,
+              child: Text(e.title),
+            );
           }).toList(),
         ),
         Form(
@@ -129,12 +132,15 @@ class _EditEventDialogBoxState extends State<EditEventDialogBox> {
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final event = EventEditForm(
+        final event = EventParams(
           id: eventID,
           title: titleController.text,
-          description: descriptionController.text,
+          description: descriptionController.text.isEmpty
+              ? null
+              : descriptionController.text,
           date: selectedDate!,
           teamID: teamID,
+          isActive: true,
         );
         widget.onPressedSubmit(event);
         context.pop();
