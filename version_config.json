@@ -1,0 +1,11 @@
+{
+  "version": {
+    "name": "1.4.0",
+    "android": {
+      "code": 1
+    },
+    "ios": {
+      "code": 1
+    }
+  }
+}
