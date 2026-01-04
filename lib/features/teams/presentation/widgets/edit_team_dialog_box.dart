@@ -64,7 +64,7 @@ class _EditTeamDialogBoxState extends State<EditTeamDialogBox> {
             },
           ),
         ),
-        Gap(12),
+        Gap(20),
 
         AppTextField(
           label: 'Description (optional)',
@@ -72,6 +72,7 @@ class _EditTeamDialogBoxState extends State<EditTeamDialogBox> {
           minLines: 3,
           maxLines: 4,
         ),
+        Gap(20),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;

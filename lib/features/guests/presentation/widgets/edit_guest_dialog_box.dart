@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/guest_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
@@ -84,18 +85,21 @@ class _EditGuestDialogBoxState extends State<EditGuestDialogBox> {
             },
           ),
         ),
+        Gap(20),
         AppTextField(
           label: 'Telegram ID',
           hint: '@mahdiyarz',
           controller: telegramIdController,
           keyboardType: TextInputType.emailAddress,
         ),
+        Gap(20),
         AppTextField(
           label: 'Instagram ID',
           hint: '@mahdiyarz',
           controller: instagramIdController,
           keyboardType: TextInputType.emailAddress,
         ),
+        Gap(20),
         AppTextField(
           label: 'Birthday',
           hint: DateTime.now().formattedToJalali_yearMonthDay,
@@ -113,12 +117,14 @@ class _EditGuestDialogBoxState extends State<EditGuestDialogBox> {
             );
           },
         ),
+        Gap(20),
         AppTextField(
           label: 'Description (optional)',
           controller: descriptionController,
           minLines: 3,
           maxLines: 4,
         ),
+        Gap(85),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;

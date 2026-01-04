@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/team_params.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
@@ -45,12 +46,14 @@ class _AddTeamDialogBoxState extends State<AddTeamDialogBox> {
             },
           ),
         ),
+        Gap(20),
         AppTextField(
           label: 'Description (optional)',
           controller: descriptionController,
           minLines: 3,
           maxLines: 4,
         ),
+        Gap(20),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;

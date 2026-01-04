@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/team_member_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
@@ -82,6 +83,7 @@ class _EditRatioDialogBoxState extends State<EditRatioDialogBox> {
       title: 'Edit Team\'s Member',
       children: [
         AppTextField(label: 'Team', controller: teamController, readOnly: true),
+        Gap(20),
         AppDropDownButton<ResponseMember>(
           label: 'Members',
           hint: 'Select a member',
@@ -102,6 +104,7 @@ class _EditRatioDialogBoxState extends State<EditRatioDialogBox> {
             );
           }).toList(),
         ),
+        Gap(20),
         Form(
           key: formKey,
           child: AppTextField(
@@ -130,6 +133,7 @@ class _EditRatioDialogBoxState extends State<EditRatioDialogBox> {
             },
           ),
         ),
+        Gap(20),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;

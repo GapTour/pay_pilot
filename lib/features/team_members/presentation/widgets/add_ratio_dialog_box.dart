@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/team_member_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
@@ -70,6 +71,7 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
       title: 'Add New Team\'s Member',
       children: [
         AppTextField(label: 'Team', controller: teamController, readOnly: true),
+        Gap(20),
         if (notAddedMembers.isNotEmpty)
           AppDropDownButton<ResponseMember>(
             label: 'Members',
@@ -105,6 +107,7 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
               },
             ),
           ),
+        Gap(20),
         Form(
           key: formKey,
           child: AppTextField(
@@ -133,6 +136,7 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
             },
           ),
         ),
+        Gap(20),
       ],
       onPressed: () {
         if (formDropDownKey.currentState?.validate() == false &&

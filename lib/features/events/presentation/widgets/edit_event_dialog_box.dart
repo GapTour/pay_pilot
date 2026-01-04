@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/event_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
@@ -81,6 +82,7 @@ class _EditEventDialogBoxState extends State<EditEventDialogBox> {
             );
           }).toList(),
         ),
+        Gap(20),
         Form(
           key: formKey,
           child: Column(
@@ -97,6 +99,7 @@ class _EditEventDialogBoxState extends State<EditEventDialogBox> {
                   return null;
                 },
               ),
+              Gap(20),
               AppTextField(
                 label: 'Date',
                 hint: DateTime.now().formattedToJalali_yearMonthDay,
@@ -120,6 +123,7 @@ class _EditEventDialogBoxState extends State<EditEventDialogBox> {
                   return null;
                 },
               ),
+              Gap(20),
             ],
           ),
         ),
@@ -129,6 +133,7 @@ class _EditEventDialogBoxState extends State<EditEventDialogBox> {
           minLines: 3,
           maxLines: 4,
         ),
+        Gap(85),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;

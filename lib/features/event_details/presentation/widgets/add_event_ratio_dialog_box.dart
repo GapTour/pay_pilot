@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
@@ -86,6 +87,7 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
             );
           }).toList(),
         ),
+        Gap(20),
         Form(
           key: formKey,
           child: AppTextField(
