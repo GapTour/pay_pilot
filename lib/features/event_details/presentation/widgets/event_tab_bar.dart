@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pay_pilot/core/utils/theme/app_theme.dart';
-import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
-import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
+import 'package:pay_pilot/core/widgets/app_tab.dart';
+import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
 
 class EventTabBar extends StatelessWidget {
   final EventDetailsState state;
@@ -12,58 +11,45 @@ class EventTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentPage = state.currentPage;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+    return AppTab(
+      tabs: [
         TabTile(
-          isSelected: currentPage == EventDetailsPage.transactions,
+          isSelected: currentPage.isTransactions,
           title: 'Transactions',
-          tilePage: EventDetailsPage.transactions,
+          onTap: () {
+            context.read<EventDetailsBloc>().add(
+              ChangePage(EventDetailsPage.transactions),
+            );
+          },
         ),
         TabTile(
-          isSelected: currentPage == EventDetailsPage.members,
+          isSelected: currentPage.isOrder,
+          title: 'Orders',
+          onTap: () {
+            context.read<EventDetailsBloc>().add(
+              ChangePage(EventDetailsPage.orders),
+            );
+          },
+        ),
+        TabTile(
+          isSelected: currentPage.isMembers,
           title: 'Members',
-          tilePage: EventDetailsPage.members,
+          onTap: () {
+            context.read<EventDetailsBloc>().add(
+              ChangePage(EventDetailsPage.members),
+            );
+          },
         ),
         TabTile(
-          isSelected: currentPage == EventDetailsPage.report,
+          isSelected: currentPage.isReport,
           title: 'Report',
-          tilePage: EventDetailsPage.report,
+          onTap: () {
+            context.read<EventDetailsBloc>().add(
+              ChangePage(EventDetailsPage.report),
+            );
+          },
         ),
       ],
-    );
-  }
-}
-
-class TabTile extends StatelessWidget {
-  final String title;
-  final bool isSelected;
-  final EventDetailsPage tilePage;
-  const TabTile({
-    super.key,
-    required this.title,
-    required this.isSelected,
-    required this.tilePage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AppElevatedButton(
-      onTap: () {
-        context.read<EventDetailsCubit>().changePage(tilePage);
-      },
-      isSelected: isSelected,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8),
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.displayLarge?.copyWith(
-            color: isSelected ? kOnPrimaryColor : null,
-          ),
-        ),
-      ),
     );
   }
 }
