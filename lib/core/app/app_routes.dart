@@ -6,7 +6,7 @@ import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pay_pilot/features/auth/presentation/screens/login_screen.dart';
 import 'package:pay_pilot/features/auth/presentation/screens/splash_screen.dart';
-import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
+import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
 import 'package:pay_pilot/features/event_details/presentation/screens/event_details_screen.dart';
 import 'package:pay_pilot/features/events/presentation/cubit/events_cubit.dart';
 import 'package:pay_pilot/features/events/presentation/screens/events_screen.dart';
@@ -140,7 +140,7 @@ class AppRoutes {
         path: EventDetailsScreen.routeName,
         builder: (context, state) => MultiBlocProvider(
           providers: [
-            BlocProvider(create: (context) => EventDetailsCubit(locator())),
+            BlocProvider(create: (context) => EventDetailsBloc(locator())),
           ],
           child: EventDetailsScreen(
             eventID: state.pathParameters[AppArguments.eventDetails]!,

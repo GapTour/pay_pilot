@@ -12,6 +12,7 @@ import 'package:pay_pilot/core/utils/services/secure_storage_service.dart';
 import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/auth/data/login_api_provider.dart';
 import 'package:pay_pilot/features/auth/repository/auth_repository.dart';
+import 'package:pay_pilot/features/event_details/data/event_details_api_provider.dart';
 import 'package:pay_pilot/features/event_details/data/event_details_db_provider.dart';
 import 'package:pay_pilot/features/event_details/repository/event_details_repository.dart';
 import 'package:pay_pilot/features/events/data/event_api_provider.dart';
@@ -105,6 +106,9 @@ void _callProviders() {
   );
   locator.registerLazySingleton<EventDetailsDbProvider>(
     () => EventDetailsDbProvider(locator(), locator()),
+  );
+  locator.registerLazySingleton<EventDetailsApiProvider>(
+    () => EventDetailsApiProvider(locator()),
   );
   locator.registerLazySingleton<TeamsDbProvider>(
     () => TeamsDbProvider(locator()),
