@@ -15,7 +15,7 @@ import 'package:pay_pilot/core/database/tables/ratios.dart';
 import 'package:pay_pilot/core/database/tables/reports.dart';
 import 'package:pay_pilot/core/database/tables/teams.dart';
 import 'package:pay_pilot/core/utils/helpers/calculator_helper.dart';
-import 'package:pay_pilot/features/reports/data/report_form.dart';
+import 'package:pay_pilot/features/reports/data/models/report_form.dart';
 
 part 'report_dao.g.dart';
 

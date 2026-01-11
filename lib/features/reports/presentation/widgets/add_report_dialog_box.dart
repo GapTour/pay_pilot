@@ -7,7 +7,7 @@ import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/reports/data/report_form.dart';
+import 'package:pay_pilot/features/reports/data/models/report_form.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/widgets/selecting_events.dart';
 import 'package:persian_calendar_widget/persian_calendar_widget.dart';
