@@ -35,6 +35,7 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
           eventRatioStatus: EventRatioInitial(),
           eventOrderStatus: EventOrderInitial(),
           eventReportStatus: EventReportInitial(),
+          filteredOrders: [],
         ),
       ) {
     on<LoadEventDetails>(_loadEventDetails);
@@ -51,6 +52,89 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
     on<ChangePage>(_changePage);
     on<ChangeStatesToInit>(_changeStatesToInit);
     on<LoadReportList>(_loadReportList);
+    on<UpdateFilteredOrders>(_updateFilteredOrders);
+    on<UpdateOrdersList>(_updateOrdersList);
+    on<ChangeOrderDeliveryStatus>(_changeOrderDeliveryStatus);
+  }
+
+  void _updateFilteredOrders(
+    UpdateFilteredOrders event,
+    Emitter<EventDetailsState> emit,
+  ) {
+    emit(state.copyWith(filteredOrders: event.filteredOrders));
+  }
+
+  Future<void> _changeOrderDeliveryStatus(
+    ChangeOrderDeliveryStatus event,
+    Emitter<EventDetailsState> emit,
+  ) async {
+    emit(state.copyWith(eventOrderStatus: EventOrderLoading()));
+
+    final dataState = await _repository.changeOrderStatus(
+      event.orderID,
+      event.isDelivered,
+    );
+
+    if (dataState is DataSuccess) {
+      add(ChangeStatesToInit());
+
+      if (state.eventDetailStatus is EventDetailSuccess) {
+        final eventDetailStatus = state.eventDetailStatus as EventDetailSuccess;
+        final eventDetailsInfo = eventDetailStatus.eventDetails;
+        final index = eventDetailsInfo.orders.indexWhere(
+          (order) => order.id == dataState.data!.id,
+        );
+        eventDetailsInfo.orders[index] = dataState.data!;
+        final orders = eventDetailsInfo.orders;
+
+        emit(
+          state.copyWith(
+            eventDetailStatus: EventDetailSuccess(
+              eventDetailsInfo.copyWith(orders: orders),
+              eventDetailStatus.members,
+              eventDetailStatus.guests,
+              eventDetailStatus.menuItems,
+            ),
+          ),
+        );
+      }
+    }
+    if (dataState is DataFailed) {
+      emit(state.copyWith(eventOrderStatus: EventOrderFailure()));
+    }
+  }
+
+  Future<void> _updateOrdersList(
+    UpdateOrdersList event,
+    Emitter<EventDetailsState> emit,
+  ) async {
+    emit(state.copyWith(eventOrderStatus: EventOrderLoading()));
+
+    final dataState = await _repository.getAllOrders(event.eventID);
+
+    if (dataState is DataSuccess) {
+      add(ChangeStatesToInit());
+
+      if (state.eventDetailStatus is EventDetailSuccess) {
+        final eventDetailStatus = state.eventDetailStatus as EventDetailSuccess;
+        final eventDetailsInfo = eventDetailStatus.eventDetails;
+        final orders = dataState.data;
+
+        emit(
+          state.copyWith(
+            eventDetailStatus: EventDetailSuccess(
+              eventDetailsInfo.copyWith(orders: orders),
+              eventDetailStatus.members,
+              eventDetailStatus.guests,
+              eventDetailStatus.menuItems,
+            ),
+          ),
+        );
+      }
+    }
+    if (dataState is DataFailed) {
+      emit(state.copyWith(eventOrderStatus: EventOrderFailure()));
+    }
   }
 
   void _changePage(ChangePage event, Emitter<EventDetailsState> emit) {
@@ -206,6 +290,8 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
             ),
           ),
         );
+
+        add(UpdateOrdersList(eventDetailsInfo.id));
       }
     }
     if (dataState is DataFailed) {
@@ -249,6 +335,8 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
             ),
           ),
         );
+
+        add(UpdateOrdersList(eventDetailsInfo.id));
       }
     }
     if (dataState is DataFailed) {
@@ -526,7 +614,9 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
               id: event.orderId,
               orderedByMember: null,
               orderedByGuest: null,
+              eventID: 0,
               orders: [],
+              isDelivered: false,
             ),
           ),
         ),

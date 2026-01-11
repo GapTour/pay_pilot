@@ -90,6 +90,15 @@ class EventDetailsApiProvider {
     return response;
   }
 
+  Future<dynamic> changeOrderDelivery(int id, bool isDelivered) async {
+    final response = await _dio.put(
+      '${dotenv.env[AppApiUrls.eventOrder]}/status/$id',
+      data: {'is_delivered': isDelivered},
+    );
+
+    return response;
+  }
+
   Future<dynamic> deleteOrder(int id) async {
     final response = await _dio.delete(
       '${dotenv.env[AppApiUrls.eventOrder]}$id',
@@ -118,6 +127,14 @@ class EventDetailsApiProvider {
 
   Future<dynamic> getAllMenuItems() async {
     final response = await _dio.get('${dotenv.env[AppApiUrls.menu]}');
+
+    return response;
+  }
+
+  Future<dynamic> getAllOrders(int eventId) async {
+    final response = await _dio.get(
+      '${dotenv.env[AppApiUrls.eventOrder]}$eventId',
+    );
 
     return response;
   }

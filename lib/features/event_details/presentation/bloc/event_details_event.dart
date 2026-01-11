@@ -82,3 +82,22 @@ class DeleteOrder extends EventDetailsEvent {
 class ChangeStatesToInit extends EventDetailsEvent {}
 
 class LoadReportList extends EventDetailsEvent {}
+
+class UpdateOrdersList extends EventDetailsEvent {
+  final int eventID;
+
+  const UpdateOrdersList(this.eventID);
+}
+
+class ChangeOrderDeliveryStatus extends EventDetailsEvent {
+  final int orderID;
+  final bool isDelivered;
+
+  const ChangeOrderDeliveryStatus(this.orderID, this.isDelivered);
+}
+
+class UpdateFilteredOrders extends EventDetailsEvent {
+  final List<int> filteredOrders;
+
+  const UpdateFilteredOrders(this.filteredOrders);
+}

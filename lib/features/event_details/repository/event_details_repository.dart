@@ -129,6 +129,29 @@ class EventDetailsRepository {
     }
   }
 
+  Future<DataState<ResponseOrder>> changeOrderStatus(
+    int id,
+    bool isDelivered,
+  ) async {
+    try {
+      final Response response = await _apiProvider.changeOrderDelivery(
+        id,
+        isDelivered,
+      );
+
+      if (response.statusCode == 201) {
+        final rawData = response.data['data'];
+        final order = ResponseOrder.fromMap(rawData);
+
+        return DataSuccess(order);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
+  }
+
   Future<DataState<int>> deleteTransaction(int id) async {
     try {
       final Response response = await _apiProvider.deleteTransaction(id);
@@ -220,6 +243,25 @@ class EventDetailsRepository {
         }).toList();
 
         return DataSuccess(members);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
+  }
+
+  Future<DataState<List<ResponseOrder>>> getAllOrders(int eventID) async {
+    try {
+      final Response response = await _apiProvider.getAllOrders(eventID);
+
+      if (response.statusCode == 200) {
+        final rawData = response.data['data'] as List<dynamic>;
+        final orders = rawData.map((e) {
+          return ResponseOrder.fromMap(e);
+        }).toList();
+
+        return DataSuccess(orders);
       }
 
       return DataFailed(ErrorResponse.defaultError(null, response.statusCode));

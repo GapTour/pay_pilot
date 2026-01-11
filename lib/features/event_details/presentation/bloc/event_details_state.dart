@@ -19,6 +19,7 @@ class EventDetailsState extends Equatable {
   final EventOrderStatus eventOrderStatus;
   final EventReportStatus eventReportStatus;
   final EventDetailsPage currentPage;
+  final List<int> filteredOrders;
   const EventDetailsState({
     required this.eventDetailStatus,
     required this.eventTransactionStatus,
@@ -26,6 +27,7 @@ class EventDetailsState extends Equatable {
     required this.eventOrderStatus,
     required this.eventReportStatus,
     required this.currentPage,
+    required this.filteredOrders,
   });
 
   @override
@@ -36,6 +38,7 @@ class EventDetailsState extends Equatable {
     eventOrderStatus,
     eventReportStatus,
     currentPage,
+    filteredOrders,
   ];
 
   EventDetailsState copyWith({
@@ -45,6 +48,7 @@ class EventDetailsState extends Equatable {
     EventOrderStatus? eventOrderStatus,
     EventReportStatus? eventReportStatus,
     EventDetailsPage? currentPage,
+    List<int>? filteredOrders,
   }) {
     return EventDetailsState(
       eventDetailStatus: eventDetailStatus ?? this.eventDetailStatus,
@@ -54,6 +58,7 @@ class EventDetailsState extends Equatable {
       eventOrderStatus: eventOrderStatus ?? this.eventOrderStatus,
       eventReportStatus: eventReportStatus ?? this.eventReportStatus,
       currentPage: currentPage ?? this.currentPage,
+      filteredOrders: filteredOrders ?? this.filteredOrders,
     );
   }
 }
