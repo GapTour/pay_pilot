@@ -40,6 +40,7 @@ final ThemeData appTheme = ThemeData(
     displayLarge: TextStyle(color: kPrimaryContainerColor, fontSize: 16),
     displayMedium: TextStyle(color: kPrimaryContainerColor, fontSize: 12.5),
     labelMedium: TextStyle(color: kPrimaryContainerColor, fontSize: 11),
+    labelSmall: TextStyle(color: kPrimaryColor, fontSize: 10),
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: kPrimaryColor,
