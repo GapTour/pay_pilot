@@ -6,15 +6,18 @@ import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
 import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_order_dialog_box.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_ratio_dialog_box.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_transaction_dialog_box.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_details_title.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/event_orders_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_ratios_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_report_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_tab_bar.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_transactions_list.dart';
 import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
+import 'package:pay_pilot/features/menu/data/models/response_menu.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   static const routeName = '/event-details/id:${AppArguments.eventDetails}';
@@ -76,6 +79,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     if (state.currentPage.isReport) {
                       return EventReportList(eventID);
                     }
+                    if (state.currentPage.isOrder) {
+                      return EventOrdersList();
+                    }
 
                     return SizedBox.shrink();
                   },
@@ -91,6 +97,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           final members = <ResponseMember>[];
           final guests = <ResponseGuest>[];
           final ratios = <ResponseEventRatio>[];
+          final menuItems = <ResponseMenu>[];
           final addedMembers = <int, double>{};
 
           if (state.eventDetailStatus is EventDetailSuccess) {
@@ -98,6 +105,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 (state.eventDetailStatus as EventDetailSuccess);
             members.addAll(eventDetailStatus.members);
             guests.addAll(eventDetailStatus.guests);
+            menuItems.addAll(eventDetailStatus.menuItems);
             ratios
               ..addAll(eventDetailStatus.eventDetails.memberRatios)
               ..sort((a, b) => b.ratio.compareTo(a.ratio));
@@ -122,16 +130,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               showDialog(
                 context: context,
                 builder: (_) {
-                  // if (state.currentPage.isMembers) {
-                  //   return AddEventRatioDialogBox(
-                  //     eventID: int.parse(widget.eventID),
-                  //     members: state.members,
-                  //     addedMembers: state.addedMembers,
-                  //     onPressedSubmit: (ratio) {
-                  //       context.read<EventDetailsCubit>().insertRatio(ratio);
-                  //     },
-                  //   );
-                  // }
+                  if (state.currentPage.isOrder) {
+                    return AddEventOrderDialogBox(
+                      eventID: int.parse(widget.eventID),
+                      responseMembers: members,
+                      responseGuests: guests,
+                      menuItems: menuItems,
+                      onPressedSubmit: (order) {
+                        context.read<EventDetailsBloc>().add(AddOrder(order));
+                      },
+                    );
+                  }
                   if (state.currentPage.isMembers) {
                     return AddEventRatioDialogBox(
                       eventID: eventID,
