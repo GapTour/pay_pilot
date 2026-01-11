@@ -1,6 +1,8 @@
 abstract class AppApiUrls {
   static const String baseUrl = 'BASE_URL';
   static const String login = 'LOGIN';
+  static const String register = 'REGISTER';
+  static const String permission = 'PERMISSION';
   static const String member = 'MEMBER';
   static const String guest = 'GUEST';
   static const String ratio = 'RATIO';

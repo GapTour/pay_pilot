@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pay_pilot/core/data/enums/splash_type.dart';
 import 'package:pay_pilot/core/data/params/login_params.dart';
+import 'package:pay_pilot/core/data/params/register_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
 import 'package:pay_pilot/core/data/response/login_response.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
@@ -35,6 +36,36 @@ class AuthRepository {
         );
 
         return DataSuccess(loginResponse);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
+  }
+
+  Future<DataState<String>> register(RegisterParams params) async {
+    try {
+      final Response response = await _loginProvider.userRegister(params);
+
+      if (response.statusCode == 201) {
+        final email = response.data['data']['email'];
+
+        return DataSuccess(email);
+      }
+
+      return DataFailed(ErrorResponse.defaultError(null));
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    }
+  }
+
+  Future<DataState<String>> createPermission() async {
+    try {
+      final Response response = await _loginProvider.createPermission();
+
+      if (response.statusCode == 201) {
+        return DataSuccess('Done');
       }
 
       return DataFailed(ErrorResponse.defaultError(null));

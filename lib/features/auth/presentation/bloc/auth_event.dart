@@ -10,8 +10,16 @@ sealed class AuthEvent extends Equatable {
 
 class CheckAuthStatus extends AuthEvent {}
 
+class CreateNewPermission extends AuthEvent {}
+
 class LoginToAccount extends AuthEvent {
   final LoginParams params;
 
   const LoginToAccount(this.params);
+}
+
+class RegisterNewAccount extends AuthEvent {
+  final RegisterParams params;
+
+  const RegisterNewAccount(this.params);
 }
