@@ -11,6 +11,7 @@ class AppTile extends StatefulWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final bool isActive;
+  final EdgeInsets padding;
   const AppTile({
     required this.child,
     this.isActive = true,
@@ -18,6 +19,7 @@ class AppTile extends StatefulWidget {
     this.onPreview,
     this.previewButtonTitle,
     this.onDelete,
+    this.padding = const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
     super.key,
   });
 
@@ -60,10 +62,7 @@ class _AppTileState extends State<AppTile> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Gap(5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
-              child: widget.child,
-            ),
+            Padding(padding: widget.padding, child: widget.child),
             Gap(5),
             AnimatedContainer(
               height: !_isExpanded ? 0 : 59,
