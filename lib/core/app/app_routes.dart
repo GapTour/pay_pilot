@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pay_pilot/features/auth/presentation/screens/login_screen.dart';
+import 'package:pay_pilot/features/auth/presentation/screens/register_screen.dart';
 import 'package:pay_pilot/features/auth/presentation/screens/splash_screen.dart';
 import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
 import 'package:pay_pilot/features/event_details/presentation/screens/event_details_screen.dart';
@@ -37,6 +38,7 @@ class AppRoutes {
   static const String mainScreen = 'mainScreen';
   static const String menuItemsScreen = 'menuItemsScreen';
   static const String loginScreen = 'loginScreen';
+  static const String registerScreen = 'registerScreen';
   static const String splashScreen = 'splashScreen';
   static const String membersScreen = 'membersScreen';
   static const String memberDetailsScreen = 'memberDetailsScreen';
@@ -68,6 +70,14 @@ class AppRoutes {
         builder: (context, state) => BlocProvider(
           create: (context) => AuthBloc(locator()),
           child: const LoginScreen(),
+        ),
+      ),
+      GoRoute(
+        name: registerScreen,
+        path: RegisterScreen.routeName,
+        builder: (context, state) => BlocProvider(
+          create: (context) => AuthBloc(locator()),
+          child: const RegisterScreen(),
         ),
       ),
       GoRoute(
