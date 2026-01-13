@@ -32,6 +32,7 @@ import 'package:pay_pilot/features/menu/data/menu_api_provider.dart';
 import 'package:pay_pilot/features/menu/repository/menu_repository.dart';
 import 'package:pay_pilot/features/report_details/data/report_details_db_provider.dart';
 import 'package:pay_pilot/features/report_details/repository/report_details_repository.dart';
+import 'package:pay_pilot/features/reports/data/report_api_provider.dart';
 import 'package:pay_pilot/features/reports/data/report_db_provider.dart';
 import 'package:pay_pilot/features/reports/repository/report_repository.dart';
 import 'package:pay_pilot/features/team_members/data/team_member_api_provider.dart';
@@ -127,6 +128,9 @@ void _callProviders() {
   );
   locator.registerLazySingleton<ReportDbProvider>(
     () => ReportDbProvider(locator(), locator()),
+  );
+  locator.registerLazySingleton<ReportApiProvider>(
+    () => ReportApiProvider(locator()),
   );
   locator.registerLazySingleton<ReportDetailsDbProvider>(
     () => ReportDetailsDbProvider(locator()),
