@@ -12,7 +12,7 @@ final class SelectingEventsInitial extends SelectingEventsState {}
 final class SelectingEventsLoading extends SelectingEventsState {}
 
 class SelectingEventsSuccess extends SelectingEventsState {
-  final List<EventDetailsModel> events;
+  final List<ResponseEventDetails> events;
 
   const SelectingEventsSuccess({required this.events});
   @override

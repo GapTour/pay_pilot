@@ -101,7 +101,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             context: context,
             builder: (_) {
               return AddReportDialogBox(
-                innerContext: context,
+                // innerContext: context,
                 onPressedSubmit: (report) {
                   context.read<ReportsCubit>().addReport(report);
                 },
