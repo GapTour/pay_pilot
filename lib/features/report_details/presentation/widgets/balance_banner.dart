@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:pay_pilot/core/data/models/event_details_model.dart';
-import 'package:pay_pilot/core/data/models/transaction_model.dart';
-import 'package:pay_pilot/core/database/tables/event_transactions.dart';
+import 'package:pay_pilot/core/data/enums/transaction_status.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 
 class BalanceBanner extends StatefulWidget {
-  final List<EventDetailsModel> events;
+  final List<ResponseEventDetails> events;
   const BalanceBanner({required this.events, super.key});
 
   @override
@@ -16,9 +16,9 @@ class BalanceBanner extends StatefulWidget {
 }
 
 class _BalanceBannerState extends State<BalanceBanner> {
-  final List<TransactionModel> transactions = [];
+  final List<ResponseEventTransaction> transactions = [];
 
-  void fetchTransactions(List<EventDetailsModel> events) {
+  void fetchTransactions(List<ResponseEventDetails> events) {
     transactions.clear();
 
     for (var event in events) {
@@ -28,7 +28,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
 
   double get totalIncomes {
     return transactions.fold(0, (previousValue, element) {
-      if (element.transactionType == TransactionType.expense) {
+      if (element.transactionType == TransactionStatus.expense) {
         return previousValue;
       }
       return previousValue + element.amount;
@@ -37,7 +37,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
 
   double get totalExpenses {
     return transactions.fold(0, (previousValue, element) {
-      if (element.transactionType == TransactionType.income) {
+      if (element.transactionType == TransactionStatus.income) {
         return previousValue;
       }
       return previousValue + element.amount;
@@ -132,7 +132,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
           Gap(2),
 
           SizedBox(
-            height: 65,
+            height: 70,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 9),

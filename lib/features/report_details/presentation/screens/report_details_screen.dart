@@ -5,8 +5,10 @@ import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
+import 'package:pay_pilot/core/widgets/app_loading_state.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
-import 'package:pay_pilot/features/report_details/presentation/cubit/report_details_cubit.dart';
+import 'package:pay_pilot/features/report_details/data/models/response_report_details.dart';
+import 'package:pay_pilot/features/report_details/presentation/bloc/report_details_bloc.dart';
 import 'package:pay_pilot/features/report_details/presentation/widgets/balance_banner.dart';
 
 class ReportDetailsScreen extends StatefulWidget {
@@ -24,8 +26,8 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   void initState() {
     super.initState();
 
-    context.read<ReportDetailsCubit>().loadReportDetails(
-      int.parse(widget.reportID),
+    context.read<ReportDetailsBloc>().add(
+      FetchReportDetails(reportID: int.parse(widget.reportID)),
     );
   }
 
@@ -33,13 +35,32 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Report Details')),
-      body: BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
+      body: BlocBuilder<ReportDetailsBloc, ReportDetailsState>(
+        buildWhen: (p, c) => p.reportDetailsStatus != c.reportDetailsStatus,
         builder: (context, state) {
-          if (state is ReportDetailsSuccess) {
-            final reportDetails = state.report;
+          late ResponseReportDetails reportDetails;
+          final isLoading =
+              state.reportDetailsStatus is ReportDetailsInit ||
+              state.reportDetailsStatus is ReportDetailsLoading;
 
-            return ListView(
-              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+          if (isLoading) {
+            return const Center(child: CircularProgressIndicator.adaptive());
+          }
+
+          if (state.reportDetailsStatus is ReportDetailsFailure) {
+            return Center(
+              child: Text('Something went wrong! try again later.'),
+            );
+          }
+
+          reportDetails =
+              (state.reportDetailsStatus as ReportDetailsFetched).reportDetails;
+
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   reportDetails.title,
@@ -70,54 +91,99 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                 BalanceBanner(events: reportDetails.events),
                 Gap(12),
 
-                AppList(
-                  itemCount: reportDetails.membersBalance.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  emptyInboxMessage: '',
-                  itemBuilder: (context, index) {
-                    return AppTile(
-                      isActive: false,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            reportDetails.membersBalance[index].member.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.displayLarge,
+                Expanded(
+                  child: BlocBuilder<ReportDetailsBloc, ReportDetailsState>(
+                    buildWhen: (p, c) =>
+                        p.reportBalanceStatus != c.reportBalanceStatus,
+                    builder: (context, state) {
+                      if (state.reportBalanceStatus is ReportBalanceInit ||
+                          state.reportBalanceStatus is ReportBalanceLoading) {
+                        return AppLoadingState();
+                      }
+
+                      if (state.reportBalanceStatus is ReportBalanceFailure) {
+                        return Center(
+                          child: Text(
+                            'Calculating members balance goes wrong!',
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Salary ',
+                        );
+                      }
+
+                      final membersBalance =
+                          (state.reportBalanceStatus as ReportBalanceCalculated)
+                              .membersBalance;
+
+                      return AppList(
+                        itemCount: membersBalance.length,
+                        shrinkWrap: true,
+                        // padding: EdgeInsets.zero,
+                        emptyInboxMessage: '',
+                        itemBuilder: (context, index) {
+                          return AppTile(
+                            isActive: false,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  membersBalance[index].member.name,
+                                  overflow: TextOverflow.ellipsis,
                                   style: Theme.of(
                                     context,
-                                  ).textTheme.headlineSmall,
+                                  ).textTheme.displayLarge,
                                 ),
-                              ),
-                              Text(
-                                AmountHelper.integerToFormattedPrice(
-                                  reportDetails
-                                      .membersBalance[index]
-                                      .totalBalance,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        'Salary ',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.headlineSmall,
+                                      ),
+                                    ),
+                                    Text(
+                                      AmountHelper.integerToFormattedPrice(
+                                        membersBalance[index].salary,
+                                      ),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.displayLarge,
+                                    ),
+                                  ],
                                 ),
-                                style: Theme.of(context).textTheme.displayLarge,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                                if ((membersBalance[index].expenses ?? 0) > 0)
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          'Paid expenses ',
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.headlineSmall,
+                                        ),
+                                      ),
+                                      Text(
+                                        AmountHelper.integerToFormattedPrice(
+                                          membersBalance[index].expenses!,
+                                        ),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.displayLarge,
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
                 Gap(45),
               ],
-            );
-          }
-
-          return const Center(child: CircularProgressIndicator.adaptive());
+            ),
+          );
         },
       ),
     );
