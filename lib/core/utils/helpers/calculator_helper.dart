@@ -1,9 +1,11 @@
 import 'package:collection/collection.dart';
+import 'package:pay_pilot/core/data/enums/transaction_status.dart';
 import 'package:pay_pilot/core/data/models/balance_model.dart';
 import 'package:pay_pilot/core/data/models/member_ratio_model.dart';
 import 'package:pay_pilot/core/data/models/raw_event_details_model.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_balance.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
@@ -170,6 +172,71 @@ class CalculatorHelper {
       }
     }
 
+    // Duration totalDuration = await compute(_calculateDurationFrom, args);
+    return membersBalance;
+  }
+
+  static Future<List<ResponseEventBalance>> customTotalSalaries({
+    required List<ResponseEventDetails> events,
+    required List<ResponseMember> members,
+  }) async {
+    final List<ResponseEventBalance> membersBalance = [];
+
+    for (var eventDetail in events) {
+      final double totalBalance = eventDetail.transactions.fold(0, (
+        previousValue,
+        element,
+      ) {
+        if (element.transactionType == TransactionStatus.expense) {
+          return previousValue - element.amount;
+        }
+        return previousValue + element.amount;
+      });
+
+      if (totalBalance < 1) continue;
+
+      for (var ratioInfo in eventDetail.memberRatios) {
+        final involvedMember = members.firstWhere(
+          (element) => element.id == ratioInfo.memberID,
+        );
+
+        final double balance = totalBalance * (ratioInfo.ratio / 100);
+        final memberBalanceInfo = membersBalance.firstWhereOrNull(
+          (e) => e.member.id == ratioInfo.memberID,
+        );
+
+        final totalExpense = eventDetail.transactions
+            .where((transaction) {
+              return transaction.transactionType.isExpense &&
+                  transaction.paidByMember == ratioInfo.memberID;
+            })
+            .toList()
+            .fold(0.0, (previousValue, element) {
+              return previousValue + element.amount;
+            });
+
+        if (memberBalanceInfo != null) {
+          membersBalance
+            ..remove(memberBalanceInfo)
+            ..add(
+              ResponseEventBalance(
+                member: involvedMember,
+                expenses: totalExpense,
+                salary: balance + memberBalanceInfo.salary,
+              ),
+            );
+        }
+        if (memberBalanceInfo == null) {
+          membersBalance.add(
+            ResponseEventBalance(
+              member: involvedMember,
+              expenses: totalExpense,
+              salary: balance,
+            ),
+          );
+        }
+      }
+    }
     // Duration totalDuration = await compute(_calculateDurationFrom, args);
     return membersBalance;
   }
