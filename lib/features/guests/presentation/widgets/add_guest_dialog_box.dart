@@ -22,6 +22,7 @@ class _AddGuestDialogBoxState extends State<AddGuestDialogBox> {
   final TextEditingController telegramIdController = TextEditingController();
   final TextEditingController instagramIdController = TextEditingController();
   final TextEditingController birthdayController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   DateTime? selectedBirthdayDate;
 
@@ -32,6 +33,7 @@ class _AddGuestDialogBoxState extends State<AddGuestDialogBox> {
     telegramIdController.dispose();
     instagramIdController.dispose();
     birthdayController.dispose();
+    phoneController.dispose();
     super.dispose();
   }
 
@@ -55,6 +57,13 @@ class _AddGuestDialogBoxState extends State<AddGuestDialogBox> {
               return null;
             },
           ),
+        ),
+        Gap(20),
+        AppTextField(
+          label: 'Phone',
+          hint: '09391543702',
+          controller: phoneController,
+          keyboardType: TextInputType.phone,
         ),
         Gap(20),
         AppTextField(
@@ -108,6 +117,7 @@ class _AddGuestDialogBoxState extends State<AddGuestDialogBox> {
           instagramID: instagramIdController.text.isNotEmpty
               ? instagramIdController.text
               : null,
+          phone: phoneController.text.isNotEmpty ? phoneController.text : null,
           birthday: selectedBirthdayDate,
           isActive: true,
           profileImage: null,

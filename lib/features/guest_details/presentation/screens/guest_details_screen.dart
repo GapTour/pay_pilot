@@ -47,6 +47,21 @@ class _GuestDetailsScreenState extends State<GuestDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
+                        text: 'Phone:  ',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      TextSpan(
+                        text: guestDetail.phone ?? '-',
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
+                    ],
+                  ),
+                ),
+                Gap(5),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
                         text: 'Telegram ID:  ',
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),

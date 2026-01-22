@@ -6,6 +6,7 @@ class GuestParams {
   final bool? isActive;
   final String? telegramID;
   final String? instagramID;
+  final String? phone;
   final DateTime? birthday;
 
   GuestParams({
@@ -16,6 +17,7 @@ class GuestParams {
     required this.isActive,
     required this.telegramID,
     required this.instagramID,
+    required this.phone,
     required this.birthday,
   });
 
@@ -27,6 +29,7 @@ class GuestParams {
       'is_active': isActive,
       'telegram_id': telegramID,
       'instagram_id': instagramID,
+      'phone': phone,
       'birthday': birthday?.toIso8601String(),
     };
   }

@@ -4,6 +4,7 @@ class ResponseGuest {
   final String? description;
   final String? telegramID;
   final String? instagramID;
+  final String? phone;
   final bool isActive;
   final String? profileImage;
   final DateTime? birthday;
@@ -14,6 +15,7 @@ class ResponseGuest {
     required this.description,
     required this.telegramID,
     required this.instagramID,
+    required this.phone,
     required this.isActive,
     required this.profileImage,
     required this.birthday,
@@ -32,6 +34,7 @@ class ResponseGuest {
       instagramID: map['instagram_id'] != null
           ? map['instagram_id'] as String
           : null,
+      phone: map['phone'] != null ? map['phone'] as String : null,
       isActive: map['is_active'] as String == '1',
       profileImage: map['profile_image'] != null
           ? map['profile_image'] as String
