@@ -22,7 +22,7 @@ import 'package:pay_pilot/features/members/presentation/cubit/members_cubit.dart
 import 'package:pay_pilot/features/members/presentation/screens/members_screen.dart';
 import 'package:pay_pilot/features/menu/presentation/cubit/menu_cubit.dart';
 import 'package:pay_pilot/features/menu/presentation/screens/menu_items_screen.dart';
-import 'package:pay_pilot/features/report_details/presentation/cubit/report_details_cubit.dart';
+import 'package:pay_pilot/features/report_details/presentation/bloc/report_details_bloc.dart';
 import 'package:pay_pilot/features/report_details/presentation/screens/report_details_screen.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/screens/reports_screen.dart';
@@ -161,7 +161,7 @@ class AppRoutes {
         name: reportDetailsScreen,
         path: ReportDetailsScreen.routeName,
         builder: (context, state) => BlocProvider(
-          create: (context) => ReportDetailsCubit(locator()),
+          create: (context) => ReportDetailsBloc(locator()),
           child: ReportDetailsScreen(
             reportID: state.pathParameters[AppArguments.reportDetails]!,
           ),
