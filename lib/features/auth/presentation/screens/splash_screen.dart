@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
 import 'package:pay_pilot/core/utils/constants/app_settings.dart';
+import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/features/auth/presentation/bloc/auth_bloc.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,24 +19,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(Duration(seconds: 3), () {
-      if (mounted) {
-        context.read<AuthBloc>().add(CheckAuthStatus());
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.sizeOf(context).height;
 
-    return BlocListener<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
       listenWhen: (p, c) => p.splashStatus != c.splashStatus,
       listener: (context, state) {
-        if (state.splashStatus is SplashAuthenticated) {
+        if (state.splashStatus is SplashAuthenticated ||
+            state.splashStatus is SplashChangedStatusSuccessfully) {
           context.goNamed(AppRoutes.mainScreen);
         }
         if (state.splashStatus is SplashNotAuthenticated) {
@@ -46,24 +37,78 @@ class _SplashScreenState extends State<SplashScreen> {
           context.goNamed(AppRoutes.loginScreen);
         }
       },
-      child: Scaffold(
-        body: Column(
-          children: [
-            Expanded(child: Image.asset('assets/icons/ic_launcher.png')),
-            LoadingAnimationWidget.threeArchedCircle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              size: 32,
+      buildWhen: (p, c) => p.splashStatus != c.splashStatus,
+      builder: (context, state) {
+        final isLoading = state.splashStatus is SplashLoading;
+
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Column(
+              children: [
+                Expanded(child: Image.asset('assets/icons/ic_launcher.png')),
+                Gap(16),
+
+                AppElevatedButton(
+                  onTap: () {
+                    context.read<AuthBloc>().add(CheckAuthStatus());
+                  },
+                  isSelected: isLoading,
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Online Mode',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.displayLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Gap(5),
+                AppElevatedButton(
+                  onTap: () {
+                    context.read<AuthBloc>().add(SetModeStatus(true));
+                  },
+                  isSelected: isLoading,
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Offline Mode',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.displayLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Gap(28),
+                Text(
+                  'Version ${AppSettings.version}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                if (isLoading) ...[
+                  Gap(8),
+                  LoadingAnimationWidget.threeArchedCircle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    size: 32,
+                  ),
+                ] else
+                  SizedBox(height: 42),
+
+                Gap(height * .1),
+              ],
             ),
-            Gap(8),
-            Text(
-              'Version ${AppSettings.version}',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 12),
-            ),
-            Gap(height * .1),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

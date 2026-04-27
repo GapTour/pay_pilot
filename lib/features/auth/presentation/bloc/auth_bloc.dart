@@ -26,10 +26,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginToAccount>(_loginToAccount);
     on<RegisterNewAccount>(_registerNewAccount);
     on<CreateNewPermission>(_createNewPermission);
+    on<RemoveModeStatus>(_removeModeStatus);
+    on<SetModeStatus>(_setModeStatus);
+  }
+
+  void _removeModeStatus(
+    RemoveModeStatus event,
+    Emitter<AuthState> emit,
+  ) async {
+    await repository.removeModeStatus();
+  }
+
+  void _setModeStatus(SetModeStatus event, Emitter<AuthState> emit) async {
+    emit(state.copyWith(splashStatus: SplashLoading()));
+
+    final dataState = await repository.setModeStatus(event.isOffline);
+
+    if (dataState is DataSuccess) {
+      emit(state.copyWith(splashStatus: SplashChangedStatusSuccessfully()));
+    }
+
+    if (dataState is DataFailed) {
+      emit(state.copyWith(splashStatus: SplashChangedStatusFailed()));
+    }
   }
 
   void _checkAuthStatus(CheckAuthStatus event, Emitter<AuthState> emit) async {
     emit(state.copyWith(splashStatus: SplashLoading()));
+
+    await repository.setModeStatus(false);
+    await Future.delayed(const Duration(seconds: 3));
 
     final dataState = await repository.checkAuthStatus();
 

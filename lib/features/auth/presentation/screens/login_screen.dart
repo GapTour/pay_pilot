@@ -43,9 +43,14 @@ class _LoginScreenState extends State<LoginScreen> {
               if (state.loginStatus is LoginSucceed) {
                 context.goNamed(AppRoutes.mainScreen);
               }
+              if (state.splashStatus is SplashChangedStatusSuccessfully) {
+                context.goNamed(AppRoutes.mainScreen);
+              }
             },
             builder: (context, state) {
-              final isLoading = state.loginStatus is LoginLoading;
+              final isLoading =
+                  state.loginStatus is LoginLoading ||
+                  state.splashStatus is SplashLoading;
 
               if (state.loginStatus is LoginFailed) {
                 errorMessage = (state.loginStatus as LoginFailed).message;
@@ -93,45 +98,46 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Gap(12),
                     ],
-                    AppElevatedButton(
-                      onTap: () {
-                        if (!formKey.currentState!.validate()) return;
-                        context.read<AuthBloc>().add(
-                          LoginToAccount(
-                            LoginParams(
-                              email: emailController.text,
-                              password: passwordController.text,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: AppElevatedButton(
+                            onTap: () {
+                              if (!formKey.currentState!.validate()) return;
+                              context.read<AuthBloc>().add(
+                                LoginToAccount(
+                                  LoginParams(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  ),
+                                ),
+                              );
+                            },
+                            isSelected: isLoading,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (isLoading) ...[
+                                    LoadingAnimationWidget.threeArchedCircle(
+                                      color: kPrimaryContainerColor,
+                                      size: 16,
+                                    ),
+                                    Gap(5),
+                                  ],
+                                  Text(
+                                    'Login',
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.displayLarge,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        );
-                      },
-                      isSelected: isLoading,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (isLoading) ...[
-                              LoadingAnimationWidget.threeArchedCircle(
-                                color: kPrimaryContainerColor,
-                                size: 16,
-                              ),
-                              Gap(5),
-                            ],
-                            Text(
-                              'Login',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.displayLarge,
-                            ),
-                          ],
                         ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
                         TextButton(
                           onPressed: () {
                             context.pushNamed(AppRoutes.registerScreen);
@@ -139,6 +145,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text('Register'),
                         ),
                       ],
+                    ),
+                    AppElevatedButton(
+                      onTap: () {
+                        context.read<AuthBloc>().add(SetModeStatus(true));
+                      },
+                      isSelected: isLoading,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Switch to Offline Mode',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.displayLarge,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),

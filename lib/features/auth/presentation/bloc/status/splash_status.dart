@@ -26,3 +26,13 @@ class SplashNeedUpdate extends SplashStatus {
   @override
   List<Object?> get props => [];
 }
+
+class SplashChangedStatusSuccessfully extends SplashStatus {
+  @override
+  List<Object?> get props => [];
+}
+
+class SplashChangedStatusFailed extends SplashStatus {
+  @override
+  List<Object?> get props => [];
+}

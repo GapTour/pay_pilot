@@ -7,13 +7,19 @@ import 'package:pay_pilot/core/data/response/login_response.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
 import 'package:pay_pilot/core/utils/services/secure_storage_service.dart';
+import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/auth/data/login_api_provider.dart';
 
 class AuthRepository {
   final LoginApiProvider _loginProvider;
   final SecureStorageService _secureStorageService;
+  final SharedPreferencesService _sharedPreferencesService;
 
-  AuthRepository(this._loginProvider, this._secureStorageService);
+  AuthRepository(
+    this._loginProvider,
+    this._secureStorageService,
+    this._sharedPreferencesService,
+  );
 
   Future<DataState<LoginResponse>> login(LoginParams params) async {
     try {
@@ -98,6 +104,24 @@ class AuthRepository {
       return DataFailed(
         ErrorResponse.defaultError(SplashType.notAuthenticated.name),
       );
+    }
+  }
+
+  Future<DataState<void>> removeModeStatus() async {
+    try {
+      await _sharedPreferencesService.delete(AppArguments.mode);
+      return DataSuccess(null);
+    } catch (e) {
+      return DataFailed(ErrorResponse.defaultError(null));
+    }
+  }
+
+  Future<DataState<void>> setModeStatus(bool isOffline) async {
+    try {
+      await _sharedPreferencesService.write<bool>(AppArguments.mode, isOffline);
+      return DataSuccess(null);
+    } catch (e) {
+      return DataFailed(ErrorResponse.defaultError(null));
     }
   }
 }

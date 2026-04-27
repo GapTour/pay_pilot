@@ -10,6 +10,14 @@ sealed class AuthEvent extends Equatable {
 
 class CheckAuthStatus extends AuthEvent {}
 
+class RemoveModeStatus extends AuthEvent {}
+
+class SetModeStatus extends AuthEvent {
+  final bool isOffline;
+
+  const SetModeStatus(this.isOffline);
+}
+
 class CreateNewPermission extends AuthEvent {}
 
 class LoginToAccount extends AuthEvent {

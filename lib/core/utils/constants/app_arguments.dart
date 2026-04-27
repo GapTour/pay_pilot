@@ -7,4 +7,5 @@ abstract class AppArguments {
   static const String accessToken = 'accessToken';
   static const String refreshToken = 'refreshToken';
   static const String expiresIn = 'expiresIn';
+  static const String mode = 'mode';
 }

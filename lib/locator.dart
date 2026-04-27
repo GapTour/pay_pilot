@@ -143,7 +143,7 @@ void _callProviders() {
 
 void _callRepositories() {
   locator.registerLazySingleton<AuthRepository>(
-    () => AuthRepository(locator(), locator()),
+    () => AuthRepository(locator(), locator(), locator()),
   );
   locator.registerLazySingleton<MemberRepository>(
     () => MemberRepository(locator()),
