@@ -1,11 +1,10 @@
 import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/data/models/team_member_details_model.dart';
+import 'package:pay_pilot/core/data/params/team_member_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/tables/members.dart';
 import 'package:pay_pilot/core/database/tables/ratios.dart';
 import 'package:pay_pilot/core/database/tables/teams.dart';
-import 'package:pay_pilot/features/team_members/data/models/team_members_edit_form.dart';
-import 'package:pay_pilot/features/team_members/data/models/team_members_form.dart';
 
 part 'ratio_dao.g.dart';
 
@@ -17,7 +16,7 @@ class RatioDao extends DatabaseAccessor<AppDatabase> with _$RatioDaoMixin {
     return (db.select(db.teams)..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
-  Future<int> insertRatio(TeamMembersForm teamMember) async {
+  Future<int> insertRatio(TeamMemberParams teamMember) async {
     return await db
         .into(db.ratios)
         .insert(
@@ -64,10 +63,10 @@ class RatioDao extends DatabaseAccessor<AppDatabase> with _$RatioDaoMixin {
     );
   }
 
-  Future<void> updateRatio(TeamMembersEditForm teamMember) async {
+  Future<void> updateRatio(TeamMemberParams teamMember) async {
     await (db.update(
       db.ratios,
-    )..where((tbl) => tbl.id.equals(teamMember.id))).write(
+    )..where((tbl) => tbl.id.equals(teamMember.id!))).write(
       RatiosCompanion(
         ratio: Value(teamMember.ratio),
         memberID: Value(teamMember.memberID),

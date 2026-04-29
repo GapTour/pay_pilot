@@ -1,9 +1,8 @@
 import 'package:drift/drift.dart';
 
-class Teams extends Table {
+class Menus extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
-  TextColumn get description => text().nullable()();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
   BoolColumn get isActive =>
       boolean().nullable().withDefault(const Constant(true))();

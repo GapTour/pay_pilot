@@ -1,8 +1,7 @@
 import 'package:drift/drift.dart';
+import 'package:pay_pilot/core/data/params/team_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/tables/teams.dart';
-import 'package:pay_pilot/features/teams/data/models/team_edit_form.dart';
-import 'package:pay_pilot/features/teams/data/models/team_form.dart';
 
 part 'team_dao.g.dart';
 
@@ -10,7 +9,7 @@ part 'team_dao.g.dart';
 class TeamDao extends DatabaseAccessor<AppDatabase> with _$TeamDaoMixin {
   TeamDao(super.db);
 
-  Future<int> insertTeam(TeamForm team) async {
+  Future<int> insertTeam(TeamParams team) async {
     return await db
         .into(db.teams)
         .insert(
@@ -29,11 +28,12 @@ class TeamDao extends DatabaseAccessor<AppDatabase> with _$TeamDaoMixin {
     return (db.select(db.teams)..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
-  Future<void> updateTeam(TeamEditForm team) async {
-    await (db.update(db.teams)..where((tbl) => tbl.id.equals(team.id))).write(
+  Future<void> updateTeam(TeamParams team) async {
+    await (db.update(db.teams)..where((tbl) => tbl.id.equals(team.id!))).write(
       TeamsCompanion(
         title: Value(team.title),
         description: Value(team.description),
+        isActive: Value(team.isActive),
       ),
     );
   }

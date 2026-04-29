@@ -1,7 +1,6 @@
+import 'package:pay_pilot/core/data/params/member_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/daos/member_dao/member_dao.dart';
-import 'package:pay_pilot/features/members/data/models/member_editing_form.dart';
-import 'package:pay_pilot/features/members/data/models/member_form.dart';
 
 class MemberDbProvider {
   final MemberDao _dbService;
@@ -11,11 +10,11 @@ class MemberDbProvider {
     return await _dbService.getAllMembers();
   }
 
-  Future<int> insertMember(MemberForm member) async {
+  Future<int> insertMember(MemberParams member) async {
     return await _dbService.insertMember(member);
   }
 
-  Future<void> updateMember(MemberEditingForm member) async {
+  Future<void> updateMember(MemberParams member) async {
     await _dbService.updateMember(member);
   }
 

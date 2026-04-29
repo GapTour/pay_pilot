@@ -1,15 +1,20 @@
 import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/database/daos/event_dao/event_dao.dart';
+import 'package:pay_pilot/core/database/daos/guest_dao/guest_dao.dart';
 import 'package:pay_pilot/core/database/daos/member_dao/member_dao.dart';
+import 'package:pay_pilot/core/database/daos/menu_dao/menu_dao.dart';
 import 'package:pay_pilot/core/database/daos/ratio_dao/ratio_dao.dart';
 import 'package:pay_pilot/core/database/daos/report_dao/report_dao.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
 import 'package:pay_pilot/core/database/schema_versions.dart';
 import 'package:pay_pilot/core/database/tables/collect_report_events.dart';
+import 'package:pay_pilot/core/database/tables/event_orders.dart';
 import 'package:pay_pilot/core/database/tables/event_ratios.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/database/tables/events.dart';
+import 'package:pay_pilot/core/database/tables/guests.dart';
 import 'package:pay_pilot/core/database/tables/members.dart';
+import 'package:pay_pilot/core/database/tables/menus.dart';
 import 'package:pay_pilot/core/database/tables/ratios.dart';
 import 'package:pay_pilot/core/database/tables/reports.dart';
 import 'package:pay_pilot/core/database/tables/teams.dart';
@@ -26,14 +31,17 @@ part 'app_database.g.dart';
     CollectReportEvents,
     EventTransactions,
     EventRatios,
+    Menus,
+    Guests,
+    EventOrders,
   ],
-  daos: [ReportDao, RatioDao, EventDao, TeamDao, MemberDao],
+  daos: [ReportDao, RatioDao, EventDao, TeamDao, MemberDao, GuestDao, MenuDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -79,6 +87,52 @@ class AppDatabase extends _$AppDatabase {
         },
         from2To3: (m, schema) async {
           await m.createTable(schema.eventRatios);
+        },
+        from3To4: (m, schema) async {
+          await m.createTable(schema.eventOrders);
+          await m.createTable(schema.guests);
+          await m.createTable(schema.menus);
+
+          if (!await columnExists('eventTransactions', 'memberID')) {
+            await m.addColumn(
+              schema.eventTransactions,
+              schema.eventTransactions.memberID,
+            );
+          }
+          if (!await columnExists('eventTransactions', 'guestID')) {
+            await m.addColumn(
+              schema.eventTransactions,
+              schema.eventTransactions.guestID,
+            );
+          }
+          if (!await columnExists('eventTransactions', 'attachment')) {
+            await m.addColumn(
+              schema.eventTransactions,
+              schema.eventTransactions.attachment,
+            );
+          }
+
+          if (!await columnExists('reports', 'isActive')) {
+            await m.addColumn(schema.reports, schema.reports.isActive);
+          }
+
+          if (!await columnExists('teams', 'isActive')) {
+            await m.addColumn(schema.teams, schema.teams.isActive);
+          }
+
+          if (!await columnExists('members', 'isActive')) {
+            await m.addColumn(schema.members, schema.members.isActive);
+          }
+
+          if (!await columnExists('members', 'isActive')) {
+            await m.addColumn(schema.members, schema.members.isActive);
+          }
+          if (!await columnExists('members', 'birthday')) {
+            await m.addColumn(schema.members, schema.members.birthday);
+          }
+          if (!await columnExists('members', 'profileImage')) {
+            await m.addColumn(schema.members, schema.members.profileImage);
+          }
         },
       ),
       beforeOpen: (openingDetails) async {

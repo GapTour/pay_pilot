@@ -1,7 +1,6 @@
+import 'package:pay_pilot/core/data/params/team_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
-import 'package:pay_pilot/features/teams/data/models/team_edit_form.dart';
-import 'package:pay_pilot/features/teams/data/models/team_form.dart';
 
 class TeamsDbProvider {
   final TeamDao _dbService;
@@ -11,11 +10,11 @@ class TeamsDbProvider {
     return await _dbService.getAllTeams();
   }
 
-  Future<int> insertTeam(TeamForm team) async {
+  Future<int> insertTeam(TeamParams team) async {
     return await _dbService.insertTeam(team);
   }
 
-  Future<void> updateTeam(TeamEditForm team) async {
+  Future<void> updateTeam(TeamParams team) async {
     await _dbService.updateTeam(team);
   }
 

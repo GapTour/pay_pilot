@@ -4,6 +4,7 @@ import 'package:pay_pilot/core/data/models/event_model.dart';
 import 'package:pay_pilot/core/data/models/member_ratio_model.dart';
 import 'package:pay_pilot/core/data/models/raw_event_details_model.dart';
 import 'package:pay_pilot/core/data/models/transaction_model.dart';
+import 'package:pay_pilot/core/data/params/event_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/tables/event_ratios.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
@@ -15,8 +16,6 @@ import 'package:pay_pilot/features/event_details/data/models/event_ratio_edit_fo
 import 'package:pay_pilot/features/event_details/data/models/event_ratio_form.dart';
 import 'package:pay_pilot/features/event_details/data/models/transaction_edit_form.dart';
 import 'package:pay_pilot/features/event_details/data/models/transaction_form.dart';
-import 'package:pay_pilot/features/events/data/models/event_edit_form.dart';
-import 'package:pay_pilot/features/events/data/models/event_form.dart';
 
 part 'event_dao.g.dart';
 
@@ -186,7 +185,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
     return memberRatios;
   }
 
-  Future<int> insertEvent(EventForm event) async {
+  Future<int> insertEvent(EventParams event) async {
     final teamRatio = await (select(
       ratios,
     )..where((tbl) => tbl.teamID.equals(event.teamID))).get();
@@ -215,15 +214,15 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
     return eventID;
   }
 
-  Future<void> updateEvent(EventEditForm event) async {
+  Future<void> updateEvent(EventParams event) async {
     final previousTeam = (await (select(
       events,
-    )..where((tbl) => tbl.id.equals(event.id))).getSingle()).teamID;
+    )..where((tbl) => tbl.id.equals(event.id!))).getSingle()).teamID;
 
     if (previousTeam != event.teamID) {
       await (db.delete(
         eventRatios,
-      )..where((tbl) => tbl.eventID.equals(event.id))).go();
+      )..where((tbl) => tbl.eventID.equals(event.id!))).go();
 
       final teamRatio = await (select(
         ratios,
@@ -232,7 +231,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
       for (var element in teamRatio) {
         await into(eventRatios).insert(
           EventRatiosCompanion(
-            eventID: Value(event.id),
+            eventID: Value(event.id!),
             memberID: Value(element.memberID),
             ratio: Value(element.ratio),
           ),
@@ -240,7 +239,9 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
       }
     }
 
-    await (db.update(db.events)..where((tbl) => tbl.id.equals(event.id))).write(
+    await (db.update(
+      db.events,
+    )..where((tbl) => tbl.id.equals(event.id!))).write(
       EventsCompanion(
         title: Value(event.title),
         teamID: Value(event.teamID),
