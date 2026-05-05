@@ -1,9 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:pay_pilot/core/data/enums/transaction_status.dart';
+import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/data/models/balance_model.dart';
 import 'package:pay_pilot/core/data/models/member_ratio_model.dart';
 import 'package:pay_pilot/core/data/models/raw_event_details_model.dart';
-import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_balance.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
@@ -187,7 +186,7 @@ class CalculatorHelper {
         previousValue,
         element,
       ) {
-        if (element.transactionType == TransactionStatus.expense) {
+        if (element.transactionType == TransactionType.expense) {
           return previousValue - element.amount;
         }
         return previousValue + element.amount;

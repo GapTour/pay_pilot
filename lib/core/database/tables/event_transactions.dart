@@ -3,7 +3,13 @@ import 'package:pay_pilot/core/database/tables/events.dart';
 import 'package:pay_pilot/core/database/tables/guests.dart';
 import 'package:pay_pilot/core/database/tables/members.dart';
 
-enum TransactionType { income, expense }
+enum TransactionType {
+  income,
+  expense;
+
+  bool get isIncome => this == TransactionType.income;
+  bool get isExpense => this == TransactionType.expense;
+}
 
 class EventTransactions extends Table {
   IntColumn get id => integer().autoIncrement()();
