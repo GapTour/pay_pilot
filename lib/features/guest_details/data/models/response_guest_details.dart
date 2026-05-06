@@ -1,3 +1,5 @@
+import 'package:pay_pilot/core/database/app_database.dart';
+
 class ResponseGuestDetails {
   final int id;
   final String name;
@@ -21,7 +23,7 @@ class ResponseGuestDetails {
     required this.birthday,
   });
 
-  factory ResponseGuestDetails.fromMap(Map<String, dynamic> map) {
+  factory ResponseGuestDetails.fromApi(Map<String, dynamic> map) {
     return ResponseGuestDetails(
       id: int.parse(map['id'] as String),
       name: map['name'] as String,
@@ -42,6 +44,20 @@ class ResponseGuestDetails {
       birthday: map['birthday'] != null
           ? DateTime.parse(map['birthday'] as String)
           : null,
+    );
+  }
+
+  factory ResponseGuestDetails.fromDb(Guest guest) {
+    return ResponseGuestDetails(
+      id: guest.id,
+      name: guest.name,
+      description: guest.description,
+      telegramID: guest.telegramId,
+      instagramID: guest.instagramId,
+      phone: guest.phoneNumber,
+      isActive: guest.isActive ?? true,
+      profileImage: guest.profileImage,
+      birthday: guest.birthday,
     );
   }
 }
