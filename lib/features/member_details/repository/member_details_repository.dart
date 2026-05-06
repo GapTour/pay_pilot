@@ -1,31 +1,44 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
+import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
-import 'package:pay_pilot/features/member_details/data/member_details_api_provider.dart';
+import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/member_details/data/models/response_member_details.dart';
+import 'package:pay_pilot/features/member_details/data/sources/i_member_details_source.dart';
+import 'package:pay_pilot/features/member_details/data/sources/local_member_details_source.dart';
+import 'package:pay_pilot/features/member_details/data/sources/remote_member_details_source.dart';
 
-class MemberDetailsRepository {
-  // final MemberDetailsDbProvider _dbProvider;
-  final MemberDetailsApiProvider _apiProvider;
+abstract class IMemberDetailsRepository implements IMemberDetailsSource {}
+
+class MemberDetailsRepository implements IMemberDetailsRepository {
+  final LocalMemberDetailsSource _localMemberDetailsSource;
+  final RemoteMemberDetailsSource _remoteMemberDetailsSource;
+  final SharedPreferencesService _preferencesService;
+  late bool isOffline;
+
   MemberDetailsRepository(
-    this._apiProvider,
-    // this._dbProvider
-  );
+    LocalMemberDetailsSource localMemberSource,
+    RemoteMemberDetailsSource remoteMemberSource,
+    SharedPreferencesService preferencesService,
+  ) : _localMemberDetailsSource = localMemberSource,
+      _remoteMemberDetailsSource = remoteMemberSource,
+      _preferencesService = preferencesService;
 
+  @override
   Future<DataState<ResponseMemberDetails>> getMember(int id) async {
     try {
-      final Response response = await _apiProvider.getMember(id);
+      isOffline =
+          await _preferencesService.read<bool>(AppArguments.mode) ?? false;
 
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as dynamic;
-        final member = ResponseMemberDetails.fromMap(rawData);
-
-        return DataSuccess(member);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline) return await _localMemberDetailsSource.getMember(id);
+      return await _remoteMemberDetailsSource.getMember(id);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 }
