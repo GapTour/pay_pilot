@@ -1,82 +1,102 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:pay_pilot/core/data/params/team_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
+import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
+import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/teams/data/models/response_team.dart';
-import 'package:pay_pilot/features/teams/data/teams_api_provider.dart';
+import 'package:pay_pilot/features/teams/data/sources/i_team_source.dart';
+import 'package:pay_pilot/features/teams/data/sources/local_team_source.dart';
+import 'package:pay_pilot/features/teams/data/sources/remote_team_source.dart';
 
-class TeamRepository {
-  // final TeamsDbProvider _dbProvider;
-  final TeamsApiProvider _apiProvider;
+abstract class ITeamRepository implements ITeamSource {}
+
+class TeamRepository implements ITeamRepository {
+  final LocalTeamSource _localTeamSource;
+  final RemoteTeamSource _remoteTeamSource;
+  final SharedPreferencesService _preferencesService;
+  late bool? isOffline;
+
   TeamRepository(
-    // this._dbProvider
-    this._apiProvider,
+    this._localTeamSource,
+    this._remoteTeamSource,
+    this._preferencesService,
   );
 
+  @override
   Future<DataState<List<ResponseTeam>>> getAllTeams() async {
     try {
-      final Response response = await _apiProvider.getAllTeams();
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: false,
+      );
 
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<dynamic>;
-        final teams = rawData.map((e) {
-          return ResponseTeam.fromMap(e);
-        }).toList();
-
-        return DataSuccess(teams);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localTeamSource.getAllTeams();
+      return await _remoteTeamSource.getAllTeams();
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
+  @override
   Future<DataState<ResponseTeam>> addTeam(TeamParams params) async {
     try {
-      final Response response = await _apiProvider.addTeam(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: false,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'] as dynamic;
-        final team = ResponseTeam.fromMap(rawData);
-
-        return DataSuccess(team);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localTeamSource.addTeam(params);
+      return await _remoteTeamSource.addTeam(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
+  @override
   Future<DataState<ResponseTeam>> editTeam(TeamParams params) async {
     try {
-      final Response response = await _apiProvider.editTeam(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: false,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'] as dynamic;
-        final member = ResponseTeam.fromMap(rawData);
-
-        return DataSuccess(member);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localTeamSource.editTeam(params);
+      return await _remoteTeamSource.editTeam(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
+  @override
   Future<DataState<int>> deleteTeam(int id) async {
     try {
-      final Response response = await _apiProvider.deleteTeam(id);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: false,
+      );
 
-      if (response.statusCode == 204) {
-        return DataSuccess(id);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localTeamSource.deleteTeam(id);
+      return await _remoteTeamSource.deleteTeam(id);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 }
