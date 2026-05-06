@@ -24,4 +24,22 @@ class EventParams {
       'is_active': isActive,
     };
   }
+
+  EventParams copyWith({
+    int? id,
+    String? title,
+    String? description,
+    DateTime? date,
+    int? teamID,
+    bool? isActive,
+  }) {
+    return EventParams(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      teamID: teamID ?? this.teamID,
+      isActive: isActive ?? this.isActive,
+    );
+  }
 }

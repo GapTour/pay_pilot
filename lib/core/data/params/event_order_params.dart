@@ -23,4 +23,20 @@ class EventOrderParams {
       'menuItems': jsonEncode(menuItemIDs),
     };
   }
+
+  EventOrderParams copyWith({
+    int? id,
+    int? eventID,
+    int? memberID,
+    int? guestID,
+    List<int>? menuItemIDs,
+  }) {
+    return EventOrderParams(
+      id: id ?? this.id,
+      eventID: eventID ?? this.eventID,
+      memberID: memberID ?? this.memberID,
+      guestID: guestID ?? this.guestID,
+      menuItemIDs: menuItemIDs ?? this.menuItemIDs,
+    );
+  }
 }

@@ -18,4 +18,18 @@ class EventRatioParams {
       'event_id': eventID,
     };
   }
+
+  EventRatioParams copyWith({
+    int? id,
+    double? ratioValue,
+    int? memberID,
+    int? eventID,
+  }) {
+    return EventRatioParams(
+      id: id ?? this.id,
+      ratioValue: ratioValue ?? this.ratioValue,
+      memberID: memberID ?? this.memberID,
+      eventID: eventID ?? this.eventID,
+    );
+  }
 }

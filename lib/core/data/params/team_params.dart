@@ -18,4 +18,18 @@ class TeamParams {
       'is_active': isActive,
     };
   }
+
+  TeamParams copyWith({
+    int? id,
+    String? title,
+    String? description,
+    bool? isActive,
+  }) {
+    return TeamParams(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      isActive: isActive ?? this.isActive,
+    );
+  }
 }

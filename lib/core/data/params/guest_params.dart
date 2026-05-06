@@ -33,4 +33,28 @@ class GuestParams {
       'birthday': birthday?.toIso8601String(),
     };
   }
+
+  GuestParams copyWith({
+    int? id,
+    String? name,
+    String? description,
+    String? profileImage,
+    bool? isActive,
+    String? telegramID,
+    String? instagramID,
+    String? phone,
+    DateTime? birthday,
+  }) {
+    return GuestParams(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      profileImage: profileImage ?? this.profileImage,
+      isActive: isActive ?? this.isActive,
+      telegramID: telegramID ?? this.telegramID,
+      instagramID: instagramID ?? this.instagramID,
+      phone: phone ?? this.phone,
+      birthday: birthday ?? this.birthday,
+    );
+  }
 }

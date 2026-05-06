@@ -18,4 +18,18 @@ class TeamMemberParams {
       'ratio_value': ratio,
     };
   }
+
+  TeamMemberParams copyWith({
+    int? id,
+    int? teamID,
+    int? memberID,
+    double? ratio,
+  }) {
+    return TeamMemberParams(
+      id: id ?? this.id,
+      teamID: teamID ?? this.teamID,
+      memberID: memberID ?? this.memberID,
+      ratio: ratio ?? this.ratio,
+    );
+  }
 }

@@ -27,4 +27,24 @@ class MemberParams {
       'birthday': birthday?.toIso8601String(),
     };
   }
+
+  MemberParams copyWith({
+    int? id,
+    String? name,
+    String? description,
+    DateTime? joinAt,
+    bool? isActive,
+    String? profileImage,
+    DateTime? birthday,
+  }) {
+    return MemberParams(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      joinAt: joinAt ?? this.joinAt,
+      isActive: isActive ?? this.isActive,
+      profileImage: profileImage ?? this.profileImage,
+      birthday: birthday ?? this.birthday,
+    );
+  }
 }
