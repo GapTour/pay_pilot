@@ -1,3 +1,6 @@
+import 'package:pay_pilot/core/data/params/member_params.dart';
+import 'package:pay_pilot/core/database/app_database.dart';
+
 class ResponseMember {
   final int id;
   final String name;
@@ -17,7 +20,7 @@ class ResponseMember {
     required this.birthday,
   });
 
-  factory ResponseMember.fromMap(Map<String, dynamic> map) {
+  factory ResponseMember.fromApi(Map<String, dynamic> map) {
     return ResponseMember(
       id: int.parse(map['id'] as String),
       name: map['name'] as String,
@@ -34,6 +37,30 @@ class ResponseMember {
       birthday: map['birthday'] != null
           ? DateTime.parse(map['birthday'] as String)
           : null,
+    );
+  }
+
+  factory ResponseMember.fromDb(Member member) {
+    return ResponseMember(
+      id: member.id,
+      name: member.name,
+      description: member.description,
+      joinAt: member.joinAt,
+      isActive: member.isActive ?? true,
+      profileImage: member.profileImage,
+      birthday: member.birthday,
+    );
+  }
+
+  factory ResponseMember.fromParams(MemberParams member) {
+    return ResponseMember(
+      id: member.id!,
+      name: member.name,
+      description: member.description,
+      joinAt: member.joinAt,
+      isActive: member.isActive ?? true,
+      profileImage: member.profileImage,
+      birthday: member.birthday,
     );
   }
 }
