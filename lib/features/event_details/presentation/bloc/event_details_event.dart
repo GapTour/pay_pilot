@@ -38,9 +38,9 @@ class EditTransaction extends EventDetailsEvent {
 }
 
 class DeleteTransaction extends EventDetailsEvent {
-  final int transactionId;
+  final TransactionParams params;
 
-  const DeleteTransaction(this.transactionId);
+  const DeleteTransaction(this.params);
 }
 
 class AddEventRatio extends EventDetailsEvent {

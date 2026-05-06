@@ -1,40 +1,51 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:pay_pilot/core/data/params/event_order_params.dart';
 import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
+import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
-import 'package:pay_pilot/features/event_details/data/event_details_api_provider.dart';
+import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_order.dart';
+import 'package:pay_pilot/features/event_details/data/sources/local_event_details_source.dart';
+import 'package:pay_pilot/features/event_details/data/sources/remote_event_details_source.dart';
 import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
 import 'package:pay_pilot/features/menu/data/models/response_menu.dart';
 
 class EventDetailsRepository {
-  // final EventDetailsDbProvider _dbProvider;
-  final EventDetailsApiProvider _apiProvider;
+  final LocalEventDetailsSource _localEventDetailsSource;
+  final RemoteEventDetailsSource _remoteEventDetailsSource;
+  final SharedPreferencesService _preferencesService;
+  late bool? isOffline;
 
   EventDetailsRepository(
-    // this._dbProvider,
-    this._apiProvider,
-  );
+    LocalEventDetailsSource localEventDetailsSource,
+    RemoteEventDetailsSource remoteEventDetailsSource,
+    SharedPreferencesService preferencesService,
+  ) : _localEventDetailsSource = localEventDetailsSource,
+      _remoteEventDetailsSource = remoteEventDetailsSource,
+      _preferencesService = preferencesService;
 
   Future<DataState<ResponseEventDetails>> getEvent(int id) async {
     try {
-      final Response response = await _apiProvider.getEventDetails(id);
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'];
-        final eventDetails = ResponseEventDetails.fromMap(rawData);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-        return DataSuccess(eventDetails);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventDetailsSource.getEvent(id);
+      return await _remoteEventDetailsSource.getEvent(id);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
@@ -42,35 +53,39 @@ class EventDetailsRepository {
     TransactionParams params,
   ) async {
     try {
-      final Response response = await _apiProvider.addTransaction(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'];
-        final transaction = ResponseEventTransaction.fromMap(rawData);
-
-        return DataSuccess(transaction);
+      if (isOffline!) {
+        return await _localEventDetailsSource.insertTransaction(params);
       }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      return await _remoteEventDetailsSource.insertTransaction(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<ResponseOrder>> insertOrder(EventOrderParams params) async {
     try {
-      final Response response = await _apiProvider.addOrder(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'];
-        final order = ResponseOrder.fromMap(rawData);
-
-        return DataSuccess(order);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventDetailsSource.insertOrder(params);
+      return await _remoteEventDetailsSource.insertOrder(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
@@ -78,18 +93,19 @@ class EventDetailsRepository {
     EventRatioParams params,
   ) async {
     try {
-      final Response response = await _apiProvider.addRatio(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'];
-        final eventRatio = ResponseEventRatio.fromMap(rawData);
-
-        return DataSuccess(eventRatio);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventDetailsSource.insertRatio(params);
+      return await _remoteEventDetailsSource.insertRatio(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
@@ -97,35 +113,39 @@ class EventDetailsRepository {
     TransactionParams params,
   ) async {
     try {
-      final Response response = await _apiProvider.editTransaction(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'];
-        final transaction = ResponseEventTransaction.fromMap(rawData);
-
-        return DataSuccess(transaction);
+      if (isOffline!) {
+        return await _localEventDetailsSource.updateTransaction(params);
       }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      return await _remoteEventDetailsSource.updateTransaction(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<ResponseOrder>> updateOrder(EventOrderParams params) async {
     try {
-      final Response response = await _apiProvider.editOrder(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'];
-        final order = ResponseOrder.fromMap(rawData);
-
-        return DataSuccess(order);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventDetailsSource.updateOrder(params);
+      return await _remoteEventDetailsSource.updateOrder(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
@@ -134,49 +154,62 @@ class EventDetailsRepository {
     bool isDelivered,
   ) async {
     try {
-      final Response response = await _apiProvider.changeOrderDelivery(
-        id,
-        isDelivered,
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
       );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'];
-        final order = ResponseOrder.fromMap(rawData);
-
-        return DataSuccess(order);
+      if (isOffline!) {
+        return await _localEventDetailsSource.changeOrderStatus(
+          id,
+          isDelivered,
+        );
       }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      return await _remoteEventDetailsSource.changeOrderStatus(id, isDelivered);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
-  Future<DataState<int>> deleteTransaction(int id) async {
+  Future<DataState<int>> deleteTransaction(TransactionParams params) async {
     try {
-      final Response response = await _apiProvider.deleteTransaction(id);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 204) {
-        return DataSuccess(id);
+      if (isOffline!) {
+        return await _localEventDetailsSource.deleteTransaction(params);
       }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      return await _remoteEventDetailsSource.deleteTransaction(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<int>> deleteOrder(int id) async {
     try {
-      final Response response = await _apiProvider.deleteOrder(id);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 204) {
-        return DataSuccess(id);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventDetailsSource.deleteOrder(id);
+      return await _remoteEventDetailsSource.deleteOrder(id);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
@@ -184,108 +217,115 @@ class EventDetailsRepository {
     EventRatioParams params,
   ) async {
     try {
-      final Response response = await _apiProvider.editRatio(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'];
-        final eventRatio = ResponseEventRatio.fromMap(rawData);
-
-        return DataSuccess(eventRatio);
+      if (isOffline!) {
+        return await _localEventDetailsSource.updateEventRatio(params);
       }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      return await _remoteEventDetailsSource.updateEventRatio(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<int>> deleteEventRatio(int id) async {
     try {
-      final Response response = await _apiProvider.deleteRatio(id);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 204) {
-        return DataSuccess(id);
+      if (isOffline!) {
+        return await _localEventDetailsSource.deleteEventRatio(id);
       }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      return await _remoteEventDetailsSource.deleteEventRatio(id);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<List<ResponseMember>>> getAllMembers() async {
     try {
-      final Response response = await _apiProvider.getAllMembers();
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<dynamic>;
-        final members = rawData.map((e) {
-          return ResponseMember.fromMap(e);
-        }).toList();
-
-        return DataSuccess(members);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventDetailsSource.getAllMembers();
+      return await _remoteEventDetailsSource.getAllMembers();
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<List<ResponseGuest>>> getAllGuests() async {
     try {
-      final Response response = await _apiProvider.getAllGuests();
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<dynamic>;
-        final members = rawData.map((e) {
-          return ResponseGuest.fromMap(e);
-        }).toList();
-
-        return DataSuccess(members);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventDetailsSource.getAllGuests();
+      return await _remoteEventDetailsSource.getAllGuests();
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<List<ResponseOrder>>> getAllOrders(int eventID) async {
     try {
-      final Response response = await _apiProvider.getAllOrders(eventID);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<dynamic>;
-        final orders = rawData.map((e) {
-          return ResponseOrder.fromMap(e);
-        }).toList();
-
-        return DataSuccess(orders);
+      if (isOffline!) {
+        return await _localEventDetailsSource.getAllOrders(eventID);
       }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      return await _remoteEventDetailsSource.getAllOrders(eventID);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<List<ResponseMenu>>> getAllMenuItems() async {
     try {
-      final Response response = await _apiProvider.getAllMenuItems();
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<dynamic>;
-        final members = rawData.map((e) {
-          return ResponseMenu.fromMap(e);
-        }).toList();
-
-        return DataSuccess(members);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventDetailsSource.getAllMenuItems();
+      return await _remoteEventDetailsSource.getAllMenuItems();
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 }

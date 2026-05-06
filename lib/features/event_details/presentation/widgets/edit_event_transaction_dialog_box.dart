@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/enums/payment_source.dart';
-import 'package:pay_pilot/core/data/enums/transaction_status.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
+import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
@@ -44,7 +44,7 @@ class _EditEventTransactionDialogBoxState
   final TextEditingController dateController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  late TransactionStatus transactionType;
+  late TransactionType transactionType;
   late DateTime? selectedDate;
   late PaymentSource paymentSource;
   bool isNotSelected = false;
@@ -179,11 +179,11 @@ class _EditEventTransactionDialogBoxState
             }).toList(),
           ),
         Gap(20),
-        AppDropDownButton<TransactionStatus>(
+        AppDropDownButton<TransactionType>(
           label: 'Transaction Type',
           hint: 'Select a type',
           showWarning: isNotSelected,
-          value: TransactionStatus.values.firstWhereOrNull((element) {
+          value: TransactionType.values.firstWhereOrNull((element) {
             return element.name == transactionType.name;
           }),
           onChanged: (value) {
@@ -192,8 +192,8 @@ class _EditEventTransactionDialogBoxState
               setState(() {});
             }
           },
-          items: TransactionStatus.values.map((e) {
-            return DropdownMenuItem<TransactionStatus>(
+          items: TransactionType.values.map((e) {
+            return DropdownMenuItem<TransactionType>(
               value: e,
               child: Text(e.name),
             );
@@ -268,8 +268,9 @@ class _EditEventTransactionDialogBoxState
           description: descriptionController.text,
           transactionDate: selectedDate!,
           attachment: null,
-          guestID: selectedGuestID,
           memberID: selectedMemberID,
+          guestID: selectedGuestID,
+          hasPermissionDeleteOrder: false,
         );
         widget.onPressedSubmit(transaction);
         context.pop();

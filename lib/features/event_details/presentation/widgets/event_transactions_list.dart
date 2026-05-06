@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
@@ -82,7 +83,21 @@ class EventTransactionsList extends StatelessWidget {
               },
               onDelete: () {
                 context.read<EventDetailsBloc>().add(
-                  DeleteTransaction(transactions[index].id),
+                  DeleteTransaction(
+                    TransactionParams(
+                      id: transactions[index].id,
+                      amount: 0,
+                      attachment: null,
+                      description: null,
+                      eventID: 0,
+                      guestID: null,
+                      memberID: null,
+                      transactionDate: DateTime.now(),
+                      transactionType: transactions[index].transactionType,
+                      // TODO(mahDyarZ): work on this feature later
+                      hasPermissionDeleteOrder: true,
+                    ),
+                  ),
                 );
               },
               child: Column(

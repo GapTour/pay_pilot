@@ -1,11 +1,13 @@
-import 'package:pay_pilot/core/data/enums/transaction_status.dart';
+import 'package:pay_pilot/core/data/models/transaction_model.dart';
+import 'package:pay_pilot/core/data/params/transaction_params.dart';
+import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 
 class ResponseEventTransaction {
   final int id;
   final double amount;
   final String? description;
   final DateTime date;
-  final TransactionStatus transactionType;
+  final TransactionType transactionType;
   final String? attachment;
   final int? paidByMember;
   final int? paidByGuest;
@@ -21,7 +23,7 @@ class ResponseEventTransaction {
     required this.paidByGuest,
   });
 
-  factory ResponseEventTransaction.fromMap(Map<String, dynamic> map) {
+  factory ResponseEventTransaction.fromApi(Map<String, dynamic> map) {
     return ResponseEventTransaction(
       id: int.parse(map['id'] as String),
       amount: double.parse(map['amount'] as String),
@@ -29,7 +31,7 @@ class ResponseEventTransaction {
           ? map['description'] as String
           : null,
       date: DateTime.parse(map['transaction_date'] as String),
-      transactionType: TransactionStatus.values.firstWhere(
+      transactionType: TransactionType.values.firstWhere(
         (type) => type.name == map['transaction_type'],
       ),
       attachment: map['attachment'] != null
@@ -41,6 +43,32 @@ class ResponseEventTransaction {
       paidByGuest: map['guest_id'] != null
           ? int.parse(map['guest_id'] as String)
           : null,
+    );
+  }
+
+  factory ResponseEventTransaction.fromParams(TransactionParams params) {
+    return ResponseEventTransaction(
+      id: params.id!,
+      amount: params.amount,
+      description: params.description,
+      date: params.transactionDate,
+      transactionType: params.transactionType,
+      attachment: params.attachment,
+      paidByMember: params.memberID,
+      paidByGuest: params.guestID,
+    );
+  }
+
+  factory ResponseEventTransaction.fromDb(TransactionModel dataModel) {
+    return ResponseEventTransaction(
+      id: dataModel.id,
+      amount: dataModel.amount,
+      description: dataModel.description,
+      date: dataModel.date,
+      transactionType: dataModel.transactionType,
+      attachment: dataModel.attachment,
+      paidByMember: dataModel.paidByMember,
+      paidByGuest: dataModel.paidByGuest,
     );
   }
 }

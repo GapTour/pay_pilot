@@ -24,17 +24,17 @@ class ResponseEventDetails {
     required this.orders,
   });
 
-  factory ResponseEventDetails.fromMap(Map<String, dynamic> map) {
+  factory ResponseEventDetails.fromApi(Map<String, dynamic> map) {
     return ResponseEventDetails(
       id: int.parse(map['id'] as String),
       title: map['title'] as String,
       description: map['description'] as String?,
       date: DateTime.parse(map['event_date'] as String),
-      team: ResponseTeam.fromMap(map['team'] as Map<String, dynamic>),
+      team: ResponseTeam.fromApi(map['team'] as Map<String, dynamic>),
       transactions: map['transactions'] != null
           ? (map['transactions'] as List<dynamic>)
                 .map(
-                  (e) => ResponseEventTransaction.fromMap(
+                  (e) => ResponseEventTransaction.fromApi(
                     e as Map<String, dynamic>,
                   ),
                 )
@@ -43,13 +43,13 @@ class ResponseEventDetails {
       memberRatios: map['ratios'] != null
           ? (map['ratios'] as List<dynamic>)
                 .map(
-                  (e) => ResponseEventRatio.fromMap(e as Map<String, dynamic>),
+                  (e) => ResponseEventRatio.fromApi(e as Map<String, dynamic>),
                 )
                 .toList()
           : [],
       orders: map['orders'] != null
           ? (map['orders'] as List<dynamic>)
-                .map((e) => ResponseOrder.fromMap(e as Map<String, dynamic>))
+                .map((e) => ResponseOrder.fromApi(e as Map<String, dynamic>))
                 .toList()
           : [],
     );

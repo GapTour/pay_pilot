@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:pay_pilot/core/data/enums/transaction_status.dart';
 import 'package:pay_pilot/core/data/params/event_order_params.dart';
 import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
+import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/helpers/calculator_helper.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_balance.dart';
@@ -350,18 +350,18 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
   ) async {
     emit(state.copyWith(eventTransactionStatus: EventTransactionLoading()));
 
-    final dataState = await _repository.deleteTransaction(event.transactionId);
+    final dataState = await _repository.deleteTransaction(event.params);
 
     if (dataState is DataSuccess) {
       emit(
         state.copyWith(
           eventTransactionStatus: EventTransactionSuccess(
             ResponseEventTransaction(
-              id: event.transactionId,
+              id: event.params.id!,
               amount: 0,
               description: null,
               date: DateTime.now(),
-              transactionType: TransactionStatus.expense,
+              transactionType: TransactionType.expense,
               attachment: null,
               paidByMember: null,
               paidByGuest: null,
@@ -376,7 +376,7 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
         final eventDetailStatus = state.eventDetailStatus as EventDetailSuccess;
         final eventDetailsInfo = eventDetailStatus.eventDetails;
         final transactions = eventDetailsInfo.transactions
-          ..removeWhere((transaction) => transaction.id == event.transactionId);
+          ..removeWhere((transaction) => transaction.id == event.params.id);
 
         emit(
           state.copyWith(

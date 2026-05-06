@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:pay_pilot/core/data/models/order_model.dart';
+import 'package:pay_pilot/core/data/params/event_order_params.dart';
+
 class ResponseOrder {
   final int id;
   final int? orderedByMember;
@@ -17,7 +20,7 @@ class ResponseOrder {
     required this.isDelivered,
   });
 
-  factory ResponseOrder.fromMap(Map<String, dynamic> map) {
+  factory ResponseOrder.fromApi(Map<String, dynamic> map) {
     final orders = map['menuItems'] != null
         ? List<int>.from(jsonDecode(map['menuItems'] as String))
         : <int>[];
@@ -35,6 +38,28 @@ class ResponseOrder {
       isDelivered: map['is_delivered'] != null
           ? map['is_delivered'] as String == '1'
           : false,
+    );
+  }
+
+  factory ResponseOrder.fromDb(OrderModel dataModel) {
+    return ResponseOrder(
+      id: dataModel.id,
+      orderedByMember: dataModel.member?.id,
+      orderedByGuest: dataModel.guest?.id,
+      orders: dataModel.orders,
+      eventID: dataModel.eventID,
+      isDelivered: dataModel.isDelivered,
+    );
+  }
+
+  factory ResponseOrder.fromParams(EventOrderParams params) {
+    return ResponseOrder(
+      id: params.id!,
+      orderedByMember: params.memberID,
+      orderedByGuest: params.guestID,
+      orders: params.menuItemIDs,
+      eventID: params.eventID,
+      isDelivered: false,
     );
   }
 }

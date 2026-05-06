@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/enums/payment_source.dart';
-import 'package:pay_pilot/core/data/enums/transaction_status.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
+import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
@@ -41,7 +41,7 @@ class _AddEventTransactionDialogBoxState
   final TextEditingController dateController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  TransactionStatus? transactionType;
+  TransactionType? transactionType;
   DateTime? selectedDate;
   PaymentSource paymentSource = PaymentSource.guest;
   bool isNotSelected = false;
@@ -154,11 +154,11 @@ class _AddEventTransactionDialogBoxState
             }).toList(),
           ),
         Gap(20),
-        AppDropDownButton<TransactionStatus>(
+        AppDropDownButton<TransactionType>(
           label: 'Transaction Type',
           hint: 'Select a type',
           showWarning: isNotSelected,
-          value: TransactionStatus.values.firstWhereOrNull((element) {
+          value: TransactionType.values.firstWhereOrNull((element) {
             return element.name == transactionType?.name;
           }),
           onChanged: (value) {
@@ -167,8 +167,8 @@ class _AddEventTransactionDialogBoxState
               setState(() {});
             }
           },
-          items: TransactionStatus.values.map((e) {
-            return DropdownMenuItem<TransactionStatus>(
+          items: TransactionType.values.map((e) {
+            return DropdownMenuItem<TransactionType>(
               value: e,
               child: Text(e.name),
             );
@@ -250,6 +250,7 @@ class _AddEventTransactionDialogBoxState
           attachment: null,
           guestID: selectedGuestID,
           memberID: selectedMemberID,
+          hasPermissionDeleteOrder: false,
         );
         widget.onPressedSubmit(transaction);
         context.pop();
