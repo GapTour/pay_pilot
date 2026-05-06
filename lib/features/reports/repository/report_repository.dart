@@ -1,87 +1,103 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:pay_pilot/core/data/params/report_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
+import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
+import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/reports/data/models/response_report.dart';
-import 'package:pay_pilot/features/reports/data/report_api_provider.dart';
+import 'package:pay_pilot/features/reports/data/sources/i_report_source.dart';
+import 'package:pay_pilot/features/reports/data/sources/local_report_source.dart';
+import 'package:pay_pilot/features/reports/data/sources/remote_report_source.dart';
 
-class ReportRepository {
-  // final ReportDbProvider _dbProvider;
-  final ReportApiProvider _apiProvider;
+abstract class IReportRepository implements IReportSource {}
+
+class ReportRepository implements IReportRepository {
+  final RemoteReportSource _remoteReportSource;
+  final LocalReportSource _localReportSource;
+  final SharedPreferencesService _preferencesService;
+  late bool? isOffline;
+
   ReportRepository(
-    // this._dbProvider,
-    this._apiProvider,
+    this._remoteReportSource,
+    this._localReportSource,
+    this._preferencesService,
   );
 
+  @override
   Future<DataState<List<ResponseReport>>> getAllReports() async {
     try {
-      final Response response = await _apiProvider.getAllReports();
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<dynamic>;
-        final reports = rawData.map((e) {
-          return ResponseReport.fromMap(e);
-        }).toList();
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-        return DataSuccess(reports);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localReportSource.getAllReports();
+      return await _remoteReportSource.getAllReports();
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
+  @override
   Future<DataState<List<ResponseEventDetails>>> getAllEvents() async {
     try {
-      final Response response = await _apiProvider.getAllEvents();
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<dynamic>;
-        final events = rawData.map((e) {
-          return ResponseEventDetails.fromMap(e);
-        }).toList();
-
-        return DataSuccess(events);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localReportSource.getAllEvents();
+      return await _remoteReportSource.getAllEvents();
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
+  @override
   Future<DataState<ResponseReport>> createReport(ReportParams params) async {
     try {
-      final Response response = await _apiProvider.createReport(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'] as dynamic;
-        final report = ResponseReport.fromMap(rawData);
-
-        return DataSuccess(report);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localReportSource.createReport(params);
+      return await _remoteReportSource.createReport(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
-  // Future<void> updateReport(ReportForm report) async {
-  //   await _dbProvider.updateReport(report);
-  // }
-
+  @override
   Future<DataState<int>> deleteReport(int id) async {
     try {
-      final Response response = await _apiProvider.deleteReport(id);
-      if (response.statusCode == 204) {
-        return DataSuccess(id);
-      }
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localReportSource.deleteReport(id);
+      return await _remoteReportSource.deleteReport(id);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 }

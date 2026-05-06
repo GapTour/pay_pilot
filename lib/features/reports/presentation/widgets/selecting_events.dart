@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:pay_pilot/core/data/enums/transaction_status.dart';
+import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
@@ -236,7 +236,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
                         final double totalExpense = events[index].transactions
                             .fold(0, (previousValue, element) {
                               if (element.transactionType ==
-                                  TransactionStatus.income) {
+                                  TransactionType.income) {
                                 return previousValue;
                               }
                               return previousValue + element.amount;
@@ -244,7 +244,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
                         final double totalIncome = events[index].transactions
                             .fold(0, (previousValue, element) {
                               if (element.transactionType ==
-                                  TransactionStatus.expense) {
+                                  TransactionType.expense) {
                                 return previousValue;
                               }
                               return previousValue + element.amount;
