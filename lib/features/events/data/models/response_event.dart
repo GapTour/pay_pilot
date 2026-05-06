@@ -1,3 +1,6 @@
+import 'package:pay_pilot/core/data/models/event_model.dart';
+import 'package:pay_pilot/core/data/params/event_params.dart';
+
 class ResponseEvent {
   final int id;
   final String title;
@@ -15,7 +18,7 @@ class ResponseEvent {
     required this.teamID,
   });
 
-  factory ResponseEvent.fromMap(Map<String, dynamic> map) {
+  factory ResponseEvent.fromApi(Map<String, dynamic> map) {
     return ResponseEvent(
       id: int.parse(map['id'] as String),
       teamID: int.parse(map['team_id'] as String),
@@ -25,6 +28,28 @@ class ResponseEvent {
           : null,
       date: DateTime.parse(map['event_date'] as String),
       isActive: map['is_active'] as String == '1',
+    );
+  }
+
+  factory ResponseEvent.fromParams(EventParams params) {
+    return ResponseEvent(
+      id: params.id!,
+      title: params.title,
+      description: params.description,
+      date: params.date,
+      isActive: params.isActive ?? true,
+      teamID: params.teamID,
+    );
+  }
+
+  factory ResponseEvent.fromDb(EventModel event) {
+    return ResponseEvent(
+      id: event.id,
+      title: event.title,
+      description: event.description,
+      date: event.date,
+      isActive: event.isActive,
+      teamID: event.team.id,
     );
   }
 }

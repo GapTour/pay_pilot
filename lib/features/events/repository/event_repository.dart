@@ -1,103 +1,114 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:pay_pilot/core/data/params/event_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
+import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
-import 'package:pay_pilot/features/events/data/event_api_provider.dart';
+import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/events/data/models/response_event.dart';
+import 'package:pay_pilot/features/events/data/sources/local_event_source.dart';
+import 'package:pay_pilot/features/events/data/sources/remote_event_source.dart';
 import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 class EventRepository {
-  // final EventDbProvider _dbProvider;
-  final EventApiProvider _apiProvider;
+  final LocalEventSource _localEventSource;
+  final RemoteEventSource _remoteEventSource;
+  final SharedPreferencesService _preferencesService;
+  late bool? isOffline;
 
   EventRepository(
-    // this._dbProvider,
-    this._apiProvider,
+    this._localEventSource,
+    this._remoteEventSource,
+    this._preferencesService,
   );
 
   Future<DataState<List<ResponseEvent>>> getAllEvents() async {
     try {
-      final Response response = await _apiProvider.getAllEvents();
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<dynamic>;
-        final events = rawData.map((e) {
-          return ResponseEvent.fromMap(e);
-        }).toList();
-
-        return DataSuccess(events);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventSource.getAllEvents();
+      return await _remoteEventSource.getAllEvents();
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<List<ResponseTeam>>> getAllTeams() async {
     try {
-      final Response response = await _apiProvider.getAllTeams();
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 200) {
-        final rawData = response.data['data'] as List<dynamic>;
-        final teams = rawData.map((e) {
-          return ResponseTeam.fromMap(e);
-        }).toList();
-
-        return DataSuccess(teams);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventSource.getAllTeams();
+      return await _remoteEventSource.getAllTeams();
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<ResponseEvent>> addEvent(EventParams params) async {
     try {
-      final Response response = await _apiProvider.addEvent(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'] as dynamic;
-        final event = ResponseEvent.fromMap(rawData);
-
-        return DataSuccess(event);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventSource.addEvent(params);
+      return await _remoteEventSource.addEvent(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<ResponseEvent>> editEvent(EventParams params) async {
     try {
-      final Response response = await _apiProvider.editEvent(params);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 201) {
-        final rawData = response.data['data'] as dynamic;
-        final event = ResponseEvent.fromMap(rawData);
-
-        return DataSuccess(event);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventSource.editEvent(params);
+      return await _remoteEventSource.editEvent(params);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 
   Future<DataState<int>> deleteEvent(int id) async {
     try {
-      final Response response = await _apiProvider.deleteEvent(id);
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
 
-      if (response.statusCode == 204) {
-        return DataSuccess(id);
-      }
-
-      return DataFailed(ErrorResponse.defaultError(null, response.statusCode));
+      if (isOffline!) return await _localEventSource.deleteEvent(id);
+      return await _remoteEventSource.deleteEvent(id);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
     }
   }
 }
