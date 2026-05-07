@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:pay_pilot/core/database/tables/events.dart';
+import 'package:pay_pilot/core/database/tables/guests.dart';
 import 'package:pay_pilot/core/database/tables/members.dart';
 
 class EventOrders extends Table {
@@ -10,7 +11,7 @@ class EventOrders extends Table {
     onDelete: KeyAction.cascade,
   )();
   IntColumn get guessID => integer().nullable().references(
-    Members,
+    Guests,
     #id,
     onDelete: KeyAction.cascade,
   )();

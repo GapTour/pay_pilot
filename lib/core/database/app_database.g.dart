@@ -4391,7 +4391,7 @@ class $EventOrdersTable extends EventOrders
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES members (id) ON DELETE CASCADE',
+      'REFERENCES guests (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _eventIDMeta = const VerificationMeta(
@@ -4938,7 +4938,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'members',
+        'guests',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('event_orders', kind: UpdateKind.delete)],
@@ -6159,6 +6159,24 @@ final class $$MembersTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$EventOrdersTable, List<EventOrder>>
+  _eventOrdersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.eventOrders,
+    aliasName: $_aliasNameGenerator(db.members.id, db.eventOrders.memberID),
+  );
+
+  $$EventOrdersTableProcessedTableManager get eventOrdersRefs {
+    final manager = $$EventOrdersTableTableManager(
+      $_db,
+      $_db.eventOrders,
+    ).filter((f) => f.memberID.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_eventOrdersRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$MembersTableFilterComposer
@@ -6276,6 +6294,31 @@ class $$MembersTableFilterComposer
           }) => $$EventRatiosTableFilterComposer(
             $db: $db,
             $table: $db.eventRatios,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> eventOrdersRefs(
+    Expression<bool> Function($$EventOrdersTableFilterComposer f) f,
+  ) {
+    final $$EventOrdersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.eventOrders,
+      getReferencedColumn: (t) => t.memberID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventOrdersTableFilterComposer(
+            $db: $db,
+            $table: $db.eventOrders,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6448,6 +6491,31 @@ class $$MembersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> eventOrdersRefs<T extends Object>(
+    Expression<T> Function($$EventOrdersTableAnnotationComposer a) f,
+  ) {
+    final $$EventOrdersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.eventOrders,
+      getReferencedColumn: (t) => t.memberID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventOrdersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.eventOrders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$MembersTableTableManager
@@ -6467,6 +6535,7 @@ class $$MembersTableTableManager
             bool ratiosRefs,
             bool eventTransactionsRefs,
             bool eventRatiosRefs,
+            bool eventOrdersRefs,
           })
         > {
   $$MembersTableTableManager(_$AppDatabase db, $MembersTable table)
@@ -6533,6 +6602,7 @@ class $$MembersTableTableManager
                 ratiosRefs = false,
                 eventTransactionsRefs = false,
                 eventRatiosRefs = false,
+                eventOrdersRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -6540,6 +6610,7 @@ class $$MembersTableTableManager
                     if (ratiosRefs) db.ratios,
                     if (eventTransactionsRefs) db.eventTransactions,
                     if (eventRatiosRefs) db.eventRatios,
+                    if (eventOrdersRefs) db.eventOrders,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -6603,6 +6674,27 @@ class $$MembersTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (eventOrdersRefs)
+                        await $_getPrefetchedData<
+                          Member,
+                          $MembersTable,
+                          EventOrder
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MembersTableReferences
+                              ._eventOrdersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).eventOrdersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.memberID == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -6627,6 +6719,7 @@ typedef $$MembersTableProcessedTableManager =
         bool ratiosRefs,
         bool eventTransactionsRefs,
         bool eventRatiosRefs,
+        bool eventOrdersRefs,
       })
     >;
 typedef $$ReportsTableCreateCompanionBuilder =
@@ -7828,6 +7921,24 @@ final class $$GuestsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$EventOrdersTable, List<EventOrder>>
+  _eventOrdersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.eventOrders,
+    aliasName: $_aliasNameGenerator(db.guests.id, db.eventOrders.guessID),
+  );
+
+  $$EventOrdersTableProcessedTableManager get eventOrdersRefs {
+    final manager = $$EventOrdersTableTableManager(
+      $_db,
+      $_db.eventOrders,
+    ).filter((f) => f.guessID.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_eventOrdersRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$GuestsTableFilterComposer
@@ -7905,6 +8016,31 @@ class $$GuestsTableFilterComposer
           }) => $$EventTransactionsTableFilterComposer(
             $db: $db,
             $table: $db.eventTransactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> eventOrdersRefs(
+    Expression<bool> Function($$EventOrdersTableFilterComposer f) f,
+  ) {
+    final $$EventOrdersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.eventOrders,
+      getReferencedColumn: (t) => t.guessID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventOrdersTableFilterComposer(
+            $db: $db,
+            $table: $db.eventOrders,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8049,6 +8185,31 @@ class $$GuestsTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> eventOrdersRefs<T extends Object>(
+    Expression<T> Function($$EventOrdersTableAnnotationComposer a) f,
+  ) {
+    final $$EventOrdersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.eventOrders,
+      getReferencedColumn: (t) => t.guessID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventOrdersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.eventOrders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$GuestsTableTableManager
@@ -8064,7 +8225,10 @@ class $$GuestsTableTableManager
           $$GuestsTableUpdateCompanionBuilder,
           (Guest, $$GuestsTableReferences),
           Guest,
-          PrefetchHooks Function({bool eventTransactionsRefs})
+          PrefetchHooks Function({
+            bool eventTransactionsRefs,
+            bool eventOrdersRefs,
+          })
         > {
   $$GuestsTableTableManager(_$AppDatabase db, $GuestsTable table)
     : super(
@@ -8131,37 +8295,63 @@ class $$GuestsTableTableManager
                     (e.readTable(table), $$GuestsTableReferences(db, table, e)),
               )
               .toList(),
-          prefetchHooksCallback: ({eventTransactionsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (eventTransactionsRefs) db.eventTransactions,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (eventTransactionsRefs)
-                    await $_getPrefetchedData<
-                      Guest,
-                      $GuestsTable,
-                      EventTransaction
-                    >(
-                      currentTable: table,
-                      referencedTable: $$GuestsTableReferences
-                          ._eventTransactionsRefsTable(db),
-                      managerFromTypedResult: (p0) => $$GuestsTableReferences(
-                        db,
-                        table,
-                        p0,
-                      ).eventTransactionsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.guestID == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({eventTransactionsRefs = false, eventOrdersRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (eventTransactionsRefs) db.eventTransactions,
+                    if (eventOrdersRefs) db.eventOrders,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (eventTransactionsRefs)
+                        await $_getPrefetchedData<
+                          Guest,
+                          $GuestsTable,
+                          EventTransaction
+                        >(
+                          currentTable: table,
+                          referencedTable: $$GuestsTableReferences
+                              ._eventTransactionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$GuestsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).eventTransactionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.guestID == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (eventOrdersRefs)
+                        await $_getPrefetchedData<
+                          Guest,
+                          $GuestsTable,
+                          EventOrder
+                        >(
+                          currentTable: table,
+                          referencedTable: $$GuestsTableReferences
+                              ._eventOrdersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$GuestsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).eventOrdersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.guessID == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -8178,7 +8368,7 @@ typedef $$GuestsTableProcessedTableManager =
       $$GuestsTableUpdateCompanionBuilder,
       (Guest, $$GuestsTableReferences),
       Guest,
-      PrefetchHooks Function({bool eventTransactionsRefs})
+      PrefetchHooks Function({bool eventTransactionsRefs, bool eventOrdersRefs})
     >;
 typedef $$EventTransactionsTableCreateCompanionBuilder =
     EventTransactionsCompanion Function({
@@ -9403,15 +9593,16 @@ final class $$EventOrdersTableReferences
     );
   }
 
-  static $MembersTable _guessIDTable(_$AppDatabase db) => db.members
-      .createAlias($_aliasNameGenerator(db.eventOrders.guessID, db.members.id));
+  static $GuestsTable _guessIDTable(_$AppDatabase db) => db.guests.createAlias(
+    $_aliasNameGenerator(db.eventOrders.guessID, db.guests.id),
+  );
 
-  $$MembersTableProcessedTableManager? get guessID {
+  $$GuestsTableProcessedTableManager? get guessID {
     final $_column = $_itemColumn<int>('guess_i_d');
     if ($_column == null) return null;
-    final manager = $$MembersTableTableManager(
+    final manager = $$GuestsTableTableManager(
       $_db,
-      $_db.members,
+      $_db.guests,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_guessIDTable($_db));
     if (item == null) return manager;
@@ -9491,20 +9682,20 @@ class $$EventOrdersTableFilterComposer
     return composer;
   }
 
-  $$MembersTableFilterComposer get guessID {
-    final $$MembersTableFilterComposer composer = $composerBuilder(
+  $$GuestsTableFilterComposer get guessID {
+    final $$GuestsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.guessID,
-      referencedTable: $db.members,
+      referencedTable: $db.guests,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$MembersTableFilterComposer(
+          }) => $$GuestsTableFilterComposer(
             $db: $db,
-            $table: $db.members,
+            $table: $db.guests,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9590,20 +9781,20 @@ class $$EventOrdersTableOrderingComposer
     return composer;
   }
 
-  $$MembersTableOrderingComposer get guessID {
-    final $$MembersTableOrderingComposer composer = $composerBuilder(
+  $$GuestsTableOrderingComposer get guessID {
+    final $$GuestsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.guessID,
-      referencedTable: $db.members,
+      referencedTable: $db.guests,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$MembersTableOrderingComposer(
+          }) => $$GuestsTableOrderingComposer(
             $db: $db,
-            $table: $db.members,
+            $table: $db.guests,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9683,20 +9874,20 @@ class $$EventOrdersTableAnnotationComposer
     return composer;
   }
 
-  $$MembersTableAnnotationComposer get guessID {
-    final $$MembersTableAnnotationComposer composer = $composerBuilder(
+  $$GuestsTableAnnotationComposer get guessID {
+    final $$GuestsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.guessID,
-      referencedTable: $db.members,
+      referencedTable: $db.guests,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$MembersTableAnnotationComposer(
+          }) => $$GuestsTableAnnotationComposer(
             $db: $db,
-            $table: $db.members,
+            $table: $db.guests,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:

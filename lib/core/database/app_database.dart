@@ -120,8 +120,8 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(schema.teams, schema.teams.isActive);
           }
 
-          if (!await columnExists('members', 'isActive')) {
-            await m.addColumn(schema.members, schema.members.isActive);
+          if (!await columnExists('events', 'isActive')) {
+            await m.addColumn(schema.events, schema.events.isActive);
           }
 
           if (!await columnExists('members', 'isActive')) {
