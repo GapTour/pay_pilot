@@ -17,7 +17,7 @@ class ResponseReportDetails {
     required this.events,
   });
 
-  factory ResponseReportDetails.fromMap(Map<String, dynamic> map) {
+  factory ResponseReportDetails.fromApi(Map<String, dynamic> map) {
     final reportMap = map['report'];
     final eventsMap = map['events'] as List<dynamic>;
 
@@ -29,7 +29,7 @@ class ResponseReportDetails {
           ? reportMap['description'] as String
           : null,
       generateFor: DateTime.parse(reportMap['generated_for'] as String),
-      events: eventsMap.map((e) => ResponseEventDetails.fromMap(e)).toList(),
+      events: eventsMap.map((e) => ResponseEventDetails.fromApi(e)).toList(),
     );
   }
 }

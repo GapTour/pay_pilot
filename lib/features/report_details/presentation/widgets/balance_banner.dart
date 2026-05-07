@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:pay_pilot/core/data/enums/transaction_status.dart';
+import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
@@ -28,7 +28,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
 
   double get totalIncomes {
     return transactions.fold(0, (previousValue, element) {
-      if (element.transactionType == TransactionStatus.expense) {
+      if (element.transactionType == TransactionType.expense) {
         return previousValue;
       }
       return previousValue + element.amount;
@@ -37,7 +37,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
 
   double get totalExpenses {
     return transactions.fold(0, (previousValue, element) {
-      if (element.transactionType == TransactionStatus.income) {
+      if (element.transactionType == TransactionType.income) {
         return previousValue;
       }
       return previousValue + element.amount;
