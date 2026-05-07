@@ -12,8 +12,8 @@ import 'package:pay_pilot/features/menu/data/models/response_menu.dart';
 
 abstract class IEventDetailsSource {
   Future<DataState<ResponseEventDetails>> getEvent(int id);
-  Future<DataState<ResponseEventTransaction>> insertTransaction(
-    TransactionParams params,
+  Future<DataState<List<ResponseEventTransaction>>> insertTransaction(
+    List<TransactionParams> params,
   );
   Future<DataState<ResponseOrder>> insertOrder(EventOrderParams params);
   Future<DataState<ResponseEventRatio>> insertRatio(EventRatioParams params);

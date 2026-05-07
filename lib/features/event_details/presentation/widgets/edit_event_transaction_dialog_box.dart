@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/data/enums/payment_source.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
@@ -10,7 +9,6 @@ import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
-import 'package:pay_pilot/core/widgets/app_tab.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
@@ -46,7 +44,6 @@ class _EditEventTransactionDialogBoxState
 
   late TransactionType transactionType;
   late DateTime? selectedDate;
-  late PaymentSource paymentSource;
   bool isNotSelected = false;
   bool isPaidSourceNotSelected = false;
   int? selectedMemberID;
@@ -74,10 +71,8 @@ class _EditEventTransactionDialogBoxState
     transactionType = widget.transaction.transactionType;
 
     if (widget.transaction.paidByGuest != null) {
-      paymentSource = PaymentSource.guest;
       selectedGuestID = widget.transaction.paidByGuest;
     } else if (widget.transaction.paidByMember != null) {
-      paymentSource = PaymentSource.member;
       selectedMemberID = widget.transaction.paidByMember;
     }
   }
@@ -87,77 +82,32 @@ class _EditEventTransactionDialogBoxState
     return AppDialogBox(
       title: 'Edit Transaction',
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Paid By',
-                style: Theme.of(context).textTheme.labelMedium,
-              ),
-            ),
-            const Gap(6),
-            AppTab(
-              tabs: [
-                TabTile(
-                  title: 'Member',
-                  isSelected: paymentSource.isMemberSelected,
-                  onTap: () {
-                    paymentSource = PaymentSource.member;
-                    selectedGuestID = null;
-                    selectedMemberID = null;
-                    setState(() {});
-                  },
-                ),
-                TabTile(
-                  title: 'Guest',
-                  isSelected: paymentSource.isGuestSelected,
-                  onTap: () {
-                    paymentSource = PaymentSource.guest;
-                    selectedGuestID = null;
-                    selectedMemberID = null;
-                    setState(() {});
-                  },
-                ),
-              ],
-            ),
-          ],
+        AppDropDownButton<TransactionType>(
+          label: 'Transaction Type',
+          hint: 'Select a type',
+          showWarning: isNotSelected,
+          value: TransactionType.values.firstWhereOrNull((element) {
+            return element.name == transactionType.name;
+          }),
+          onChanged: (value) {
+            if (value != null) {
+              transactionType = value;
+              selectedMemberID = null;
+              selectedGuestID = null;
+              setState(() {});
+            }
+          },
+          items: TransactionType.values.map((e) {
+            return DropdownMenuItem<TransactionType>(
+              value: e,
+              child: Text(e.name),
+            );
+          }).toList(),
         ),
-        if (isPaidSourceNotSelected)
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              '*Please select a payment source',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.error,
-              ),
-            ),
-          )
-        else
-          Gap(4),
-        if (paymentSource == PaymentSource.member)
-          AppDropDownButton<ResponseMember>(
-            hint: 'Select a Member',
-            showWarning: isPaidSourceNotSelected,
-            value: widget.responseMembers.firstWhereOrNull((element) {
-              return element.id == selectedMemberID;
-            }),
-            onChanged: (value) {
-              if (value != null) {
-                selectedMemberID = value.id;
-                selectedGuestID = null;
-                isPaidSourceNotSelected = false;
-                setState(() {});
-              }
-            },
-            items: widget.responseMembers.map((e) {
-              return DropdownMenuItem<ResponseMember>(
-                value: e,
-                child: Text(e.name),
-              );
-            }).toList(),
-          ),
-        if (paymentSource == PaymentSource.guest)
+        Gap(20),
+        if (transactionType.isIncome) ...[
           AppDropDownButton<ResponseGuest>(
+            label: 'Guests',
             hint: 'Select a Guest',
             showWarning: isPaidSourceNotSelected,
             value: widget.responseGuests.firstWhereOrNull((element) {
@@ -178,28 +128,50 @@ class _EditEventTransactionDialogBoxState
               );
             }).toList(),
           ),
-        Gap(20),
-        AppDropDownButton<TransactionType>(
-          label: 'Transaction Type',
-          hint: 'Select a type',
-          showWarning: isNotSelected,
-          value: TransactionType.values.firstWhereOrNull((element) {
-            return element.name == transactionType.name;
-          }),
-          onChanged: (value) {
-            if (value != null) {
-              transactionType = value;
-              setState(() {});
-            }
-          },
-          items: TransactionType.values.map((e) {
-            return DropdownMenuItem<TransactionType>(
-              value: e,
-              child: Text(e.name),
-            );
-          }).toList(),
-        ),
-        Gap(20),
+          Gap(20),
+        ],
+        if (transactionType.isExpense) ...[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: AppDropDownButton<ResponseMember>(
+                  label: 'Members (optional)',
+                  hint: 'Select a Member',
+                  value: widget.responseMembers.firstWhereOrNull((element) {
+                    return element.id == selectedMemberID;
+                  }),
+                  onChanged: (value) {
+                    if (value != null) {
+                      selectedMemberID = value.id;
+                      selectedGuestID = null;
+                      isPaidSourceNotSelected = false;
+                      setState(() {});
+                    }
+                  },
+                  items: widget.responseMembers.map((e) {
+                    return DropdownMenuItem<ResponseMember>(
+                      value: e,
+                      child: Text(e.name),
+                    );
+                  }).toList(),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  selectedMemberID = null;
+                  selectedGuestID = null;
+                  isPaidSourceNotSelected = false;
+                  setState(() {});
+                },
+                icon: Icon(Icons.clear_rounded),
+              ),
+            ],
+          ),
+          Gap(20),
+        ],
+
         Form(
           key: formKey,
           child: Column(
@@ -255,7 +227,8 @@ class _EditEventTransactionDialogBoxState
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        if (selectedGuestID == null && selectedMemberID == null) {
+
+        if (transactionType.isIncome && selectedGuestID == null) {
           isPaidSourceNotSelected = true;
           setState(() {});
           return;

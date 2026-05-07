@@ -10,12 +10,12 @@ class EventTransactionInitial extends EventTransactionStatus {}
 class EventTransactionLoading extends EventTransactionStatus {}
 
 class EventTransactionSuccess extends EventTransactionStatus {
-  final ResponseEventTransaction transaction;
+  final List<ResponseEventTransaction> transactions;
 
-  EventTransactionSuccess(this.transaction);
+  EventTransactionSuccess(this.transactions);
 
   @override
-  List<Object?> get props => [transaction];
+  List<Object?> get props => [transactions];
 }
 
 class EventTransactionFailure extends EventTransactionStatus {}

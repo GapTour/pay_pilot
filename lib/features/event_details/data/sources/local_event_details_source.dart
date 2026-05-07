@@ -191,16 +191,19 @@ class LocalEventDetailsSource implements IEventDetailsSource {
   }
 
   @override
-  Future<DataState<ResponseEventTransaction>> insertTransaction(
-    TransactionParams params,
+  Future<DataState<List<ResponseEventTransaction>>> insertTransaction(
+    List<TransactionParams> params,
   ) async {
     try {
-      final response = await _dbServiceForEvent.insertTransaction(params);
-      final transaction = ResponseEventTransaction.fromParams(
-        params.copyWith(id: response),
-      );
+      final transactions = <ResponseEventTransaction>[];
+      for (var param in params) {
+        final response = await _dbServiceForEvent.insertTransaction(param);
+        transactions.add(
+          ResponseEventTransaction.fromParams(param.copyWith(id: response)),
+        );
+      }
 
-      return DataSuccess(transaction);
+      return DataSuccess(transactions);
     } on PlatformException catch (e) {
       return DataFailed(
         ErrorResponse.defaultError(e.message, int.tryParse(e.code)),

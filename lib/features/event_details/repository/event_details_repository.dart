@@ -49,8 +49,8 @@ class EventDetailsRepository {
     }
   }
 
-  Future<DataState<ResponseEventTransaction>> insertTransaction(
-    TransactionParams params,
+  Future<DataState<List<ResponseEventTransaction>>> insertTransaction(
+    List<TransactionParams> params,
   ) async {
     try {
       isOffline = await _preferencesService.read<bool>(

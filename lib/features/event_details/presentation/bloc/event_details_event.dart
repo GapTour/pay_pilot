@@ -26,7 +26,7 @@ class UpdateEventDetails extends EventDetailsEvent {
 }
 
 class AddTransaction extends EventDetailsEvent {
-  final TransactionParams params;
+  final List<TransactionParams> params;
 
   const AddTransaction(this.params);
 }

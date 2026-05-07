@@ -156,9 +156,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
                   return AddEventTransactionDialogBox(
                     eventID: int.parse(widget.eventID),
-                    onPressedSubmit: (transaction) {
+                    onPressedSubmit: (transactions) {
                       context.read<EventDetailsBloc>().add(
-                        AddTransaction(transaction),
+                        AddTransaction(transactions),
                       );
                     },
                     responseMembers: members,

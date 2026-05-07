@@ -225,17 +225,18 @@ class RemoteEventDetailsSource implements IEventDetailsSource {
   }
 
   @override
-  Future<DataState<ResponseEventTransaction>> insertTransaction(
-    TransactionParams params,
+  Future<DataState<List<ResponseEventTransaction>>> insertTransaction(
+    List<TransactionParams> params,
   ) async {
     try {
-      final Response response = await _apiProvider.addTransaction(params);
+      // TODO(mahDyarZ): fix this later
+      final Response response = await _apiProvider.addTransaction(params.first);
 
       if (response.statusCode == 201) {
         final rawData = response.data['data'];
         final transaction = ResponseEventTransaction.fromApi(rawData);
 
-        return DataSuccess(transaction);
+        return DataSuccess([transaction]);
       }
 
       return DataFailed(ErrorResponse.defaultError(null, response.statusCode));

@@ -278,7 +278,7 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
         final eventDetailStatus = state.eventDetailStatus as EventDetailSuccess;
         final eventDetailsInfo = eventDetailStatus.eventDetails;
         final transactions = eventDetailsInfo.transactions
-          ..add(dataState.data!);
+          ..addAll(dataState.data!);
 
         emit(
           state.copyWith(
@@ -310,7 +310,7 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
     if (dataState is DataSuccess) {
       emit(
         state.copyWith(
-          eventTransactionStatus: EventTransactionSuccess(dataState.data!),
+          eventTransactionStatus: EventTransactionSuccess([dataState.data!]),
         ),
       );
 
@@ -355,7 +355,7 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
     if (dataState is DataSuccess) {
       emit(
         state.copyWith(
-          eventTransactionStatus: EventTransactionSuccess(
+          eventTransactionStatus: EventTransactionSuccess([
             ResponseEventTransaction(
               id: event.params.id!,
               amount: 0,
@@ -366,7 +366,7 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
               paidByMember: null,
               paidByGuest: null,
             ),
-          ),
+          ]),
         ),
       );
 
