@@ -8,6 +8,7 @@ import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
+import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class EditMemberDialogBox extends StatefulWidget {
   final ResponseMember member;
@@ -91,6 +92,8 @@ class _EditMemberDialogBoxState extends State<EditMemberDialogBox> {
           onTap: (focusNode) async {
             PickDate.yearAndMonth(
               context,
+              startFrom: 1380,
+              endTo: DateTime.now().toJalali().year,
               initDate: selectedJainAtDate ?? widget.member.joinAt,
               onSubmit: (pickedDate, formattedDate) {
                 selectedJainAtDate = pickedDate;
@@ -109,6 +112,8 @@ class _EditMemberDialogBoxState extends State<EditMemberDialogBox> {
           onTap: (focusNode) async {
             PickDate.yearMonthAndDay(
               context,
+              startFrom: 1330,
+              endTo: DateTime.now().toJalali().year,
               initDate: selectedBirthdayDate ?? widget.member.joinAt,
               onSubmit: (pickedDate, formattedDate) {
                 selectedBirthdayDate = pickedDate;

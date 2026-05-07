@@ -9,6 +9,7 @@ import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
 import 'package:pay_pilot/features/teams/data/models/response_team.dart';
+import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class AddEventDialogBox extends StatefulWidget {
   final List<ResponseTeam> teams;
@@ -91,6 +92,8 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
                 onTap: (focusNode) async {
                   PickDate.yearMonthAndDay(
                     context,
+                    startFrom: DateTime.now().toJalali().year - 1,
+                    endTo: DateTime.now().toJalali().year,
                     initDate: selectedDate,
                     onSubmit: (pickedDate, formattedDate) {
                       selectedDate = pickedDate;

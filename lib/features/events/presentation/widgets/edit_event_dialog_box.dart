@@ -10,6 +10,7 @@ import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
 import 'package:pay_pilot/features/events/data/models/response_event.dart';
 import 'package:pay_pilot/features/teams/data/models/response_team.dart';
+import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class EditEventDialogBox extends StatefulWidget {
   final ResponseEvent eventDetails;
@@ -109,6 +110,8 @@ class _EditEventDialogBoxState extends State<EditEventDialogBox> {
                 onTap: (focusNode) async {
                   PickDate.yearMonthAndDay(
                     context,
+                    startFrom: DateTime.now().toJalali().year - 1,
+                    endTo: DateTime.now().toJalali().year,
                     initDate: selectedDate ?? widget.eventDetails.date,
                     onSubmit: (pickedDate, formattedDate) {
                       selectedDate = pickedDate;
