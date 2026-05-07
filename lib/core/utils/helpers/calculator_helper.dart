@@ -220,7 +220,7 @@ class CalculatorHelper {
             ..add(
               ResponseEventBalance(
                 member: involvedMember,
-                expenses: totalExpense,
+                expenses: totalExpense + (memberBalanceInfo.expenses ?? 0),
                 salary: balance + memberBalanceInfo.salary,
               ),
             );
