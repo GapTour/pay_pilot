@@ -5,6 +5,7 @@ import 'package:pay_pilot/core/database/daos/member_dao/member_dao.dart';
 import 'package:pay_pilot/core/database/daos/menu_dao/menu_dao.dart';
 import 'package:pay_pilot/core/database/daos/ratio_dao/ratio_dao.dart';
 import 'package:pay_pilot/core/database/daos/report_dao/report_dao.dart';
+import 'package:pay_pilot/core/database/daos/settings_dao/settings_dao.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
 import 'package:pay_pilot/core/database/schema_versions.dart';
 import 'package:pay_pilot/core/database/tables/collect_report_events.dart';
@@ -35,7 +36,16 @@ part 'app_database.g.dart';
     Guests,
     EventOrders,
   ],
-  daos: [ReportDao, RatioDao, EventDao, TeamDao, MemberDao, GuestDao, MenuDao],
+  daos: [
+    ReportDao,
+    RatioDao,
+    EventDao,
+    TeamDao,
+    MemberDao,
+    GuestDao,
+    MenuDao,
+    SettingsDao,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
