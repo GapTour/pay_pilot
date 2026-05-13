@@ -8,6 +8,7 @@ import 'package:pay_pilot/core/database/daos/member_dao/member_dao.dart';
 import 'package:pay_pilot/core/database/daos/menu_dao/menu_dao.dart';
 import 'package:pay_pilot/core/database/daos/ratio_dao/ratio_dao.dart';
 import 'package:pay_pilot/core/database/daos/report_dao/report_dao.dart';
+import 'package:pay_pilot/core/database/daos/settings_dao/settings_dao.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
 import 'package:pay_pilot/core/database/platform/platfrom.dart';
 import 'package:pay_pilot/core/utils/services/secure_storage_service.dart';
@@ -50,6 +51,8 @@ import 'package:pay_pilot/features/reports/data/providers/report_api_provider.da
 import 'package:pay_pilot/features/reports/data/sources/local_report_source.dart';
 import 'package:pay_pilot/features/reports/data/sources/remote_report_source.dart';
 import 'package:pay_pilot/features/reports/repository/report_repository.dart';
+import 'package:pay_pilot/features/settings/data/sources/backup_native_source.dart';
+import 'package:pay_pilot/features/settings/repository/backup_provider_repository.dart';
 import 'package:pay_pilot/features/team_members/data/providers/team_member_api_provider.dart';
 import 'package:pay_pilot/features/team_members/data/sources/local_team_members_source.dart';
 import 'package:pay_pilot/features/team_members/data/sources/remote_team_members_source.dart';
@@ -97,6 +100,7 @@ Future<void> _callServices() async {
   locator.registerSingleton<EventDao>(EventDao(locator()));
   locator.registerSingleton<GuestDao>(GuestDao(locator()));
   locator.registerSingleton<MenuDao>(MenuDao(locator()));
+  locator.registerSingleton<SettingsDao>(SettingsDao(locator()));
 }
 
 void _callProviders() {
@@ -214,6 +218,10 @@ void _callSources() {
   locator.registerLazySingleton<LocalReportDetailsSource>(
     () => LocalReportDetailsSource(locator(), locator()),
   );
+
+  locator.registerLazySingleton<BackupNativeSource>(
+    () => BackupNativeSource(locator()),
+  );
 }
 
 void _callRepositories() {
@@ -252,6 +260,9 @@ void _callRepositories() {
   );
   locator.registerLazySingleton<ReportDetailsRepository>(
     () => ReportDetailsRepository(locator(), locator(), locator()),
+  );
+  locator.registerLazySingleton<BackupProviderRepository>(
+    () => BackupProviderRepository(locator()),
   );
 }
 
