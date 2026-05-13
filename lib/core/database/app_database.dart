@@ -124,24 +124,94 @@ class AppDatabase extends _$AppDatabase {
 
           if (!await columnExists('reports', 'isActive')) {
             await m.addColumn(schema.reports, schema.reports.isActive);
+            await m.database.customStatement(
+              'UPDATE "reports" SET "isActive" = true WHERE "isActive" IS NULL;',
+            );
           }
 
           if (!await columnExists('teams', 'isActive')) {
             await m.addColumn(schema.teams, schema.teams.isActive);
+            await m.database.customStatement(
+              'UPDATE "teams" SET "isActive" = true WHERE "isActive" IS NULL;',
+            );
           }
 
           if (!await columnExists('events', 'isActive')) {
             await m.addColumn(schema.events, schema.events.isActive);
+            await m.database.customStatement(
+              'UPDATE "events" SET "isActive" = true WHERE "isActive" IS NULL;',
+            );
           }
 
           if (!await columnExists('members', 'isActive')) {
             await m.addColumn(schema.members, schema.members.isActive);
+            await m.database.customStatement(
+              'UPDATE "members" SET "isActive" = true WHERE "isActive" IS NULL;',
+            );
           }
           if (!await columnExists('members', 'birthday')) {
             await m.addColumn(schema.members, schema.members.birthday);
           }
           if (!await columnExists('members', 'profileImage')) {
             await m.addColumn(schema.members, schema.members.profileImage);
+          }
+
+          if (!await columnExists('collectReportEvents', 'modifiedAt')) {
+            await m.addColumn(
+              schema.collectReportEvents,
+              schema.collectReportEvents.modifiedAt,
+            );
+            await m.database.customStatement(
+              'UPDATE "collectReportEvents" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
+            );
+          }
+          if (!await columnExists('eventRatios', 'modifiedAt')) {
+            await m.addColumn(
+              schema.eventRatios,
+              schema.eventRatios.modifiedAt,
+            );
+            await m.database.customStatement(
+              'UPDATE "eventRatios" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
+            );
+          }
+          if (!await columnExists('eventTransactions', 'modifiedAt')) {
+            await m.addColumn(
+              schema.eventTransactions,
+              schema.eventTransactions.modifiedAt,
+            );
+            await m.database.customStatement(
+              'UPDATE "eventTransactions" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
+            );
+          }
+          if (!await columnExists('events', 'modifiedAt')) {
+            await m.addColumn(schema.events, schema.events.modifiedAt);
+            await m.database.customStatement(
+              'UPDATE "events" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
+            );
+          }
+          if (!await columnExists('ratios', 'modifiedAt')) {
+            await m.addColumn(schema.ratios, schema.ratios.modifiedAt);
+            await m.database.customStatement(
+              'UPDATE "ratios" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
+            );
+          }
+          if (!await columnExists('reports', 'modifiedAt')) {
+            await m.addColumn(schema.reports, schema.reports.modifiedAt);
+            await m.database.customStatement(
+              'UPDATE "reports" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
+            );
+          }
+          if (!await columnExists('teams', 'modifiedAt')) {
+            await m.addColumn(schema.teams, schema.teams.modifiedAt);
+            await m.database.customStatement(
+              'UPDATE "teams" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
+            );
+          }
+          if (!await columnExists('members', 'modifiedAt')) {
+            await m.addColumn(schema.members, schema.members.modifiedAt);
+            await m.database.customStatement(
+              'UPDATE "members" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
+            );
           }
         },
       ),

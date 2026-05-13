@@ -518,7 +518,14 @@ final class Schema4 extends i0.VersionedSchema {
       withoutRowId: false,
       isStrict: false,
       tableConstraints: [],
-      columns: [_column_0, _column_1, _column_2, _column_3, _column_16],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_16,
+        _column_17,
+      ],
       attachedDatabase: database,
     ),
     alias: null,
@@ -537,6 +544,7 @@ final class Schema4 extends i0.VersionedSchema {
         _column_5,
         _column_3,
         _column_16,
+        _column_17,
       ],
       attachedDatabase: database,
     ),
@@ -553,10 +561,11 @@ final class Schema4 extends i0.VersionedSchema {
         _column_6,
         _column_2,
         _column_7,
-        _column_16,
         _column_17,
         _column_18,
+        _column_19,
         _column_3,
+        _column_16,
       ],
       attachedDatabase: database,
     ),
@@ -576,34 +585,42 @@ final class Schema4 extends i0.VersionedSchema {
         _column_9,
         _column_3,
         _column_16,
+        _column_17,
       ],
       attachedDatabase: database,
     ),
     alias: null,
   );
-  late final Shape4 ratios = Shape4(
+  late final Shape12 ratios = Shape12(
     source: i0.VersionedTable(
       entityName: 'ratios',
       withoutRowId: false,
       isStrict: false,
       tableConstraints: [],
-      columns: [_column_0, _column_10, _column_4, _column_11, _column_3],
+      columns: [
+        _column_0,
+        _column_10,
+        _column_4,
+        _column_11,
+        _column_3,
+        _column_16,
+      ],
       attachedDatabase: database,
     ),
     alias: null,
   );
-  late final Shape5 collectReportEvents = Shape5(
+  late final Shape13 collectReportEvents = Shape13(
     source: i0.VersionedTable(
       entityName: 'collect_report_events',
       withoutRowId: false,
       isStrict: false,
       tableConstraints: [],
-      columns: [_column_0, _column_12, _column_13, _column_3],
+      columns: [_column_0, _column_12, _column_13, _column_3, _column_16],
       attachedDatabase: database,
     ),
     alias: null,
   );
-  late final Shape12 guests = Shape12(
+  late final Shape14 guests = Shape14(
     source: i0.VersionedTable(
       entityName: 'guests',
       withoutRowId: false,
@@ -613,19 +630,20 @@ final class Schema4 extends i0.VersionedSchema {
         _column_0,
         _column_6,
         _column_2,
-        _column_18,
+        _column_19,
         _column_3,
         _column_16,
-        _column_19,
+        _column_17,
         _column_20,
         _column_21,
-        _column_17,
+        _column_22,
+        _column_18,
       ],
       attachedDatabase: database,
     ),
     alias: null,
   );
-  late final Shape13 eventTransactions = Shape13(
+  late final Shape15 eventTransactions = Shape15(
     source: i0.VersionedTable(
       entityName: 'event_transactions',
       withoutRowId: false,
@@ -639,37 +657,45 @@ final class Schema4 extends i0.VersionedSchema {
         _column_12,
         _column_5,
         _column_3,
-        _column_22,
+        _column_16,
         _column_23,
         _column_24,
+        _column_25,
       ],
       attachedDatabase: database,
     ),
     alias: null,
   );
-  late final Shape7 eventRatios = Shape7(
+  late final Shape16 eventRatios = Shape16(
     source: i0.VersionedTable(
       entityName: 'event_ratios',
       withoutRowId: false,
       isStrict: false,
       tableConstraints: [],
-      columns: [_column_0, _column_10, _column_12, _column_11, _column_3],
+      columns: [
+        _column_0,
+        _column_10,
+        _column_12,
+        _column_11,
+        _column_3,
+        _column_16,
+      ],
       attachedDatabase: database,
     ),
     alias: null,
   );
-  late final Shape14 menus = Shape14(
+  late final Shape17 menus = Shape17(
     source: i0.VersionedTable(
       entityName: 'menus',
       withoutRowId: false,
       isStrict: false,
       tableConstraints: [],
-      columns: [_column_0, _column_1, _column_3, _column_16],
+      columns: [_column_0, _column_1, _column_3, _column_16, _column_17],
       attachedDatabase: database,
     ),
     alias: null,
   );
-  late final Shape15 eventOrders = Shape15(
+  late final Shape18 eventOrders = Shape18(
     source: i0.VersionedTable(
       entityName: 'event_orders',
       withoutRowId: false,
@@ -677,12 +703,13 @@ final class Schema4 extends i0.VersionedSchema {
       tableConstraints: [],
       columns: [
         _column_0,
-        _column_22,
-        _column_25,
-        _column_12,
+        _column_23,
         _column_26,
+        _column_12,
         _column_27,
+        _column_28,
         _column_3,
+        _column_16,
       ],
       attachedDatabase: database,
     ),
@@ -700,15 +727,25 @@ class Shape8 extends i0.VersionedTable {
       columnsByName['description']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createAt =>
       columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
   i1.GeneratedColumn<bool> get isActive =>
       columnsByName['is_active']! as i1.GeneratedColumn<bool>;
 }
 
-i1.GeneratedColumn<bool> _column_16(String aliasedName) =>
+i1.GeneratedColumn<DateTime> _column_16(String aliasedName) =>
+    i1.GeneratedColumn<DateTime>(
+      'modified_at',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.dateTime,
+      defaultValue: const CustomExpression('strftime(\'%s\', CURRENT_DATE)'),
+    );
+i1.GeneratedColumn<bool> _column_17(String aliasedName) =>
     i1.GeneratedColumn<bool>(
       'is_active',
       aliasedName,
-      true,
+      false,
       type: i1.DriftSqlType.bool,
       defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
         'CHECK ("is_active" IN (0, 1))',
@@ -730,6 +767,8 @@ class Shape9 extends i0.VersionedTable {
       columnsByName['date']! as i1.GeneratedColumn<DateTime>;
   i1.GeneratedColumn<DateTime> get createAt =>
       columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
   i1.GeneratedColumn<bool> get isActive =>
       columnsByName['is_active']! as i1.GeneratedColumn<bool>;
 }
@@ -752,16 +791,18 @@ class Shape10 extends i0.VersionedTable {
       columnsByName['profile_image']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createAt =>
       columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
 }
 
-i1.GeneratedColumn<DateTime> _column_17(String aliasedName) =>
+i1.GeneratedColumn<DateTime> _column_18(String aliasedName) =>
     i1.GeneratedColumn<DateTime>(
       'birthday',
       aliasedName,
       true,
       type: i1.DriftSqlType.dateTime,
     );
-i1.GeneratedColumn<String> _column_18(String aliasedName) =>
+i1.GeneratedColumn<String> _column_19(String aliasedName) =>
     i1.GeneratedColumn<String>(
       'profile_image',
       aliasedName,
@@ -783,12 +824,44 @@ class Shape11 extends i0.VersionedTable {
       columnsByName['generate_for']! as i1.GeneratedColumn<DateTime>;
   i1.GeneratedColumn<DateTime> get createAt =>
       columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
   i1.GeneratedColumn<bool> get isActive =>
       columnsByName['is_active']! as i1.GeneratedColumn<bool>;
 }
 
 class Shape12 extends i0.VersionedTable {
   Shape12({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get memberID =>
+      columnsByName['member_i_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get teamID =>
+      columnsByName['team_i_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<double> get ratio =>
+      columnsByName['ratio']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<DateTime> get createAt =>
+      columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
+}
+
+class Shape13 extends i0.VersionedTable {
+  Shape13({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get eventID =>
+      columnsByName['event_i_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get reportID =>
+      columnsByName['report_i_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<DateTime> get createAt =>
+      columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
+}
+
+class Shape14 extends i0.VersionedTable {
+  Shape14({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<int> get id =>
       columnsByName['id']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get name =>
@@ -799,6 +872,8 @@ class Shape12 extends i0.VersionedTable {
       columnsByName['profile_image']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createAt =>
       columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
   i1.GeneratedColumn<bool> get isActive =>
       columnsByName['is_active']! as i1.GeneratedColumn<bool>;
   i1.GeneratedColumn<String> get telegramId =>
@@ -811,21 +886,21 @@ class Shape12 extends i0.VersionedTable {
       columnsByName['birthday']! as i1.GeneratedColumn<DateTime>;
 }
 
-i1.GeneratedColumn<String> _column_19(String aliasedName) =>
+i1.GeneratedColumn<String> _column_20(String aliasedName) =>
     i1.GeneratedColumn<String>(
       'telegram_id',
       aliasedName,
       true,
       type: i1.DriftSqlType.string,
     );
-i1.GeneratedColumn<String> _column_20(String aliasedName) =>
+i1.GeneratedColumn<String> _column_21(String aliasedName) =>
     i1.GeneratedColumn<String>(
       'instagram_id',
       aliasedName,
       true,
       type: i1.DriftSqlType.string,
     );
-i1.GeneratedColumn<String> _column_21(String aliasedName) =>
+i1.GeneratedColumn<String> _column_22(String aliasedName) =>
     i1.GeneratedColumn<String>(
       'phone_number',
       aliasedName,
@@ -833,8 +908,8 @@ i1.GeneratedColumn<String> _column_21(String aliasedName) =>
       type: i1.DriftSqlType.string,
     );
 
-class Shape13 extends i0.VersionedTable {
-  Shape13({required super.source, required super.alias}) : super.aliased();
+class Shape15 extends i0.VersionedTable {
+  Shape15({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<int> get id =>
       columnsByName['id']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get description =>
@@ -849,6 +924,8 @@ class Shape13 extends i0.VersionedTable {
       columnsByName['date']! as i1.GeneratedColumn<DateTime>;
   i1.GeneratedColumn<DateTime> get createAt =>
       columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
   i1.GeneratedColumn<int> get memberID =>
       columnsByName['member_i_d']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<int> get guestID =>
@@ -857,7 +934,7 @@ class Shape13 extends i0.VersionedTable {
       columnsByName['attachment']! as i1.GeneratedColumn<String>;
 }
 
-i1.GeneratedColumn<int> _column_22(String aliasedName) =>
+i1.GeneratedColumn<int> _column_23(String aliasedName) =>
     i1.GeneratedColumn<int>(
       'member_i_d',
       aliasedName,
@@ -867,7 +944,7 @@ i1.GeneratedColumn<int> _column_22(String aliasedName) =>
         'REFERENCES members (id) ON DELETE CASCADE',
       ),
     );
-i1.GeneratedColumn<int> _column_23(String aliasedName) =>
+i1.GeneratedColumn<int> _column_24(String aliasedName) =>
     i1.GeneratedColumn<int>(
       'guest_i_d',
       aliasedName,
@@ -877,7 +954,7 @@ i1.GeneratedColumn<int> _column_23(String aliasedName) =>
         'REFERENCES guests (id) ON DELETE CASCADE',
       ),
     );
-i1.GeneratedColumn<String> _column_24(String aliasedName) =>
+i1.GeneratedColumn<String> _column_25(String aliasedName) =>
     i1.GeneratedColumn<String>(
       'attachment',
       aliasedName,
@@ -885,20 +962,38 @@ i1.GeneratedColumn<String> _column_24(String aliasedName) =>
       type: i1.DriftSqlType.string,
     );
 
-class Shape14 extends i0.VersionedTable {
-  Shape14({required super.source, required super.alias}) : super.aliased();
+class Shape16 extends i0.VersionedTable {
+  Shape16({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get memberID =>
+      columnsByName['member_i_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get eventID =>
+      columnsByName['event_i_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<double> get ratio =>
+      columnsByName['ratio']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<DateTime> get createAt =>
+      columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
+}
+
+class Shape17 extends i0.VersionedTable {
+  Shape17({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<int> get id =>
       columnsByName['id']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get title =>
       columnsByName['title']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createAt =>
       columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
   i1.GeneratedColumn<bool> get isActive =>
       columnsByName['is_active']! as i1.GeneratedColumn<bool>;
 }
 
-class Shape15 extends i0.VersionedTable {
-  Shape15({required super.source, required super.alias}) : super.aliased();
+class Shape18 extends i0.VersionedTable {
+  Shape18({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<int> get id =>
       columnsByName['id']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<int> get memberID =>
@@ -913,19 +1008,21 @@ class Shape15 extends i0.VersionedTable {
       columnsByName['menu_items']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createAt =>
       columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
 }
 
-i1.GeneratedColumn<int> _column_25(String aliasedName) =>
+i1.GeneratedColumn<int> _column_26(String aliasedName) =>
     i1.GeneratedColumn<int>(
       'guess_i_d',
       aliasedName,
       true,
       type: i1.DriftSqlType.int,
       defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
-        'REFERENCES members (id) ON DELETE CASCADE',
+        'REFERENCES guests (id) ON DELETE CASCADE',
       ),
     );
-i1.GeneratedColumn<bool> _column_26(String aliasedName) =>
+i1.GeneratedColumn<bool> _column_27(String aliasedName) =>
     i1.GeneratedColumn<bool>(
       'is_delivered',
       aliasedName,
@@ -936,7 +1033,7 @@ i1.GeneratedColumn<bool> _column_26(String aliasedName) =>
       ),
       defaultValue: const CustomExpression('0'),
     );
-i1.GeneratedColumn<String> _column_27(String aliasedName) =>
+i1.GeneratedColumn<String> _column_28(String aliasedName) =>
     i1.GeneratedColumn<String>(
       'menu_items',
       aliasedName,

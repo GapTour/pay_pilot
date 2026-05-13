@@ -9,6 +9,6 @@ class Events extends Table {
       integer().references(Teams, #id, onDelete: KeyAction.cascade)();
   DateTimeColumn get date => dateTime().withDefault(currentDate)();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
-  BoolColumn get isActive =>
-      boolean().nullable().withDefault(const Constant(true))();
+  DateTimeColumn get modifiedAt => dateTime().withDefault(currentDate)();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
 }

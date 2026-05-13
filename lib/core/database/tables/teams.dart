@@ -5,6 +5,6 @@ class Teams extends Table {
   TextColumn get title => text()();
   TextColumn get description => text().nullable()();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
-  BoolColumn get isActive =>
-      boolean().nullable().withDefault(const Constant(true))();
+  DateTimeColumn get modifiedAt => dateTime().withDefault(currentDate)();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
 }

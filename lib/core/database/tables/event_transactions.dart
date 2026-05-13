@@ -20,6 +20,7 @@ class EventTransactions extends Table {
       integer().references(Events, #id, onDelete: KeyAction.cascade)();
   DateTimeColumn get date => dateTime().withDefault(currentDate)();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
+  DateTimeColumn get modifiedAt => dateTime().withDefault(currentDate)();
   IntColumn get memberID => integer().nullable().references(
     Members,
     #id,

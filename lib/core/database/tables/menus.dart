@@ -4,6 +4,6 @@ class Menus extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
-  BoolColumn get isActive =>
-      boolean().nullable().withDefault(const Constant(true))();
+  DateTimeColumn get modifiedAt => dateTime().withDefault(currentDate)();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
 }

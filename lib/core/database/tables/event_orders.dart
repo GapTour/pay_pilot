@@ -20,4 +20,5 @@ class EventOrders extends Table {
   BoolColumn get isDelivered => boolean().withDefault(const Constant(false))();
   TextColumn get menuItems => text().nullable()();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
+  DateTimeColumn get modifiedAt => dateTime().withDefault(currentDate)();
 }
