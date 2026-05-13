@@ -66,32 +66,32 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(schema.collectReportEvents);
           await m.createTable(schema.eventTransactions);
 
-          if (!await columnExists('members', 'joinAt')) {
+          if (!await columnExists(m, 'members', 'joinAt')) {
             await m.addColumn(schema.members, schema.members.joinAt);
           }
-          if (await columnExists('members', 'percentage')) {
+          if (await columnExists(m, 'members', 'percentage')) {
             await m.dropColumn(schema.members, 'percentage');
           }
 
           await m.renameTable(schema.events, 'incomes');
-          if (await columnExists('events', 'amount')) {
+          if (await columnExists(m, 'events', 'amount')) {
             await m.dropColumn(schema.events, 'amount');
           }
-          if (!await columnExists('events', 'teamID')) {
+          if (!await columnExists(m, 'events', 'teamID')) {
             await m.addColumn(schema.events, schema.events.teamID);
           }
 
-          if (await columnExists('reports', 'date')) {
+          if (await columnExists(m, 'reports', 'date')) {
             await m.renameColumn(
               schema.reports,
               'date',
               schema.reports.generateFor,
             );
           }
-          if (await columnExists('reports', 'membersReport')) {
+          if (await columnExists(m, 'reports', 'membersReport')) {
             await m.dropColumn(schema.reports, 'membersReport');
           }
-          if (await columnExists('reports', 'totalBalance')) {
+          if (await columnExists(m, 'reports', 'totalBalance')) {
             await m.dropColumn(schema.reports, 'totalBalance');
           }
         },
@@ -103,116 +103,103 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(schema.guests);
           await m.createTable(schema.menus);
 
-          if (!await columnExists('eventTransactions', 'memberID')) {
-            await m.addColumn(
+          await m.alterTable(
+            TableMigration(
+              schema.members,
+              columnTransformer: {
+                schema.members.isActive: Constant(true),
+                schema.members.modifiedAt: Constant(DateTime.now().toUtc()),
+              },
+              newColumns: [
+                schema.members.isActive,
+                schema.members.birthday,
+                schema.members.profileImage,
+                schema.members.modifiedAt,
+              ],
+            ),
+          );
+
+          await m.alterTable(
+            TableMigration(
+              schema.teams,
+              columnTransformer: {
+                schema.teams.isActive: Constant(true),
+                schema.teams.modifiedAt: Constant(DateTime.now().toUtc()),
+              },
+              newColumns: [schema.teams.isActive, schema.teams.modifiedAt],
+            ),
+          );
+
+          await m.alterTable(
+            TableMigration(
+              schema.ratios,
+              columnTransformer: {
+                schema.ratios.modifiedAt: Constant(DateTime.now().toUtc()),
+              },
+              newColumns: [schema.ratios.modifiedAt],
+            ),
+          );
+
+          await m.alterTable(
+            TableMigration(
+              schema.events,
+              columnTransformer: {
+                schema.events.isActive: Constant(true),
+                schema.events.modifiedAt: Constant(DateTime.now().toUtc()),
+              },
+              newColumns: [schema.events.modifiedAt, schema.events.isActive],
+            ),
+          );
+
+          await m.alterTable(
+            TableMigration(
               schema.eventTransactions,
-              schema.eventTransactions.memberID,
-            );
-          }
-          if (!await columnExists('eventTransactions', 'guestID')) {
-            await m.addColumn(
-              schema.eventTransactions,
-              schema.eventTransactions.guestID,
-            );
-          }
-          if (!await columnExists('eventTransactions', 'attachment')) {
-            await m.addColumn(
-              schema.eventTransactions,
-              schema.eventTransactions.attachment,
-            );
-          }
+              columnTransformer: {
+                schema.eventTransactions.modifiedAt: Constant(
+                  DateTime.now().toUtc(),
+                ),
+              },
+              newColumns: [
+                schema.eventTransactions.modifiedAt,
+                schema.eventTransactions.memberID,
+                schema.eventTransactions.guestID,
+                schema.eventTransactions.attachment,
+              ],
+            ),
+          );
 
-          if (!await columnExists('reports', 'isActive')) {
-            await m.addColumn(schema.reports, schema.reports.isActive);
-            await m.database.customStatement(
-              'UPDATE "reports" SET "isActive" = true WHERE "isActive" IS NULL;',
-            );
-          }
-
-          if (!await columnExists('teams', 'isActive')) {
-            await m.addColumn(schema.teams, schema.teams.isActive);
-            await m.database.customStatement(
-              'UPDATE "teams" SET "isActive" = true WHERE "isActive" IS NULL;',
-            );
-          }
-
-          if (!await columnExists('events', 'isActive')) {
-            await m.addColumn(schema.events, schema.events.isActive);
-            await m.database.customStatement(
-              'UPDATE "events" SET "isActive" = true WHERE "isActive" IS NULL;',
-            );
-          }
-
-          if (!await columnExists('members', 'isActive')) {
-            await m.addColumn(schema.members, schema.members.isActive);
-            await m.database.customStatement(
-              'UPDATE "members" SET "isActive" = true WHERE "isActive" IS NULL;',
-            );
-          }
-          if (!await columnExists('members', 'birthday')) {
-            await m.addColumn(schema.members, schema.members.birthday);
-          }
-          if (!await columnExists('members', 'profileImage')) {
-            await m.addColumn(schema.members, schema.members.profileImage);
-          }
-
-          if (!await columnExists('collectReportEvents', 'modifiedAt')) {
-            await m.addColumn(
-              schema.collectReportEvents,
-              schema.collectReportEvents.modifiedAt,
-            );
-            await m.database.customStatement(
-              'UPDATE "collectReportEvents" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
-            );
-          }
-          if (!await columnExists('eventRatios', 'modifiedAt')) {
-            await m.addColumn(
+          await m.alterTable(
+            TableMigration(
               schema.eventRatios,
-              schema.eventRatios.modifiedAt,
-            );
-            await m.database.customStatement(
-              'UPDATE "eventRatios" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
-            );
-          }
-          if (!await columnExists('eventTransactions', 'modifiedAt')) {
-            await m.addColumn(
-              schema.eventTransactions,
-              schema.eventTransactions.modifiedAt,
-            );
-            await m.database.customStatement(
-              'UPDATE "eventTransactions" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
-            );
-          }
-          if (!await columnExists('events', 'modifiedAt')) {
-            await m.addColumn(schema.events, schema.events.modifiedAt);
-            await m.database.customStatement(
-              'UPDATE "events" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
-            );
-          }
-          if (!await columnExists('ratios', 'modifiedAt')) {
-            await m.addColumn(schema.ratios, schema.ratios.modifiedAt);
-            await m.database.customStatement(
-              'UPDATE "ratios" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
-            );
-          }
-          if (!await columnExists('reports', 'modifiedAt')) {
-            await m.addColumn(schema.reports, schema.reports.modifiedAt);
-            await m.database.customStatement(
-              'UPDATE "reports" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
-            );
-          }
-          if (!await columnExists('teams', 'modifiedAt')) {
-            await m.addColumn(schema.teams, schema.teams.modifiedAt);
-            await m.database.customStatement(
-              'UPDATE "teams" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
-            );
-          }
-          if (!await columnExists('members', 'modifiedAt')) {
-            await m.addColumn(schema.members, schema.members.modifiedAt);
-            await m.database.customStatement(
-              'UPDATE "members" SET "modifiedAt" = "createdAt" WHERE "modifiedAt" IS NULL;',
-            );
-          }
+              columnTransformer: {
+                schema.eventRatios.modifiedAt: Constant(DateTime.now().toUtc()),
+              },
+              newColumns: [schema.eventRatios.modifiedAt],
+            ),
+          );
+
+          await m.alterTable(
+            TableMigration(
+              schema.reports,
+              columnTransformer: {
+                schema.reports.isActive: Constant(true),
+                schema.reports.modifiedAt: Constant(DateTime.now().toUtc()),
+              },
+              newColumns: [schema.reports.modifiedAt, schema.reports.isActive],
+            ),
+          );
+
+          await m.alterTable(
+            TableMigration(
+              schema.collectReportEvents,
+              columnTransformer: {
+                schema.collectReportEvents.modifiedAt: Constant(
+                  DateTime.now().toUtc(),
+                ),
+              },
+              newColumns: [schema.collectReportEvents.modifiedAt],
+            ),
+          );
         },
       ),
       beforeOpen: (openingDetails) async {
@@ -223,9 +210,15 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<bool> columnExists(String table, String column) async {
-    final result = await customSelect('PRAGMA table_info($table);').get();
-    return result.any((row) => row.data['name'] == column);
+  Future<bool> columnExists(
+    Migrator m,
+    String sqlTableName,
+    String sqlColumnName,
+  ) async {
+    final rows = await m.database
+        .customSelect('PRAGMA table_info("$sqlTableName");')
+        .get();
+    return rows.any((r) => r.data['name'] == sqlColumnName);
   }
 }
 
