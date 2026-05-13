@@ -90,6 +90,17 @@ class MainScreen extends StatelessWidget {
                     context.pushNamed(AppRoutes.reportsScreen);
                   },
                 ),
+                AppElevatedButton(
+                  child: Center(
+                    child: Text(
+                      'Settings',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
+                  onTap: () {
+                    context.pushNamed(AppRoutes.settingsScreen);
+                  },
+                ),
               ],
             ),
             Positioned(

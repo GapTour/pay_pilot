@@ -26,6 +26,8 @@ import 'package:pay_pilot/features/report_details/presentation/bloc/report_detai
 import 'package:pay_pilot/features/report_details/presentation/screens/report_details_screen.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
 import 'package:pay_pilot/features/reports/presentation/screens/reports_screen.dart';
+import 'package:pay_pilot/features/settings/presentation/bloc/backup_bloc.dart';
+import 'package:pay_pilot/features/settings/presentation/screens/settings_screen.dart';
 import 'package:pay_pilot/features/team_members/presentation/cubit/ratios_cubit.dart';
 import 'package:pay_pilot/features/team_members/presentation/screens/team_members_screen.dart';
 import 'package:pay_pilot/features/teams/presentation/cubit/teams_cubit.dart';
@@ -50,6 +52,7 @@ class AppRoutes {
   static const String reportDetailsScreen = 'reportDetailsScreen';
   static const String teamsScreen = 'teamsScreen';
   static const String teamMembersScreen = 'teamMembersScreen';
+  static const String settingsScreen = 'settingsScreen';
 
   static GoRouter router = GoRouter(
     navigatorKey: navigatorKey,
@@ -183,6 +186,14 @@ class AppRoutes {
         builder: (context, state) => BlocProvider(
           create: (context) => TeamsCubit(locator()),
           child: TeamsScreen(),
+        ),
+      ),
+      GoRoute(
+        name: settingsScreen,
+        path: SettingsScreen.routeName,
+        builder: (context, state) => BlocProvider(
+          create: (context) => BackupBloc(locator()),
+          child: SettingsScreen(),
         ),
       ),
     ],
