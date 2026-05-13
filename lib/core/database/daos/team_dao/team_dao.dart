@@ -33,7 +33,7 @@ class TeamDao extends DatabaseAccessor<AppDatabase> with _$TeamDaoMixin {
       TeamsCompanion(
         title: Value(team.title),
         description: Value(team.description),
-        isActive: Value(team.isActive),
+        isActive: Value(team.isActive ?? true),
       ),
     );
   }

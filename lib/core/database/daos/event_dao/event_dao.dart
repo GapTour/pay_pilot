@@ -47,7 +47,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         description: row.readTable(events).description,
         date: row.readTable(events).date,
         team: row.readTable(teams),
-        isActive: row.readTable(events).isActive ?? true,
+        isActive: row.readTable(events).isActive,
       );
     }).toList();
   }

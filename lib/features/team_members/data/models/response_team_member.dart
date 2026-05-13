@@ -41,7 +41,7 @@ class ResponseTeamMember {
         name: dataModel.member.name,
         description: dataModel.member.description,
         joinAt: dataModel.member.joinAt,
-        isActive: dataModel.member.isActive ?? true,
+        isActive: dataModel.member.isActive,
         profileImage: dataModel.member.profileImage,
         birthday: dataModel.member.birthday,
       ),

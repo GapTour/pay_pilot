@@ -29,7 +29,7 @@ class MenuDao extends DatabaseAccessor<AppDatabase> with _$MenuDaoMixin {
     )..where((tbl) => tbl.id.equals(menuItem.id!))).write(
       MenusCompanion(
         title: Value(menuItem.title),
-        isActive: Value(menuItem.isActive),
+        isActive: Value(menuItem.isActive ?? true),
       ),
     );
   }

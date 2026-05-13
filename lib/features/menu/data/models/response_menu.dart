@@ -28,7 +28,7 @@ class ResponseMenu {
     return ResponseMenu(
       id: menuItem.id,
       title: menuItem.title,
-      isActive: menuItem.isActive ?? true,
+      isActive: menuItem.isActive,
     );
   }
 }

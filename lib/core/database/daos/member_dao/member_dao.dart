@@ -43,7 +43,7 @@ class MemberDao extends DatabaseAccessor<AppDatabase> with _$MemberDaoMixin {
         description: Value(member.description),
         birthday: Value(member.birthday),
         profileImage: Value(member.profileImage),
-        isActive: Value(member.isActive),
+        isActive: Value(member.isActive ?? true),
       ),
     );
   }

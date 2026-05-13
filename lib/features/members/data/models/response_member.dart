@@ -46,7 +46,7 @@ class ResponseMember {
       name: member.name,
       description: member.description,
       joinAt: member.joinAt,
-      isActive: member.isActive ?? true,
+      isActive: member.isActive,
       profileImage: member.profileImage,
       birthday: member.birthday,
     );

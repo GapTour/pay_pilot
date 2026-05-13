@@ -55,7 +55,7 @@ class ResponseGuestDetails {
       telegramID: guest.telegramId,
       instagramID: guest.instagramId,
       phone: guest.phoneNumber,
-      isActive: guest.isActive ?? true,
+      isActive: guest.isActive,
       profileImage: guest.profileImage,
       birthday: guest.birthday,
     );

@@ -30,7 +30,7 @@ class ResponseTeam {
       id: params.id,
       title: params.title,
       description: params.description,
-      isActive: params.isActive ?? true,
+      isActive: params.isActive,
     );
   }
 

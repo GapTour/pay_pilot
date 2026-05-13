@@ -47,7 +47,7 @@ class GuestDao extends DatabaseAccessor<AppDatabase> with _$GuestDaoMixin {
         description: Value(guest.description),
         birthday: Value(guest.birthday),
         profileImage: Value(guest.profileImage),
-        isActive: Value(guest.isActive),
+        isActive: Value(guest.isActive ?? true),
       ),
     );
   }
