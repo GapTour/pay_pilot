@@ -27,7 +27,7 @@ class LocalMenuSource implements IMenuSource {
   @override
   Future<DataState<int>> deleteMenuItem(int id) async {
     try {
-      await _dbService.deleteItem(id);
+      await _dbService.archiveMenu(id);
 
       return DataSuccess(id);
     } on PlatformException catch (e) {

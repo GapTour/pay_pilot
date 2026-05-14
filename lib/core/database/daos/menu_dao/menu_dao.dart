@@ -16,7 +16,9 @@ class MenuDao extends DatabaseAccessor<AppDatabase> with _$MenuDaoMixin {
   }
 
   Future<List<MenusData>> getAllMenus() async {
-    return await db.select(db.menus).get();
+    return await (db.select(
+      db.menus,
+    )..where((tbl) => tbl.isActive.equals(true))).get();
   }
 
   Future<MenusData> getMenu(int id) async {
@@ -30,6 +32,16 @@ class MenuDao extends DatabaseAccessor<AppDatabase> with _$MenuDaoMixin {
       MenusCompanion(
         title: Value(menuItem.title),
         isActive: Value(menuItem.isActive ?? true),
+        modifiedAt: Value(DateTime.now().toUtc()),
+      ),
+    );
+  }
+
+  Future<void> archiveMenu(int id) async {
+    await (db.update(db.menus)..where((tbl) => tbl.id.equals(id))).write(
+      MenusCompanion(
+        isActive: Value(false),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
   }

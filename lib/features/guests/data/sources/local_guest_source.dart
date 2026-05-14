@@ -27,7 +27,7 @@ class LocalGuestSource implements IGuestSource {
   @override
   Future<DataState<int>> deleteGuest(int id) async {
     try {
-      await _dbService.deleteGuest(id);
+      await _dbService.archiveGuest(id);
 
       return DataSuccess(id);
     } on PlatformException catch (e) {

@@ -71,6 +71,7 @@ class RatioDao extends DatabaseAccessor<AppDatabase> with _$RatioDaoMixin {
         ratio: Value(teamMember.ratio),
         memberID: Value(teamMember.memberID),
         teamID: Value(teamMember.teamID),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
   }

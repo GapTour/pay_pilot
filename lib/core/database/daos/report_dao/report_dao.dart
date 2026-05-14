@@ -366,7 +366,9 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
   }
 
   Future<List<Report>> getAllReports() async {
-    return await db.select(db.reports).get();
+    return await (db.select(
+      db.reports,
+    )..where((tbl) => tbl.isActive.equals(true))).get();
   }
 
   // Future<void> updateReport(ReportForm report) async {

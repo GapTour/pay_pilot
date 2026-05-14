@@ -27,7 +27,7 @@ class LocalMemberSource implements IMemberSource {
   @override
   Future<DataState<int>> deleteMember(int id) async {
     try {
-      await _dbService.deleteMember(id);
+      await _dbService.archiveMember(id);
 
       return DataSuccess(id);
     } on PlatformException catch (e) {

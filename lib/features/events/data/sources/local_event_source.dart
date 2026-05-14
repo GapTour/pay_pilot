@@ -31,7 +31,7 @@ class LocalEventSource implements IEventSource {
   @override
   Future<DataState<int>> deleteEvent(int id) async {
     try {
-      await _dbServiceForEvent.deleteEvent(id);
+      await _dbServiceForEvent.archiveEvent(id);
 
       return DataSuccess(id);
     } on PlatformException catch (e) {

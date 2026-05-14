@@ -26,7 +26,9 @@ class GuestDao extends DatabaseAccessor<AppDatabase> with _$GuestDaoMixin {
   }
 
   Future<List<Guest>> getAllGuests() async {
-    return await db.select(db.guests).get();
+    return await (db.select(
+      db.guests,
+    )..where((tbl) => tbl.isActive.equals(true))).get();
   }
 
   Future<Guest> getGuest(int id) async {
@@ -48,6 +50,16 @@ class GuestDao extends DatabaseAccessor<AppDatabase> with _$GuestDaoMixin {
         birthday: Value(guest.birthday),
         profileImage: Value(guest.profileImage),
         isActive: Value(guest.isActive ?? true),
+        modifiedAt: Value(DateTime.now().toUtc()),
+      ),
+    );
+  }
+
+  Future<void> archiveGuest(int id) async {
+    await (db.update(db.guests)..where((tbl) => tbl.id.equals(id))).write(
+      GuestsCompanion(
+        isActive: Value(false),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
   }

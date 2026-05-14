@@ -34,9 +34,8 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
   EventDao(super.db);
 
   Future<List<EventModel>> getAllEvents() async {
-    final query = select(
-      db.events,
-    ).join([innerJoin(teams, teams.id.equalsExp(events.teamID))]);
+    final query = (select(db.events)..where((tbl) => tbl.isActive.equals(true)))
+        .join([innerJoin(teams, teams.id.equalsExp(events.teamID))]);
 
     final rows = await query.get();
 
@@ -56,9 +55,10 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
   getEventsWithoutMembersBalanceAndRatios() async {
     final List<EventDetailsModel> eventDetails = [];
 
-    final rowEvents = await ((select(
-      events,
-    )).join([innerJoin(teams, teams.id.equalsExp(events.teamID))])).get();
+    final rowEvents =
+        await (((select(events))..where((tbl) => tbl.isActive.equals(true)))
+                .join([innerJoin(teams, teams.id.equalsExp(events.teamID))]))
+            .get();
 
     for (var element in rowEvents) {
       final List<EventTransaction> rawTransactions =
@@ -189,9 +189,10 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
 
   Future<List<ResponseEventDetails>> getAllEventsInfoWithoutBalance() async {
     final responses = <ResponseEventDetails>[];
-    final eventRows = await ((select(
-      events,
-    )).join([innerJoin(teams, teams.id.equalsExp(events.teamID))])).get();
+    final eventRows =
+        await (((select(events))..where((tbl) => tbl.isActive.equals(true)))
+                .join([innerJoin(teams, teams.id.equalsExp(events.teamID))]))
+            .get();
 
     for (var er in eventRows) {
       final id = er.readTable(events).id;
@@ -451,6 +452,16 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         teamID: Value(event.teamID),
         date: Value(event.date),
         description: Value(event.description),
+        modifiedAt: Value(DateTime.now().toUtc()),
+      ),
+    );
+  }
+
+  Future<void> archiveEvent(int id) async {
+    await (db.update(db.events)..where((tbl) => tbl.id.equals(id))).write(
+      EventsCompanion(
+        isActive: Value(false),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
   }
@@ -523,6 +534,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         transactionType: Value(transaction.transactionType),
         date: Value(transaction.transactionDate),
         description: Value(transaction.description),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
 
@@ -599,6 +611,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
             memberID: Value(transaction.memberID),
             eventID: Value(transaction.eventID),
             guessID: Value(transaction.guestID),
+            modifiedAt: Value(DateTime.now().toUtc()),
           ),
         );
         return;
@@ -667,6 +680,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         ratio: Value(eventRatio.ratioValue),
         memberID: Value(eventRatio.memberID),
         eventID: Value(eventRatio.eventID),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
   }
@@ -709,7 +723,10 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
 
   Future<OrderModel> changeOrderDeliveryStatus(int id, bool isDelivered) async {
     await (db.update(eventOrders)..where((tbl) => tbl.id.equals(id))).write(
-      EventOrdersCompanion(isDelivered: Value(isDelivered)),
+      EventOrdersCompanion(
+        isDelivered: Value(isDelivered),
+        modifiedAt: Value(DateTime.now().toUtc()),
+      ),
     );
 
     final row =
@@ -761,6 +778,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         memberID: Value(eventOrder.memberID),
         eventID: Value(eventOrder.eventID),
         guessID: Value(eventOrder.guestID),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
 

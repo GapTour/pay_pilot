@@ -21,7 +21,9 @@ class TeamDao extends DatabaseAccessor<AppDatabase> with _$TeamDaoMixin {
   }
 
   Future<List<Team>> getAllTeams() async {
-    return await db.select(db.teams).get();
+    return await (db.select(
+      db.teams,
+    )..where((tbl) => tbl.isActive.equals(true))).get();
   }
 
   Future<Team> getTeam(int id) async {
@@ -34,6 +36,16 @@ class TeamDao extends DatabaseAccessor<AppDatabase> with _$TeamDaoMixin {
         title: Value(team.title),
         description: Value(team.description),
         isActive: Value(team.isActive ?? true),
+        modifiedAt: Value(DateTime.now().toUtc()),
+      ),
+    );
+  }
+
+  Future<void> archiveTeam(int id) async {
+    await (db.update(db.teams)..where((tbl) => tbl.id.equals(id))).write(
+      TeamsCompanion(
+        isActive: Value(false),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
   }

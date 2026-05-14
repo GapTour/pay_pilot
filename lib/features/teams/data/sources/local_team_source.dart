@@ -28,7 +28,7 @@ class LocalTeamSource implements ITeamSource {
   @override
   Future<DataState<int>> deleteTeam(int id) async {
     try {
-      await _dbService.deleteTeam(id);
+      await _dbService.archiveTeam(id);
 
       return DataSuccess(id);
     } on PlatformException catch (e) {

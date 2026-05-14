@@ -24,7 +24,9 @@ class MemberDao extends DatabaseAccessor<AppDatabase> with _$MemberDaoMixin {
   }
 
   Future<List<Member>> getAllMembers() async {
-    return await db.select(db.members).get();
+    return await (db.select(
+      db.members,
+    )..where((tbl) => tbl.isActive.equals(true))).get();
   }
 
   Future<Member> getMember(int id) async {
@@ -44,6 +46,16 @@ class MemberDao extends DatabaseAccessor<AppDatabase> with _$MemberDaoMixin {
         birthday: Value(member.birthday),
         profileImage: Value(member.profileImage),
         isActive: Value(member.isActive ?? true),
+        modifiedAt: Value(DateTime.now().toUtc()),
+      ),
+    );
+  }
+
+  Future<void> archiveMember(int id) async {
+    await (db.update(db.members)..where((tbl) => tbl.id.equals(id))).write(
+      MembersCompanion(
+        isActive: Value(false),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
   }
