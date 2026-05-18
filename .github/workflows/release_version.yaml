@@ -3,41 +3,46 @@ name: Build Web App
 on:
   push:
     tags:
-      - 'web*.*.*'
+      - "web*.*.*"
 
 jobs:
   release-pwa-version:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-    - name: Set up Java
-      uses: actions/setup-java@v3.12.0
-      with:
-        distribution: 'oracle'
-        java-version: '17'
+      - name: Set up Java
+        uses: actions/setup-java@v3.12.0
+        with:
+          distribution: "oracle"
+          java-version: "17"
 
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-        flutter-version: '3.32.1'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version: "3.32.1"
 
-    - name: Install dependencies
-      run: flutter pub get
+      - name: Install dependencies
+        run: flutter pub get
 
-    - name: Enable Web
-      run: flutter config --enable-web
+      - name: Create variables.env file
+        run: |
+          echo "${{ secrets.DEV_ENV_VARS }}" > variables.env
+        shell: bash
 
-    - name: Build Web
-      run: flutter build web
-  
-    - run: ls build/web
-    
-    - name: Deploy to Firebase
-      uses: w9jds/firebase-action@master
-      with:
-        args: deploy --only hosting
-      env:
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Enable Web
+        run: flutter config --enable-web
+
+      - name: Build Web
+        run: flutter build web
+
+      - run: ls build/web
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
