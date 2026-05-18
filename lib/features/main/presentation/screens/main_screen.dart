@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/utils/constants/app_settings.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 
 class MainScreen extends StatelessWidget {
-  static const routeName = '/';
+  static const routeName = '/main';
 
   const MainScreen({super.key});
 
@@ -37,12 +38,34 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
+                      'Guests',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
+                  onTap: () {
+                    context.pushNamed(AppRoutes.guestsScreen);
+                  },
+                ),
+                AppElevatedButton(
+                  child: Center(
+                    child: Text(
                       'Teams',
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),
                   onTap: () {
                     context.pushNamed(AppRoutes.teamsScreen);
+                  },
+                ),
+                AppElevatedButton(
+                  child: Center(
+                    child: Text(
+                      'Menu Items',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
+                  onTap: () {
+                    context.pushNamed(AppRoutes.menuItemsScreen);
                   },
                 ),
                 AppElevatedButton(
@@ -67,6 +90,17 @@ class MainScreen extends StatelessWidget {
                     context.pushNamed(AppRoutes.reportsScreen);
                   },
                 ),
+                AppElevatedButton(
+                  child: Center(
+                    child: Text(
+                      'Settings',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
+                  onTap: () {
+                    context.pushNamed(AppRoutes.settingsScreen);
+                  },
+                ),
               ],
             ),
             Positioned(
@@ -74,7 +108,7 @@ class MainScreen extends StatelessWidget {
               right: 0,
               left: 0,
               child: Text(
-                'Version 1.4.0',
+                'Version ${AppSettings.version}',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey, fontSize: 9),
               ),

@@ -6,20 +6,20 @@ import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 
 class AppTile extends StatefulWidget {
   final Widget child;
-  final double height;
   final VoidCallback? onPreview;
   final String? previewButtonTitle;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final bool isActive;
+  final EdgeInsets padding;
   const AppTile({
     required this.child,
-    required this.height,
     this.isActive = true,
     this.onEdit,
     this.onPreview,
     this.previewButtonTitle,
     this.onDelete,
+    this.padding = const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
     super.key,
   });
 
@@ -45,8 +45,7 @@ class _AppTileState extends State<AppTile> {
               setState(() {});
             }
           : null,
-      child: AnimatedContainer(
-        height: !_isExpanded ? widget.height : widget.height + 59,
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: kPrimaryColor,
           borderRadius: BorderRadius.circular(15),
@@ -59,133 +58,142 @@ class _AppTileState extends State<AppTile> {
             ),
           ],
         ),
-        duration: Duration(milliseconds: 150),
-        curve: Curves.linear,
-        // padding: EdgeInsets.symmetric(horizontal: 18, vertical: 5),
-        onEnd: () {
-          if (!_showButtons && _isExpanded) {
-            _showButtons = true;
-            setState(() {});
-          }
-        },
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Gap(5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
-              child: widget.child,
-            ),
+            Padding(padding: widget.padding, child: widget.child),
             Gap(5),
-            if (_showButtons) ...[
-              Gap(5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (widget.onPreview != null)
-                      Expanded(
-                        child: AppElevatedButton(
-                          onTap: widget.onPreview,
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Text(
-                              widget.previewButtonTitle ?? 'Preview',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.labelMedium,
+            AnimatedContainer(
+              height: !_isExpanded ? 0 : 59,
+              duration: Duration(milliseconds: 150),
+              curve: Curves.linear,
+              // padding: EdgeInsets.symmetric(horizontal: 18, vertical: 5),
+              onEnd: () {
+                if (!_showButtons && _isExpanded) {
+                  _showButtons = true;
+                  setState(() {});
+                }
+              },
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (_showButtons) ...[
+                    Gap(5),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (widget.onPreview != null)
+                            Expanded(
+                              child: AppElevatedButton(
+                                onTap: widget.onPreview,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                    widget.previewButtonTitle ?? 'Preview',
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.labelMedium,
+                                  ),
+                                ),
+                              ),
+                            )
+                          else
+                            Spacer(),
+                          if (widget.onEdit != null)
+                            AppElevatedButton(
+                              onTap: widget.onEdit,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 25.0,
+                                  vertical: 5,
+                                ),
+                                child: Text(
+                                  'Edit',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.labelMedium,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      )
-                    else
-                      Spacer(),
-                    if (widget.onEdit != null)
-                      AppElevatedButton(
-                        onTap: widget.onEdit,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25.0,
-                            vertical: 5,
-                          ),
-                          child: Text(
-                            'Edit',
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ),
-                      ),
-                    if (widget.onDelete != null) ...[
-                      AppElevatedButton(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                backgroundColor: kPrimaryColor,
-                                title: Text(
-                                  'Are sure about this action?',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.displayLarge,
-                                ),
-                                content: Text(
-                                  'Notice that if you used this item, it effects those and delete all data that related to this item too.',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.displayMedium,
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      context.pop();
-                                    },
-                                    child: Text(
-                                      'Cancel',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.displayMedium,
-                                    ),
-                                  ),
-                                  AppElevatedButton(
-                                    onTap: () {
-                                      widget.onDelete!.call();
-                                      context.pop();
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 25.0,
-                                        vertical: 5,
+                          if (widget.onDelete != null) ...[
+                            AppElevatedButton(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      backgroundColor: kPrimaryColor,
+                                      title: Text(
+                                        'Are sure about this action?',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.displayLarge,
                                       ),
-                                      child: Text(
-                                        'Delete',
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium!
-                                            .copyWith(color: kErrorColor),
+                                      content: Text(
+                                        'Notice that if you used this item, it effects those and delete all data that related to this item too.',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.displayMedium,
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Icon(
-                            Icons.delete_outline_rounded,
-                            color: kErrorColor,
-                            size: 16,
-                          ),
-                        ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            context.pop();
+                                          },
+                                          child: Text(
+                                            'Cancel',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.displayMedium,
+                                          ),
+                                        ),
+                                        AppElevatedButton(
+                                          onTap: () {
+                                            widget.onDelete!.call();
+                                            context.pop();
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 25.0,
+                                              vertical: 5,
+                                            ),
+                                            child: Text(
+                                              'Delete',
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displayMedium!
+                                                  .copyWith(color: kErrorColor),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: kErrorColor,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
-                    ],
+                    ),
                   ],
-                ),
+                ],
               ),
-            ],
+            ),
           ],
         ),
       ),

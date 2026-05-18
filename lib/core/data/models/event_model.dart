@@ -5,6 +5,7 @@ class EventModel {
   final String title;
   final String? description;
   final DateTime date;
+  final bool isActive;
   final Team team;
 
   EventModel({
@@ -12,6 +13,7 @@ class EventModel {
     required this.title,
     this.description,
     required this.date,
+    required this.isActive,
     required this.team,
   });
 }

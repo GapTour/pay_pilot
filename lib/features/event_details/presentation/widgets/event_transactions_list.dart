@@ -1,13 +1,17 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:pay_pilot/core/data/models/transaction_model.dart';
+import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
-import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
+import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event_transaction_dialog_box.dart';
+import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
 class EventTransactionsList extends StatelessWidget {
   final int eventID;
@@ -15,17 +19,27 @@ class EventTransactionsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EventDetailsCubit, EventDetailsState>(
+    return BlocBuilder<EventDetailsBloc, EventDetailsState>(
       buildWhen: (p, c) {
-        if (p.transactions != c.transactions) return true;
-        if (p.eventTabsStatus != c.eventTabsStatus) return true;
+        if (p.eventTransactionStatus != c.eventTransactionStatus) return true;
+        if (p.eventDetailStatus != c.eventDetailStatus) return true;
         return false;
       },
       builder: (context, state) {
-        final List<TransactionModel> transactions = state.transactions;
+        final transactions = <ResponseEventTransaction>[];
+        final members = <ResponseMember>[];
+        final guests = <ResponseGuest>[];
 
-        if (state.eventTabsStatus.isLoading) {
+        if (state.eventTransactionStatus is EventTransactionLoading) {
           return const Center(child: CircularProgressIndicator.adaptive());
+        }
+
+        if (state.eventDetailStatus is EventDetailSuccess) {
+          final eventDetailStatus =
+              (state.eventDetailStatus as EventDetailSuccess);
+          members.addAll(eventDetailStatus.members);
+          guests.addAll(eventDetailStatus.guests);
+          transactions.addAll(eventDetailStatus.eventDetails.transactions);
         }
 
         return AppList(
@@ -35,18 +49,32 @@ class EventTransactionsList extends StatelessWidget {
           itemCount: transactions.length,
           emptyInboxMessage: 'There is no transaction yet!',
           itemBuilder: (context, index) {
+            final paidBy =
+                members
+                    .firstWhereOrNull(
+                      (m) => m.id == transactions[index].paidByMember,
+                    )
+                    ?.name ??
+                guests
+                    .firstWhereOrNull(
+                      (g) => g.id == transactions[index].paidByGuest,
+                    )
+                    ?.name ??
+                'Unknown';
+
             return AppTile(
-              height: 62,
               onEdit: () {
                 showDialog(
                   context: context,
                   builder: (_) {
                     return EditEventTransactionDialogBox(
                       transaction: transactions[index],
+                      responseGuests: guests,
+                      responseMembers: members,
                       eventID: eventID,
                       onPressedSubmit: (transaction) {
-                        context.read<EventDetailsCubit>().updateTransaction(
-                          transaction,
+                        context.read<EventDetailsBloc>().add(
+                          EditTransaction(transaction),
                         );
                       },
                     );
@@ -54,8 +82,22 @@ class EventTransactionsList extends StatelessWidget {
                 );
               },
               onDelete: () {
-                context.read<EventDetailsCubit>().deleteTransaction(
-                  transactions[index].id,
+                context.read<EventDetailsBloc>().add(
+                  DeleteTransaction(
+                    TransactionParams(
+                      id: transactions[index].id,
+                      amount: 0,
+                      attachment: null,
+                      description: null,
+                      eventID: 0,
+                      guestID: null,
+                      memberID: null,
+                      transactionDate: DateTime.now(),
+                      transactionType: transactions[index].transactionType,
+                      // TODO(mahDyarZ): work on this feature later
+                      hasPermissionDeleteOrder: true,
+                    ),
+                  ),
                 );
               },
               child: Column(
@@ -90,6 +132,21 @@ class EventTransactionsList extends StatelessWidget {
                           text: transactions[index]
                               .date
                               .formattedToJalali_yearMonthDay,
+                          style: Theme.of(context).textTheme.displayMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap(5),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'by  ',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        TextSpan(
+                          text: paidBy,
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                       ],

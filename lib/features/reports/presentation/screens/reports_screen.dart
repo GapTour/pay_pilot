@@ -48,7 +48,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
             emptyInboxMessage: 'There is no report yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 56,
                 onPreview: () {
                   context.pushNamed(
                     AppRoutes.reportDetailsScreen,
@@ -102,7 +101,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             context: context,
             builder: (_) {
               return AddReportDialogBox(
-                innerContext: context,
+                // innerContext: context,
                 onPressedSubmit: (report) {
                   context.read<ReportsCubit>().addReport(report);
                 },

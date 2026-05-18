@@ -1,17 +1,19 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/data/params/event_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
-import 'package:pay_pilot/features/events/data/event_form.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
+import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class AddEventDialogBox extends StatefulWidget {
-  final List<Team> teams;
-  final Function(EventForm event) onPressedSubmit;
+  final List<ResponseTeam> teams;
+  final Function(EventParams event) onPressedSubmit;
   const AddEventDialogBox({
     super.key,
     required this.teams,
@@ -45,7 +47,7 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
     return AppDialogBox(
       title: 'Add New Event',
       children: [
-        AppDropDownButton<Team>(
+        AppDropDownButton<ResponseTeam>(
           label: 'Teams',
           hint: 'Select a team',
           showWarning: isNotSelected,
@@ -57,9 +59,13 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
             setState(() {});
           },
           items: widget.teams.map((e) {
-            return DropdownMenuItem<Team>(value: e, child: Text(e.title));
+            return DropdownMenuItem<ResponseTeam>(
+              value: e,
+              child: Text(e.title),
+            );
           }).toList(),
         ),
+        Gap(20),
         Form(
           key: formKey,
           child: Column(
@@ -76,6 +82,7 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
                   return null;
                 },
               ),
+              Gap(20),
               AppTextField(
                 label: 'Date',
                 hint: DateTime.now().formattedToJalali_yearMonthDay,
@@ -85,6 +92,8 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
                 onTap: (focusNode) async {
                   PickDate.yearMonthAndDay(
                     context,
+                    startFrom: DateTime.now().toJalali().year - 1,
+                    endTo: DateTime.now().toJalali().year,
                     initDate: selectedDate,
                     onSubmit: (pickedDate, formattedDate) {
                       selectedDate = pickedDate;
@@ -102,12 +111,14 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
             ],
           ),
         ),
+        Gap(20),
         AppTextField(
           label: 'Description (optional)',
           controller: descriptionController,
           minLines: 3,
           maxLines: 4,
         ),
+        Gap(85),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
@@ -116,11 +127,15 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
           setState(() {});
           return;
         }
-        final event = EventForm(
+        final event = EventParams(
+          id: null,
           title: titleController.text,
-          description: descriptionController.text,
+          description: descriptionController.text.isEmpty
+              ? null
+              : descriptionController.text,
           date: selectedDate!,
           teamID: teamID!,
+          isActive: true,
         );
         widget.onPressedSubmit(event);
         context.pop();

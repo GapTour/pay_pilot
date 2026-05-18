@@ -1,10 +1,12 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pay_pilot/core/data/models/member_ratio_model.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
-import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
+import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event_ratio_dialog_box.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
 class EventRatiosList extends StatelessWidget {
   final int eventID;
@@ -12,18 +14,37 @@ class EventRatiosList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EventDetailsCubit, EventDetailsState>(
+    return BlocBuilder<EventDetailsBloc, EventDetailsState>(
       buildWhen: (p, c) {
-        if (p.memberRatios != c.memberRatios) return true;
-        if (p.eventTabsStatus != c.eventTabsStatus) return true;
+        if (p.eventRatioStatus != c.eventRatioStatus) return true;
+        if (p.eventDetailStatus != c.eventDetailStatus) return true;
         return false;
       },
       builder: (context, state) {
-        final List<MemberRatioModel> ratios = state.memberRatios;
-        ratios.sort((a, b) => b.ratio.compareTo(a.ratio));
+        final ratios = <ResponseEventRatio>[];
+        final members = <ResponseMember>[];
+        final addedMembers = <int, double>{};
 
-        if (state.eventTabsStatus.isLoading) {
+        if (state.eventRatioStatus is EventRatioLoading) {
           return const Center(child: CircularProgressIndicator.adaptive());
+        }
+
+        if (state.eventDetailStatus is EventDetailSuccess) {
+          final eventDetailStatus =
+              (state.eventDetailStatus as EventDetailSuccess);
+
+          ratios
+            ..addAll(eventDetailStatus.eventDetails.memberRatios)
+            ..sort((a, b) => b.ratio.compareTo(a.ratio));
+
+          members.addAll(eventDetailStatus.members);
+          for (var m in members) {
+            final double? ratio = ratios
+                .firstWhereOrNull((r) => r.memberID == m.id)
+                ?.ratio;
+
+            if (ratio != null) addedMembers[m.id] = ratio;
+          }
         }
 
         return AppList(
@@ -33,8 +54,13 @@ class EventRatiosList extends StatelessWidget {
           itemCount: ratios.length,
           emptyInboxMessage: 'There is no ratios yet!',
           itemBuilder: (context, index) {
+            final String memberName =
+                members.firstWhereOrNull((m) {
+                  return m.id == ratios[index].memberID;
+                })?.name ??
+                'Unknown';
+
             return AppTile(
-              height: 38,
               onEdit: () {
                 showDialog(
                   context: context,
@@ -42,11 +68,11 @@ class EventRatiosList extends StatelessWidget {
                     return EditEventRatioDialogBox(
                       memberRatio: ratios[index],
                       eventID: eventID,
-                      members: state.members,
-                      addedMembers: state.addedMembers,
+                      members: members,
+                      addedMembers: addedMembers,
                       onPressedSubmit: (submittedRatio) {
-                        context.read<EventDetailsCubit>().updateRatio(
-                          submittedRatio,
+                        context.read<EventDetailsBloc>().add(
+                          EditEventRatio(submittedRatio),
                         );
                       },
                     );
@@ -54,13 +80,15 @@ class EventRatiosList extends StatelessWidget {
                 );
               },
               onDelete: () {
-                context.read<EventDetailsCubit>().deleteRatio(ratios[index].id);
+                context.read<EventDetailsBloc>().add(
+                  DeleteEventRatio(ratios[index].id),
+                );
               },
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
-                      ratios[index].member.name,
+                      memberName,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.displayLarge,

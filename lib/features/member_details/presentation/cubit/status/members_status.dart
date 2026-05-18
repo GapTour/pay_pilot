@@ -13,7 +13,7 @@ class MemberLoading extends MembersStatus {
 }
 
 class MemberSuccess extends MembersStatus {
-  final Member member;
+  final ResponseMemberDetails member;
 
   MemberSuccess(this.member);
   @override

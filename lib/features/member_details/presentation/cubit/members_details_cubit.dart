@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/utils/resource/data_state.dart';
+import 'package:pay_pilot/features/member_details/data/models/response_member_details.dart';
 import 'package:pay_pilot/features/member_details/repository/member_details_repository.dart';
 
 part 'members_details_state.dart';
@@ -15,11 +16,13 @@ class MembersDetailsCubit extends Cubit<MembersDetailsState> {
   void loadMembers(int id) async {
     emit(state.copyWith(membersStatus: MemberLoading()));
 
-    try {
-      final member = await _repository.getMember(id);
+    final dataState = await _repository.getMember(id);
 
-      emit(state.copyWith(membersStatus: MemberSuccess(member)));
-    } catch (_) {
+    if (dataState is DataSuccess) {
+      emit(state.copyWith(membersStatus: MemberSuccess(dataState.data!)));
+    }
+
+    if (dataState is DataFailed) {
       emit(state.copyWith(membersStatus: MemberFailure()));
     }
   }

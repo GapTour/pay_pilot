@@ -6,6 +6,9 @@ class TransactionModel {
   final double amount;
   final TransactionType transactionType;
   final DateTime date;
+  final String? attachment;
+  final int? paidByMember;
+  final int? paidByGuest;
 
   TransactionModel({
     required this.id,
@@ -13,5 +16,8 @@ class TransactionModel {
     required this.amount,
     required this.transactionType,
     required this.date,
+    required this.attachment,
+    required this.paidByMember,
+    required this.paidByGuest,
   });
 }

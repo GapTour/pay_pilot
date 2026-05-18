@@ -1,20 +1,22 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/data/models/member_ratio_model.dart';
+import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/event_details/data/models/event_ratio_edit_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
 class EditEventRatioDialogBox extends StatefulWidget {
-  final MemberRatioModel memberRatio;
+  final ResponseEventRatio memberRatio;
   final int eventID;
-  final List<Member> members;
+  final List<ResponseMember> members;
   final Map<int, double> addedMembers;
-  final Function(EventRatioEditForm ratioEvent) onPressedSubmit;
+  final Function(EventRatioParams ratioEvent) onPressedSubmit;
   const EditEventRatioDialogBox({
     super.key,
     required this.memberRatio,
@@ -33,9 +35,9 @@ class _EditEventRatioDialogBoxState extends State<EditEventRatioDialogBox> {
   final TextEditingController ratioController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final formDropDownKey = GlobalKey<FormState>();
-  final List<Member> notAddedMembers = [];
+  final List<ResponseMember> notAddedMembers = [];
   double remindedRatio = 100;
-  late Member member;
+  late ResponseMember member;
   late int ratioID;
   bool isNotSelected = false;
 
@@ -50,10 +52,12 @@ class _EditEventRatioDialogBoxState extends State<EditEventRatioDialogBox> {
     super.initState();
 
     ratioID = widget.memberRatio.id;
-    member = widget.memberRatio.member;
+    member = widget.members.firstWhere(
+      (element) => element.id == widget.memberRatio.memberID,
+    );
     ratioController.text = widget.memberRatio.ratio.toString();
 
-    notAddedMembers.add(widget.memberRatio.member);
+    notAddedMembers.add(member);
     remindedRatio = remindedRatio + widget.memberRatio.ratio;
 
     widget.members.fold<List<Member>>([], (previousValue, element) {
@@ -76,7 +80,7 @@ class _EditEventRatioDialogBoxState extends State<EditEventRatioDialogBox> {
     return AppDialogBox(
       title: 'Edit Ratio',
       children: [
-        AppDropDownButton<Member>(
+        AppDropDownButton<ResponseMember>(
           label: 'Members',
           hint: 'Select a member',
           showWarning: isNotSelected,
@@ -90,9 +94,13 @@ class _EditEventRatioDialogBoxState extends State<EditEventRatioDialogBox> {
             }
           },
           items: notAddedMembers.map((e) {
-            return DropdownMenuItem<Member>(value: e, child: Text(e.name));
+            return DropdownMenuItem<ResponseMember>(
+              value: e,
+              child: Text(e.name),
+            );
           }).toList(),
         ),
+        Gap(20),
         Form(
           key: formKey,
           child: AppTextField(
@@ -124,10 +132,10 @@ class _EditEventRatioDialogBoxState extends State<EditEventRatioDialogBox> {
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final ratio = EventRatioEditForm(
+        final ratio = EventRatioParams(
           id: ratioID,
-          member: member,
-          ratio: ratioController.text.parseToDouble,
+          memberID: member.id,
+          ratioValue: ratioController.text.parseToDouble,
           eventID: widget.eventID,
         );
         widget.onPressedSubmit(ratio);

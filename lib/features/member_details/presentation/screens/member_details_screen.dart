@@ -62,6 +62,25 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
+                        text: 'Birthday:  ',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      TextSpan(
+                        text: memberDetail.birthday == null
+                            ? '-'
+                            : memberDetail
+                                  .birthday!
+                                  .formattedToJalali_yearMonthDay,
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
+                    ],
+                  ),
+                ),
+                Gap(5),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
                         text: 'Description:  ',
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),

@@ -47,7 +47,6 @@ class _TeamsScreenState extends State<TeamsScreen> {
             emptyInboxMessage: 'There is no team yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 40,
                 previewButtonTitle: 'Team\'s Members',
                 onPreview: () {
                   context.pushNamed(

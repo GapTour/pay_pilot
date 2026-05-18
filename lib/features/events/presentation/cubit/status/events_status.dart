@@ -9,13 +9,6 @@ class EventInitial extends EventsStatus {}
 
 class EventLoading extends EventsStatus {}
 
-class EventSuccess extends EventsStatus {
-  final List<Team> teams;
-
-  EventSuccess(this.teams);
-
-  @override
-  List<Object?> get props => [teams];
-}
+class EventSuccess extends EventsStatus {}
 
 class EventFailure extends EventsStatus {}

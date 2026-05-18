@@ -9,4 +9,5 @@ class CollectReportEvents extends Table {
   IntColumn get reportID =>
       integer().references(Reports, #id, onDelete: KeyAction.cascade)();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
+  DateTimeColumn get modifiedAt => dateTime().withDefault(currentDate)();
 }

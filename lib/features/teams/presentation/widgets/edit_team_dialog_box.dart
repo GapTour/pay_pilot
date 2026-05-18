@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/data/params/team_params.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/teams/data/team_edit_form.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 class EditTeamDialogBox extends StatefulWidget {
-  final Team team;
-  final Function(TeamEditForm team) onPressedSubmit;
+  final ResponseTeam team;
+  final Function(TeamParams team) onPressedSubmit;
   const EditTeamDialogBox({
     super.key,
     required this.team,
@@ -39,7 +39,9 @@ class _EditTeamDialogBoxState extends State<EditTeamDialogBox> {
 
     teamID = widget.team.id;
     titleController.text = widget.team.title;
-    descriptionController.text = widget.team.description ?? '';
+    if (widget.team.description != null) {
+      descriptionController.text = widget.team.description!;
+    }
   }
 
   @override
@@ -62,7 +64,7 @@ class _EditTeamDialogBoxState extends State<EditTeamDialogBox> {
             },
           ),
         ),
-        Gap(12),
+        Gap(20),
 
         AppTextField(
           label: 'Description (optional)',
@@ -70,15 +72,19 @@ class _EditTeamDialogBoxState extends State<EditTeamDialogBox> {
           minLines: 3,
           maxLines: 4,
         ),
+        Gap(20),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final member = TeamEditForm(
+        final team = TeamParams(
           id: teamID,
           title: titleController.text,
-          description: descriptionController.text,
+          description: descriptionController.text.isNotEmpty
+              ? descriptionController.text
+              : null,
+          isActive: true,
         );
-        widget.onPressedSubmit(member);
+        widget.onPressedSubmit(team);
         context.pop();
       },
     );

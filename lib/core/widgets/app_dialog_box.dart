@@ -25,12 +25,21 @@ class AppDialogBox extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Stack(
             children: [
-              ListView(
-                children: [
-                  Text(title, style: Theme.of(context).textTheme.displayLarge),
-                  Gap(18),
-                  ...children,
-                ],
+              ListView(children: [Gap(35), ...children]),
+              Positioned(
+                top: 0,
+                right: 0,
+                left: 0,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: kPrimaryColor),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      title,
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
+                ),
               ),
               Positioned(
                 bottom: 0,

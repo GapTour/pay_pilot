@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pay_pilot/core/data/models/balance_model.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
-import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_balance.dart';
+import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
 
 class EventReportList extends StatefulWidget {
   final int eventID;
@@ -19,18 +19,30 @@ class _EventReportListState extends State<EventReportList> {
   void initState() {
     super.initState();
 
-    context.read<EventDetailsCubit>().loadTransactions(widget.eventID);
+    context.read<EventDetailsBloc>().add(LoadReportList());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EventDetailsCubit, EventDetailsState>(
+    return BlocBuilder<EventDetailsBloc, EventDetailsState>(
+      buildWhen: (p, c) {
+        if (p.eventReportStatus != c.eventReportStatus) return true;
+        if (p.eventDetailStatus != c.eventDetailStatus) return true;
+        return false;
+      },
       builder: (context, state) {
-        final List<BalanceModel> memberBalances = state.membersBalance;
-        memberBalances.sort((a, b) => b.totalBalance.compareTo(a.totalBalance));
+        final memberBalances = <ResponseEventBalance>[];
 
-        if (state.eventTabsStatus.isLoading) {
+        if (state.eventReportStatus is! EventReportSuccess) {
           return const Center(child: CircularProgressIndicator.adaptive());
+        }
+
+        if (state.eventReportStatus is EventReportSuccess) {
+          memberBalances
+            ..addAll(
+              (state.eventReportStatus as EventReportSuccess).membersBalance,
+            )
+            ..sort((a, b) => b.salary.compareTo(a.salary));
         }
 
         return AppList(
@@ -41,7 +53,6 @@ class _EventReportListState extends State<EventReportList> {
           emptyInboxMessage: 'There is no ratios yet!',
           itemBuilder: (context, index) {
             return AppTile(
-              height: 56,
               isActive: false,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,12 +72,29 @@ class _EventReportListState extends State<EventReportList> {
                       ),
                       Text(
                         AmountHelper.integerToFormattedPrice(
-                          memberBalances[index].totalBalance,
+                          memberBalances[index].salary,
                         ),
                         style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ],
                   ),
+                  if ((memberBalances[index].expenses ?? 0) > 0)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Paid expenses ',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                        ),
+                        Text(
+                          AmountHelper.integerToFormattedPrice(
+                            memberBalances[index].expenses!,
+                          ),
+                          style: Theme.of(context).textTheme.displayLarge,
+                        ),
+                      ],
+                    ),
                 ],
               ),
             );

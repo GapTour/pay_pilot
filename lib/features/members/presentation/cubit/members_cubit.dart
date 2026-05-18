@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
-import 'package:pay_pilot/features/members/data/member_editing_form.dart';
-import 'package:pay_pilot/features/members/data/member_form.dart';
+import 'package:pay_pilot/core/data/params/member_params.dart';
+import 'package:pay_pilot/core/utils/resource/data_state.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
 import 'package:pay_pilot/features/members/repository/member_repository.dart';
 
 part 'members_state.dart';
@@ -16,8 +16,11 @@ class MembersCubit extends Cubit<MembersState> {
   void loadMembers() async {
     emit(state.copyWith(membersStatus: MembersStatus.loading));
 
-    try {
-      final members = await _repository.getAllMembers();
+    final dataState = await _repository.getAllMembers();
+
+    if (dataState is DataSuccess) {
+      final members = dataState.data!;
+
       members.sort(
         (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
       );
@@ -25,26 +28,76 @@ class MembersCubit extends Cubit<MembersState> {
       emit(
         state.copyWith(membersStatus: MembersStatus.success, members: members),
       );
-    } catch (_) {
+    }
+
+    if (dataState is DataFailed) {
       emit(state.copyWith(membersStatus: MembersStatus.failure));
     }
   }
 
-  void addMember(MemberForm member) async {
-    await _repository.insertMember(member).whenComplete(() {
-      loadMembers();
-    });
+  void addMember(MemberParams params) async {
+    final members = state.members;
+    emit(state.copyWith(membersStatus: MembersStatus.loading));
+
+    final dataState = await _repository.addMember(params);
+
+    if (dataState is DataSuccess) {
+      final newMember = dataState.data!;
+
+      members
+        ..add(newMember)
+        ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
+      emit(
+        state.copyWith(membersStatus: MembersStatus.success, members: members),
+      );
+    }
+
+    if (dataState is DataFailed) {
+      emit(state.copyWith(membersStatus: MembersStatus.failure));
+    }
   }
 
-  void updateMember(MemberEditingForm member) async {
-    await _repository.updateMember(member).whenComplete(() {
-      loadMembers();
-    });
+  void updateMember(MemberParams params) async {
+    final members = state.members;
+    emit(state.copyWith(membersStatus: MembersStatus.loading));
+
+    final dataState = await _repository.editMember(params);
+
+    if (dataState is DataSuccess) {
+      final newMember = dataState.data!;
+
+      members
+        ..removeWhere((element) => element.id == newMember.id)
+        ..add(newMember)
+        ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
+      emit(
+        state.copyWith(membersStatus: MembersStatus.success, members: members),
+      );
+    }
+
+    if (dataState is DataFailed) {
+      emit(state.copyWith(membersStatus: MembersStatus.failure));
+    }
   }
 
   void deleteMember(int memberID) async {
-    await _repository.deleteMember(memberID).whenComplete(() {
-      loadMembers();
-    });
+    final members = state.members;
+    emit(state.copyWith(membersStatus: MembersStatus.loading));
+
+    final dataState = await _repository.deleteMember(memberID);
+
+    if (dataState is DataSuccess) {
+      members.removeWhere((element) => element.id == memberID);
+
+      emit(
+        state.copyWith(membersStatus: MembersStatus.success, members: members),
+      );
+    }
+
+    if (dataState is DataFailed) {
+      emit(state.copyWith(membersStatus: MembersStatus.failure));
+    }
   }
 }

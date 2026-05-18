@@ -49,7 +49,6 @@ class _MembersScreenState extends State<MembersScreen> {
             emptyInboxMessage: 'There is no member yet!',
             itemBuilder: (context, index) {
               return AppTile(
-                height: 56,
                 onPreview: () {
                   context.pushNamed(
                     AppRoutes.memberDetailsScreen,

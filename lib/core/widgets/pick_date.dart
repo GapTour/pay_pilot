@@ -8,6 +8,8 @@ class PickDate {
     BuildContext context, {
     required Function(DateTime pickedDate, String formattedDate) onSubmit,
     DateTime? initDate,
+    int? startFrom,
+    int? endTo,
   }) {
     CustomDecorationPersianCalendar.pickYearAndMonth(
       context: context,
@@ -39,9 +41,10 @@ class PickDate {
       ),
       titleTextStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
       submitButtonStyle: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        shadowColor: Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        shadowColor: Theme.of(context).colorScheme.onSecondary,
       ),
+
       onSubmit: (pickedDate, formattedDate) {
         final splitFormattedDate = formattedDate.jalali.split(' ');
         onSubmit.call(
@@ -50,6 +53,8 @@ class PickDate {
         );
       },
       calendarType: CalendarType.persian,
+      minYear: startFrom,
+      maxYear: endTo,
     );
   }
 
@@ -57,6 +62,8 @@ class PickDate {
     BuildContext context, {
     required Function(DateTime pickedDate, String formattedDate) onSubmit,
     DateTime? initDate,
+    int? startFrom,
+    int? endTo,
   }) {
     CustomDecorationPersianCalendar.pickFullDate(
       context: context,
@@ -102,8 +109,8 @@ class PickDate {
       ),
       titleTextStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
       submitButtonStyle: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        shadowColor: Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        shadowColor: Theme.of(context).colorScheme.onSecondary,
       ),
       onSubmit: (pickedDate, formattedDate) {
         final splitFormattedDate = formattedDate.jalali.split(' ');
@@ -113,6 +120,8 @@ class PickDate {
         );
       },
       calendarType: CalendarType.persian,
+      minYear: startFrom,
+      maxYear: endTo,
     );
   }
 }

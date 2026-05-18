@@ -1,91 +1,202 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:pay_pilot/core/data/models/team_member_details_model.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
-import 'package:pay_pilot/features/team_members/data/team_members_edit_form.dart';
-import 'package:pay_pilot/features/team_members/data/team_members_form.dart';
+import 'package:pay_pilot/core/data/params/team_member_params.dart';
+import 'package:pay_pilot/core/utils/resource/data_state.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
+import 'package:pay_pilot/features/team_members/data/models/response_team_member.dart';
 import 'package:pay_pilot/features/team_members/repository/team_members_repository.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 part 'ratios_state.dart';
-part 'status/ratios_status.dart';
+part 'status/team_member_status.dart';
 
 class RatiosCubit extends Cubit<RatiosState> {
   final TeamMembersRepository _repository;
   RatiosCubit(this._repository)
-    : super(RatiosState(ratioStatus: RatioInitial(), ratios: []));
+    : super(RatiosState(teamMemberStatus: TeamMemberInitial(), ratios: []));
 
-  void loadRatios(int teamID, {Team? team, List<Member>? members}) async {
-    late Team? fetchedTeam;
-    late List<Member>? fetchedMembers;
+  void loadRatios(int teamID) async {
+    emit(state.copyWith(teamMemberStatus: TeamMemberLoading()));
 
-    emit(state.copyWith(ratioStatus: RatioLoading()));
+    final memberDataState = await _repository.getAllMembers();
+    final teamDataState = await _repository.getTeamDetails(teamID);
 
-    try {
-      final ratios = await _repository.getAllRatios(teamID);
-      ratios.sort((a, b) => a.ratio.compareTo(b.ratio));
+    if (memberDataState is DataSuccess && teamDataState is DataSuccess) {
+      final team = teamDataState.data!;
+      final members = memberDataState.data!;
+      Map<int, double> addedMembers = {};
 
-      fetchedTeam = team ?? await _repository.getTeamDetails(teamID);
-      fetchedMembers = members ?? await _repository.getAllMembers();
+      final ratiosDataState = await _repository.getAllRatios(teamID);
 
-      final Map<int, double> addedMembers = {};
-      ratios.fold<Map<int, double>>({}, (previousValue, element) {
-        if (!previousValue.containsKey(element.member.id)) {
-          addedMembers[element.member.id] = element.ratio;
-        }
-        return previousValue;
-      });
+      if (ratiosDataState is DataSuccess) {
+        final teamMembers = ratiosDataState.data!;
+        teamMembers.sort((a, b) => a.ratio.compareTo(b.ratio));
+        addedMembers = await _updateAddedMembersList(teamMembers);
+
+        emit(state.copyWith(ratios: teamMembers));
+      }
 
       emit(
         state.copyWith(
-          ratioStatus: RatioSuccess(fetchedTeam, fetchedMembers, addedMembers),
-          ratios: ratios,
+          teamMemberStatus: TeamMemberSuccess(
+            addedMembers: addedMembers,
+            team: team,
+            members: members,
+          ),
         ),
       );
-    } catch (_) {
-      emit(state.copyWith(ratioStatus: RatioFailure()));
+    }
+
+    if (memberDataState is DataFailed || teamDataState is DataFailed) {
+      emit(state.copyWith(teamMemberStatus: TeamMemberFailure()));
     }
   }
 
-  void addRatio(TeamMembersForm teamMember) async {
-    bool isSuccess = false;
+  void addRatio(TeamMemberParams params) async {
+    final team = (state.teamMemberStatus as TeamMemberSuccess).team;
+    final members = (state.teamMemberStatus as TeamMemberSuccess).members;
+    Map<int, double> addedMembers =
+        (state.teamMemberStatus as TeamMemberSuccess).addedMembers;
+    final teamMembers = state.ratios;
 
-    await _repository.insertRatio(teamMember).whenComplete(() {
-      if (state.ratioStatus is RatioSuccess) isSuccess = true;
+    emit(state.copyWith(teamMemberStatus: TeamMemberLoading()));
 
-      loadRatios(
-        teamMember.teamID,
-        team: isSuccess ? (state.ratioStatus as RatioSuccess).team : null,
-        members: isSuccess ? (state.ratioStatus as RatioSuccess).members : null,
+    final dataState = await _repository.insertRatio(params);
+
+    if (dataState is DataSuccess) {
+      final newRatio = dataState.data!;
+
+      teamMembers
+        ..add(newRatio)
+        ..sort((a, b) => a.ratio.compareTo(b.ratio));
+      addedMembers = await _updateAddedMembersList(teamMembers);
+
+      emit(
+        state.copyWith(
+          ratios: teamMembers,
+          teamMemberStatus: TeamMemberSuccess(
+            addedMembers: addedMembers,
+            team: team,
+            members: members,
+          ),
+        ),
       );
-    });
+    }
+
+    if (dataState is DataFailed) {
+      emit(
+        state.copyWith(
+          ratios: teamMembers,
+          teamMemberStatus: TeamMemberSuccess(
+            addedMembers: addedMembers,
+            team: team,
+            members: members,
+          ),
+        ),
+      );
+    }
   }
 
-  void updateRatio(TeamMembersEditForm teamMember) async {
-    bool isSuccess = false;
+  void updateRatio(TeamMemberParams params) async {
+    final team = (state.teamMemberStatus as TeamMemberSuccess).team;
+    final members = (state.teamMemberStatus as TeamMemberSuccess).members;
+    Map<int, double> addedMembers =
+        (state.teamMemberStatus as TeamMemberSuccess).addedMembers;
+    final teamMembers = state.ratios;
 
-    await _repository.updateRatio(teamMember).whenComplete(() {
-      if (state.ratioStatus is RatioSuccess) isSuccess = true;
+    emit(state.copyWith(teamMemberStatus: TeamMemberLoading()));
 
-      loadRatios(
-        teamMember.teamID,
-        team: isSuccess ? (state.ratioStatus as RatioSuccess).team : null,
-        members: isSuccess ? (state.ratioStatus as RatioSuccess).members : null,
+    final dataState = await _repository.updateRatio(params);
+
+    if (dataState is DataSuccess) {
+      final newRatio = dataState.data!;
+
+      teamMembers
+        ..removeWhere((element) => element.id == newRatio.id)
+        ..add(newRatio)
+        ..sort((a, b) => a.ratio.compareTo(b.ratio));
+      addedMembers = await _updateAddedMembersList(teamMembers);
+
+      emit(
+        state.copyWith(
+          ratios: teamMembers,
+          teamMemberStatus: TeamMemberSuccess(
+            addedMembers: addedMembers,
+            team: team,
+            members: members,
+          ),
+        ),
       );
-    });
+    }
+
+    if (dataState is DataFailed) {
+      emit(
+        state.copyWith(
+          ratios: teamMembers,
+          teamMemberStatus: TeamMemberSuccess(
+            addedMembers: addedMembers,
+            team: team,
+            members: members,
+          ),
+        ),
+      );
+    }
   }
 
-  void deleteRatio(int teamID, int teamMemberID) async {
-    bool isSuccess = false;
+  void deleteRatio(int ratioID) async {
+    final team = (state.teamMemberStatus as TeamMemberSuccess).team;
+    final members = (state.teamMemberStatus as TeamMemberSuccess).members;
+    Map<int, double> addedMembers =
+        (state.teamMemberStatus as TeamMemberSuccess).addedMembers;
+    final teamMembers = state.ratios;
 
-    await _repository.deleteRatio(teamMemberID).whenComplete(() {
-      if (state.ratioStatus is RatioSuccess) isSuccess = true;
+    emit(state.copyWith(teamMemberStatus: TeamMemberLoading()));
 
-      loadRatios(
-        teamID,
-        team: isSuccess ? (state.ratioStatus as RatioSuccess).team : null,
-        members: isSuccess ? (state.ratioStatus as RatioSuccess).members : null,
+    final dataState = await _repository.deleteRatio(ratioID);
+
+    if (dataState is DataSuccess) {
+      teamMembers.removeWhere((element) => element.id == ratioID);
+      addedMembers = await _updateAddedMembersList(teamMembers);
+
+      emit(
+        state.copyWith(
+          ratios: teamMembers,
+          teamMemberStatus: TeamMemberSuccess(
+            addedMembers: addedMembers,
+            team: team,
+            members: members,
+          ),
+        ),
       );
+    }
+
+    if (dataState is DataFailed) {
+      emit(
+        state.copyWith(
+          ratios: teamMembers,
+          teamMemberStatus: TeamMemberSuccess(
+            addedMembers: addedMembers,
+            team: team,
+            members: members,
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<Map<int, double>> _updateAddedMembersList(
+    List<ResponseTeamMember> teamMembers,
+  ) async {
+    final addedMembers = <int, double>{};
+
+    teamMembers.fold<Map<int, double>>({}, (previousValue, element) {
+      if (!previousValue.containsKey(element.memberInfo.id)) {
+        addedMembers[element.memberInfo.id] = element.ratio;
+      }
+      return previousValue;
     });
+
+    return addedMembers;
   }
 }

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/empty_text.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
 import 'package:pay_pilot/features/team_members/presentation/cubit/ratios_cubit.dart';
 import 'package:pay_pilot/features/team_members/presentation/widgets/add_ratio_dialog_box.dart';
 import 'package:pay_pilot/features/team_members/presentation/widgets/edit_ratio_dialog_box.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 class TeamMembersScreen extends StatefulWidget {
   static const routeName = '/team-members/id:${AppArguments.teamDetails}';
@@ -36,18 +37,31 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
       appBar: AppBar(title: const Text('Team\'s Members')),
       body: BlocBuilder<RatiosCubit, RatiosState>(
         builder: (context, state) {
-          late Team teamInfo;
+          late ResponseTeam teamInfo;
+          late List<ResponseMember> members;
+          late Map<int, double> addedMembers;
+
           final teamMembers = state.ratios;
+
           final isLoading =
-              state.ratioStatus is RatioInitial ||
-              state.ratioStatus is RatioLoading;
+              state.teamMemberStatus is TeamMemberInitial ||
+              state.teamMemberStatus is TeamMemberLoading;
 
           if (isLoading) {
             return const Center(child: CircularProgressIndicator.adaptive());
           }
 
-          if (state.ratioStatus is RatioSuccess) {
-            teamInfo = (state.ratioStatus as RatioSuccess).team;
+          if (state.teamMemberStatus is TeamMemberFailure) {
+            return const Center(
+              child: Text('Something went wrong, try again later...'),
+            );
+          }
+
+          if (state.teamMemberStatus is TeamMemberSuccess) {
+            teamInfo = (state.teamMemberStatus as TeamMemberSuccess).team;
+            members = (state.teamMemberStatus as TeamMemberSuccess).members;
+            addedMembers =
+                (state.teamMemberStatus as TeamMemberSuccess).addedMembers;
           }
 
           return ListView(
@@ -84,7 +98,6 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                 emptyInboxMessage: 'There is no member yet!',
                 itemBuilder: (context, index) {
                   return AppTile(
-                    height: 38,
                     onEdit: () {
                       showDialog(
                         context: context,
@@ -92,10 +105,8 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                           return EditRatioDialogBox(
                             teamMember: teamMembers[index],
                             team: teamInfo,
-                            members:
-                                (state.ratioStatus as RatioSuccess).members,
-                            addedMembers: (state.ratioStatus as RatioSuccess)
-                                .addedMembers,
+                            members: members,
+                            addedMembers: addedMembers,
                             onPressedSubmit: (ratio) {
                               context.read<RatiosCubit>().updateRatio(ratio);
                             },
@@ -105,7 +116,6 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                     },
                     onDelete: () {
                       context.read<RatiosCubit>().deleteRatio(
-                        int.parse(widget.teamID),
                         teamMembers[index].id,
                       );
                     },
@@ -113,7 +123,7 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            teamMembers[index].member.name,
+                            teamMembers[index].memberInfo.name,
                             textAlign: TextAlign.left,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.displayLarge,
@@ -136,9 +146,10 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
       floatingActionButton: BlocBuilder<RatiosCubit, RatiosState>(
         builder: (context, state) {
           final isLoading =
-              state.ratioStatus is RatioInitial ||
-              state.ratioStatus is RatioLoading;
-          final isFailure = state.ratioStatus is RatioFailure;
+              state.teamMemberStatus is TeamMemberInitial ||
+              state.teamMemberStatus is TeamMemberLoading;
+
+          final isFailure = state.teamMemberStatus is TeamMemberFailure;
 
           return FloatingActionButton(
             onPressed: isFailure || isLoading
@@ -148,10 +159,13 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                       context: context,
                       builder: (_) {
                         return AddRatioDialogBox(
-                          team: (state.ratioStatus as RatioSuccess).team,
-                          members: (state.ratioStatus as RatioSuccess).members,
+                          team: (state.teamMemberStatus as TeamMemberSuccess)
+                              .team,
+                          members: (state.teamMemberStatus as TeamMemberSuccess)
+                              .members,
                           addedMembers:
-                              (state.ratioStatus as RatioSuccess).addedMembers,
+                              (state.teamMemberStatus as TeamMemberSuccess)
+                                  .addedMembers,
                           onPressedSubmit: (ratio) {
                             context.read<RatiosCubit>().addRatio(ratio);
                           },

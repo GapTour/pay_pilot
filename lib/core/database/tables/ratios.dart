@@ -10,4 +10,5 @@ class Ratios extends Table {
       integer().references(Teams, #id, onDelete: KeyAction.cascade)();
   RealColumn get ratio => real()();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
+  DateTimeColumn get modifiedAt => dateTime().withDefault(currentDate)();
 }

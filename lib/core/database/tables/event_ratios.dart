@@ -10,4 +10,5 @@ class EventRatios extends Table {
       integer().references(Events, #id, onDelete: KeyAction.cascade)();
   RealColumn get ratio => real()();
   DateTimeColumn get createAt => dateTime().withDefault(currentDate)();
+  DateTimeColumn get modifiedAt => dateTime().withDefault(currentDate)();
 }

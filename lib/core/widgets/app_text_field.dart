@@ -107,108 +107,105 @@ class _AppTextFieldState extends State<AppTextField> {
   }
 
   Widget _customTextFormField(BuildContext ctx) {
-    return SizedBox(
-      height: 68,
-      child: TextFormField(
-        focusNode: widget.focusNode,
-        onTap: widget.onTap == null
-            ? null
-            : () => widget.onTap!(widget.focusNode),
-        onFieldSubmitted:
-            widget.onFieldSubmitted ??
-            (s) {
-              FocusScope.of(ctx).requestFocus(widget.nextFocusNode);
-            },
-        style: Theme.of(context).textTheme.displayLarge,
+    return TextFormField(
+      focusNode: widget.focusNode,
+      onTap: widget.onTap == null
+          ? null
+          : () => widget.onTap!(widget.focusNode),
+      onFieldSubmitted:
+          widget.onFieldSubmitted ??
+          (s) {
+            FocusScope.of(ctx).requestFocus(widget.nextFocusNode);
+          },
+      style: Theme.of(context).textTheme.displayLarge,
 
-        maxLength: widget.maxLength,
-        readOnly: widget.readOnly,
-        onEditingComplete: widget.onEditingComplete,
-        controller: widget.controller,
-        onChanged: widget.onChange,
-        textInputAction: widget.textInputAction,
-        keyboardType: widget.keyboardType,
-        obscureText: widget.keyboardType == TextInputType.visiblePassword,
-        maxLines: widget.maxLines,
-        minLines: widget.minLines,
-        inputFormatters: widget.inputFormatters,
-        validator: widget.validatorText == null
-            ? widget.validator
-            : (value) {
-                if (value!.isEmpty) {
-                  return widget.validatorText;
-                }
-                return null;
-              },
-        autofocus: widget.autoFocus!,
-        // cursorColor: AppColors.mediumGray,
-        mouseCursor: MouseCursor.defer,
-        cursorColor: kOnPrimaryColor.withAlpha(150),
-        decoration: InputDecoration(
-          // hoverColor: kSecondaryColor,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 10,
-          ),
-          hintStyle: TextStyle(
-            color: kOnPrimaryColor.withAlpha(100),
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
-          // errorStyle: AppTextStyle.getRegularXsStyle(
-          //   color: _hasFocus
-          //       ? AppColors.accentWarning700
-          //       : AppColors.accentWarning900,
-          // ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: kPrimaryContainerColor),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: kPrimaryContainerColor.withAlpha(100),
-            ),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.outlineVariant,
-            ),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-          ),
-          hintText: widget.hint,
-          prefixIcon: widget.prefixIcon == null
-              ? null
-              : Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Icon(
-                    widget.prefixIcon,
-                    size: 15,
-                    color: kPrimaryContainerColor,
-                  ),
-                ),
-          // prefixIconColor: AppColors.mediumGray,
-          prefixIconConstraints: const BoxConstraints(
-            minHeight: 15,
-            minWidth: 15,
-          ),
-          suffixIcon: widget.suffixIcon == null
-              ? null
-              : Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: InkWell(
-                    onTap: widget.onTapSuffixIcon,
-                    child: Icon(widget.suffixIcon),
-                  ),
-                ),
-          counterText: '',
-          // fillColor: AppColors.deepBlueGray,
-          filled: true,
+      maxLength: widget.maxLength,
+      readOnly: widget.readOnly,
+      onEditingComplete: widget.onEditingComplete,
+      controller: widget.controller,
+      onChanged: widget.onChange,
+      textInputAction: widget.textInputAction,
+      keyboardType: widget.keyboardType,
+      obscureText: widget.keyboardType == TextInputType.visiblePassword,
+      maxLines: widget.keyboardType == TextInputType.visiblePassword
+          ? 1
+          : widget.maxLines,
+      minLines: widget.minLines,
+      inputFormatters: widget.inputFormatters,
+      validator: widget.validatorText == null
+          ? widget.validator
+          : (value) {
+              if (value!.isEmpty) {
+                return widget.validatorText;
+              }
+              return null;
+            },
+      autofocus: widget.autoFocus!,
+      // cursorColor: AppColors.mediumGray,
+      mouseCursor: MouseCursor.defer,
+      cursorColor: kOnPrimaryColor.withAlpha(150),
+      decoration: InputDecoration(
+        // hoverColor: kSecondaryColor,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 10,
         ),
+        hintStyle: TextStyle(
+          color: kOnPrimaryColor.withAlpha(100),
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+        // errorStyle: AppTextStyle.getRegularXsStyle(
+        //   color: _hasFocus
+        //       ? AppColors.accentWarning700
+        //       : AppColors.accentWarning900,
+        // ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: kPrimaryContainerColor),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: kPrimaryContainerColor.withAlpha(100)),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+        hintText: widget.hint,
+        prefixIcon: widget.prefixIcon == null
+            ? null
+            : Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Icon(
+                  widget.prefixIcon,
+                  size: 15,
+                  color: kPrimaryContainerColor,
+                ),
+              ),
+        // prefixIconColor: AppColors.mediumGray,
+        prefixIconConstraints: const BoxConstraints(
+          minHeight: 15,
+          minWidth: 15,
+        ),
+        suffixIcon: widget.suffixIcon == null
+            ? null
+            : Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: InkWell(
+                  onTap: widget.onTapSuffixIcon,
+                  child: Icon(widget.suffixIcon),
+                ),
+              ),
+        counterText: '',
+        // fillColor: AppColors.deepBlueGray,
+        filled: true,
       ),
     );
   }

@@ -1,16 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/data/params/member_params.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
-import 'package:pay_pilot/features/members/data/member_editing_form.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
+import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class EditMemberDialogBox extends StatefulWidget {
-  final Member member;
-  final Function(MemberEditingForm member) onPressedSubmit;
+  final ResponseMember member;
+  final Function(MemberParams member) onPressedSubmit;
   const EditMemberDialogBox({
     super.key,
     required this.member,
@@ -25,15 +27,18 @@ class _EditMemberDialogBoxState extends State<EditMemberDialogBox> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController joinAtDateController = TextEditingController();
+  final TextEditingController birthdayController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   late int memberID;
-  late DateTime? selectedDate;
+  late DateTime? selectedJainAtDate;
+  late DateTime? selectedBirthdayDate;
 
   @override
   void dispose() {
     descriptionController.dispose();
     nameController.dispose();
     joinAtDateController.dispose();
+    birthdayController.dispose();
     super.dispose();
   }
 
@@ -43,11 +48,17 @@ class _EditMemberDialogBoxState extends State<EditMemberDialogBox> {
 
     memberID = widget.member.id;
     nameController.text = widget.member.name;
-    joinAtDateController.text = widget.member.joinAt == null
-        ? ''
-        : widget.member.joinAt!.formattedToJalali_yearMonth;
     descriptionController.text = widget.member.description ?? '';
-    selectedDate = widget.member.joinAt;
+    selectedJainAtDate = widget.member.joinAt;
+    if (selectedJainAtDate != null) {
+      joinAtDateController.text =
+          selectedJainAtDate!.formattedToJalali_yearMonth;
+    }
+    selectedBirthdayDate = widget.member.birthday;
+    if (selectedBirthdayDate != null) {
+      birthdayController.text =
+          selectedBirthdayDate!.formattedToJalali_yearMonthDay;
+    }
   }
 
   @override
@@ -71,6 +82,7 @@ class _EditMemberDialogBoxState extends State<EditMemberDialogBox> {
             },
           ),
         ),
+        Gap(20),
         AppTextField(
           label: 'Join at',
           hint: DateTime.now().formattedToJalali_yearMonth,
@@ -80,28 +92,57 @@ class _EditMemberDialogBoxState extends State<EditMemberDialogBox> {
           onTap: (focusNode) async {
             PickDate.yearAndMonth(
               context,
-              initDate: selectedDate ?? widget.member.joinAt,
+              startFrom: 1380,
+              endTo: DateTime.now().toJalali().year,
+              initDate: selectedJainAtDate ?? widget.member.joinAt,
               onSubmit: (pickedDate, formattedDate) {
-                selectedDate = pickedDate;
+                selectedJainAtDate = pickedDate;
                 joinAtDateController.text = formattedDate;
               },
             );
           },
         ),
+        Gap(20),
+        AppTextField(
+          label: 'Birthday',
+          hint: DateTime.now().formattedToJalali_yearMonthDay,
+          controller: birthdayController,
+          keyboardType: TextInputType.datetime,
+          readOnly: true,
+          onTap: (focusNode) async {
+            PickDate.yearMonthAndDay(
+              context,
+              startFrom: 1330,
+              endTo: DateTime.now().toJalali().year,
+              initDate: selectedBirthdayDate ?? widget.member.joinAt,
+              onSubmit: (pickedDate, formattedDate) {
+                selectedBirthdayDate = pickedDate;
+                birthdayController.text = formattedDate;
+              },
+            );
+          },
+        ),
+        Gap(20),
         AppTextField(
           label: 'Description (optional)',
           controller: descriptionController,
           minLines: 3,
           maxLines: 4,
         ),
+        Gap(85),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final member = MemberEditingForm(
+        final member = MemberParams(
           id: memberID,
           name: nameController.text,
-          joinAt: selectedDate,
-          description: descriptionController.text,
+          joinAt: selectedJainAtDate,
+          birthday: selectedBirthdayDate,
+          description: descriptionController.text.isNotEmpty
+              ? descriptionController.text
+              : null,
+          isActive: true,
+          profileImage: null,
         );
         widget.onPressedSubmit(member);
         context.pop();

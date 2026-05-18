@@ -1,20 +1,23 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/data/models/team_member_details_model.dart';
+import 'package:pay_pilot/core/data/params/team_member_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/team_members/data/team_members_edit_form.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
+import 'package:pay_pilot/features/team_members/data/models/response_team_member.dart';
+import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 class EditRatioDialogBox extends StatefulWidget {
-  final TeamMemberDetailsModel teamMember;
-  final Team team;
-  final List<Member> members;
+  final ResponseTeamMember teamMember;
+  final ResponseTeam team;
+  final List<ResponseMember> members;
   final Map<int, double> addedMembers;
-  final Function(TeamMembersEditForm teamMember) onPressedSubmit;
+  final Function(TeamMemberParams teamMember) onPressedSubmit;
   const EditRatioDialogBox({
     super.key,
     required this.teamMember,
@@ -33,7 +36,7 @@ class _EditRatioDialogBoxState extends State<EditRatioDialogBox> {
   final TextEditingController teamController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final formDropDownKey = GlobalKey<FormState>();
-  final List<Member> notAddedMembers = [];
+  final List<ResponseMember> notAddedMembers = [];
   double remindedRatio = 100;
   late int memberID;
   late int ratioID;
@@ -53,10 +56,10 @@ class _EditRatioDialogBoxState extends State<EditRatioDialogBox> {
     teamController.text = widget.team.title;
 
     ratioID = widget.teamMember.id;
-    memberID = widget.teamMember.member.id;
+    memberID = widget.teamMember.memberInfo.id;
     ratioController.text = widget.teamMember.ratio.toString();
 
-    notAddedMembers.add(widget.teamMember.member);
+    notAddedMembers.add(widget.teamMember.memberInfo);
     remindedRatio = remindedRatio + widget.teamMember.ratio;
 
     widget.members.fold<List<Member>>([], (previousValue, element) {
@@ -80,11 +83,12 @@ class _EditRatioDialogBoxState extends State<EditRatioDialogBox> {
       title: 'Edit Team\'s Member',
       children: [
         AppTextField(label: 'Team', controller: teamController, readOnly: true),
-        AppDropDownButton<Member>(
+        Gap(20),
+        AppDropDownButton<ResponseMember>(
           label: 'Members',
           hint: 'Select a member',
           showWarning: isNotSelected,
-          value: widget.members.firstWhereOrNull(
+          value: notAddedMembers.firstWhereOrNull(
             (element) => element.id == memberID,
           ),
           onChanged: (value) {
@@ -94,9 +98,13 @@ class _EditRatioDialogBoxState extends State<EditRatioDialogBox> {
             }
           },
           items: notAddedMembers.map((e) {
-            return DropdownMenuItem<Member>(value: e, child: Text(e.name));
+            return DropdownMenuItem<ResponseMember>(
+              value: e,
+              child: Text(e.name),
+            );
           }).toList(),
         ),
+        Gap(20),
         Form(
           key: formKey,
           child: AppTextField(
@@ -125,10 +133,11 @@ class _EditRatioDialogBoxState extends State<EditRatioDialogBox> {
             },
           ),
         ),
+        Gap(20),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final ratio = TeamMembersEditForm(
+        final ratio = TeamMemberParams(
           id: ratioID,
           memberID: memberID,
           ratio: ratioController.text.parseToDouble,

@@ -1,18 +1,20 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/event_details/data/models/event_ratio_form.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
 class AddEventRatioDialogBox extends StatefulWidget {
   final int eventID;
-  final List<Member> members;
+  final List<ResponseMember> members;
   final Map<int, double> addedMembers;
-  final Function(EventRatioForm ratioEvent) onPressedSubmit;
+  final Function(EventRatioParams ratioEvent) onPressedSubmit;
   const AddEventRatioDialogBox({
     super.key,
     required this.eventID,
@@ -29,9 +31,9 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
   final TextEditingController ratioController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final formDropDownKey = GlobalKey<FormState>();
-  final List<Member> notAddedMembers = [];
+  final List<ResponseMember> notAddedMembers = [];
   double remindedRatio = 100;
-  Member? member;
+  ResponseMember? member;
   bool isNotSelected = false;
 
   @override
@@ -64,7 +66,7 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
     return AppDialogBox(
       title: 'Add New Member\'s Ratio',
       children: [
-        AppDropDownButton<Member>(
+        AppDropDownButton<ResponseMember>(
           label: 'Members',
           hint: 'Select a member',
           showWarning: isNotSelected,
@@ -74,13 +76,18 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
           onChanged: (value) {
             if (value != null) {
               member = value;
+              isNotSelected = false;
               setState(() {});
             }
           },
           items: notAddedMembers.map((e) {
-            return DropdownMenuItem<Member>(value: e, child: Text(e.name));
+            return DropdownMenuItem<ResponseMember>(
+              value: e,
+              child: Text(e.name),
+            );
           }).toList(),
         ),
+        Gap(20),
         Form(
           key: formKey,
           child: AppTextField(
@@ -112,9 +119,15 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final ratio = EventRatioForm(
-          member: member!,
-          ratio: ratioController.text.parseToDouble,
+        if (member == null) {
+          isNotSelected = true;
+          setState(() {});
+          return;
+        }
+        final ratio = EventRatioParams(
+          id: null,
+          memberID: member!.id,
+          ratioValue: ratioController.text.parseToDouble,
           eventID: widget.eventID,
         );
         widget.onPressedSubmit(ratio);

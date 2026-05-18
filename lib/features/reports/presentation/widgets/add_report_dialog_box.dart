@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/data/models/event_details_model.dart';
+import 'package:pay_pilot/core/data/params/report_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/reports/data/report_form.dart';
-import 'package:pay_pilot/features/reports/presentation/cubit/reports_cubit.dart';
+import 'package:pay_pilot/core/widgets/pick_date.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/reports/presentation/widgets/selecting_events.dart';
 import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class AddReportDialogBox extends StatefulWidget {
   final Report? report;
-  final Function(ReportForm report) onPressedSubmit;
-  final BuildContext innerContext;
+  final Function(ReportParams report) onPressedSubmit;
+  // final BuildContext innerContext;
   const AddReportDialogBox({
     super.key,
     this.report,
     required this.onPressedSubmit,
-    required this.innerContext,
+    // required this.innerContext,
   });
 
   @override
@@ -30,33 +30,19 @@ class AddReportDialogBox extends StatefulWidget {
 class _AddReportDialogBoxState extends State<AddReportDialogBox> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
-  final TextEditingController versionController = TextEditingController();
   final TextEditingController totalAmountController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final PageController pageController = PageController();
   final formKey = GlobalKey<FormState>();
   ({int month, int year})? selectedDate;
-  final List<EventDetailsModel> selectedEvents = [];
+  final List<ResponseEventDetails> selectedEvents = [];
   int pageIndex = 0;
   bool showIncomesWarning = false;
-
-  void generateVersion(BuildContext innerContext) {
-    final reports = innerContext.read<ReportsCubit>().state.reports;
-    final int reportLength =
-        reports.where((element) {
-          return element.generateFor.toJalali().month == selectedDate!.month &&
-              element.generateFor.toJalali().year == selectedDate!.year;
-        }).length +
-        1;
-
-    versionController.text = reportLength.toString();
-  }
 
   @override
   void dispose() {
     descriptionController.dispose();
     titleController.dispose();
-    versionController.dispose();
     totalAmountController.dispose();
     dateController.dispose();
     pageController.dispose();
@@ -111,26 +97,62 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                             children: [
                               Form(
                                 key: formKey,
-                                child: AppTextField(
-                                  label: 'Title',
-                                  hint: 'This month salary',
-                                  autoFocus: true,
-                                  controller: titleController,
-                                  keyboardType: TextInputType.name,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return '*Required';
-                                    }
-                                    return null;
-                                  },
+                                child: Column(
+                                  children: [
+                                    AppTextField(
+                                      label: 'Title',
+                                      hint: 'This month salary',
+                                      autoFocus: true,
+                                      controller: titleController,
+                                      keyboardType: TextInputType.name,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return '*Required';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    Gap(8),
+                                    AppTextField(
+                                      label: 'Generate for',
+                                      hint: DateTime.now()
+                                          .formattedToJalali_yearMonth,
+                                      controller: dateController,
+                                      keyboardType: TextInputType.datetime,
+                                      readOnly: true,
+                                      onTap: (focusNode) async {
+                                        PickDate.yearAndMonth(
+                                          context,
+                                          initDate: Jalali(
+                                            selectedDate!.year,
+                                            selectedDate!.month,
+                                          ).toDateTime(),
+                                          onSubmit:
+                                              (pickedDate, formattedDate) {
+                                                selectedDate = (
+                                                  month: pickedDate
+                                                      .toJalali()
+                                                      .month,
+                                                  year: pickedDate
+                                                      .toJalali()
+                                                      .year,
+                                                );
+                                                dateController.text =
+                                                    formattedDate;
+                                              },
+                                        );
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return '*Required';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
-                              AppTextField(
-                                label: 'Version (read only)',
-                                controller: versionController,
-                                readOnly: true,
-                              ),
-
+                              Gap(8),
                               AppTextField(
                                 label: 'Description (optional)',
                                 controller: descriptionController,
@@ -206,17 +228,16 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                     }
 
                                     widget.onPressedSubmit.call(
-                                      ReportForm(
+                                      ReportParams(
                                         title: titleController.text,
-                                        version: int.parse(
-                                          versionController.text,
-                                        ),
                                         description: descriptionController.text,
                                         generateFor: Jalali(
                                           selectedDate!.year,
                                           selectedDate!.month,
                                         ).toDateTime(),
-                                        events: selectedEvents,
+                                        events: selectedEvents
+                                            .map((e) => e.id)
+                                            .toList(),
                                       ),
                                     );
 
@@ -224,9 +245,6 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                       context.pop();
                                     }
                                     return;
-                                  }
-                                  if (pageIndex == 0) {
-                                    generateVersion(widget.innerContext);
                                   }
 
                                   pageController.animateToPage(
@@ -241,7 +259,7 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    pageIndex == 2 ? 'Generate' : 'Next',
+                                    pageIndex == 1 ? 'Generate' : 'Next',
                                     textAlign: TextAlign.center,
                                     style: Theme.of(
                                       context,

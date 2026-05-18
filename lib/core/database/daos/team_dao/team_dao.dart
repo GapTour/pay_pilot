@@ -1,8 +1,7 @@
 import 'package:drift/drift.dart';
+import 'package:pay_pilot/core/data/params/team_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/tables/teams.dart';
-import 'package:pay_pilot/features/teams/data/team_edit_form.dart';
-import 'package:pay_pilot/features/teams/data/team_form.dart';
 
 part 'team_dao.g.dart';
 
@@ -10,7 +9,7 @@ part 'team_dao.g.dart';
 class TeamDao extends DatabaseAccessor<AppDatabase> with _$TeamDaoMixin {
   TeamDao(super.db);
 
-  Future<int> insertTeam(TeamForm team) async {
+  Future<int> insertTeam(TeamParams team) async {
     return await db
         .into(db.teams)
         .insert(
@@ -22,18 +21,31 @@ class TeamDao extends DatabaseAccessor<AppDatabase> with _$TeamDaoMixin {
   }
 
   Future<List<Team>> getAllTeams() async {
-    return await db.select(db.teams).get();
+    return await (db.select(
+      db.teams,
+    )..where((tbl) => tbl.isActive.equals(true))).get();
   }
 
   Future<Team> getTeam(int id) async {
     return (db.select(db.teams)..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
-  Future<void> updateTeam(TeamEditForm team) async {
-    await (db.update(db.teams)..where((tbl) => tbl.id.equals(team.id))).write(
+  Future<void> updateTeam(TeamParams team) async {
+    await (db.update(db.teams)..where((tbl) => tbl.id.equals(team.id!))).write(
       TeamsCompanion(
         title: Value(team.title),
         description: Value(team.description),
+        isActive: Value(team.isActive ?? true),
+        modifiedAt: Value(DateTime.now().toUtc()),
+      ),
+    );
+  }
+
+  Future<void> archiveTeam(int id) async {
+    await (db.update(db.teams)..where((tbl) => tbl.id.equals(id))).write(
+      TeamsCompanion(
+        isActive: Value(false),
+        modifiedAt: Value(DateTime.now().toUtc()),
       ),
     );
   }

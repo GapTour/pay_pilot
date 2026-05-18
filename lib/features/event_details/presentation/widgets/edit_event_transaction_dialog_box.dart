@@ -1,7 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pay_pilot/core/data/models/transaction_model.dart';
+import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
@@ -10,15 +11,22 @@ import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
-import 'package:pay_pilot/features/event_details/data/transaction_edit_form.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
+import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
+import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class EditEventTransactionDialogBox extends StatefulWidget {
-  final TransactionModel transaction;
+  final ResponseEventTransaction transaction;
+  final List<ResponseMember> responseMembers;
+  final List<ResponseGuest> responseGuests;
   final int eventID;
-  final Function(TransactionEditForm transaction) onPressedSubmit;
+  final Function(TransactionParams transaction) onPressedSubmit;
   const EditEventTransactionDialogBox({
     super.key,
     required this.transaction,
+    required this.responseMembers,
+    required this.responseGuests,
     required this.eventID,
     required this.onPressedSubmit,
   });
@@ -38,8 +46,9 @@ class _EditEventTransactionDialogBoxState
   late TransactionType transactionType;
   late DateTime? selectedDate;
   bool isNotSelected = false;
-
-  final transactionTypes = [TransactionType.expense, TransactionType.income];
+  bool isPaidSourceNotSelected = false;
+  int? selectedMemberID;
+  int? selectedGuestID;
 
   @override
   void dispose() {
@@ -61,6 +70,12 @@ class _EditEventTransactionDialogBoxState
         widget.transaction.date.formattedToJalali_yearMonthDay;
     selectedDate = widget.transaction.date;
     transactionType = widget.transaction.transactionType;
+
+    if (widget.transaction.paidByGuest != null) {
+      selectedGuestID = widget.transaction.paidByGuest;
+    } else if (widget.transaction.paidByMember != null) {
+      selectedMemberID = widget.transaction.paidByMember;
+    }
   }
 
   @override
@@ -72,12 +87,14 @@ class _EditEventTransactionDialogBoxState
           label: 'Transaction Type',
           hint: 'Select a type',
           showWarning: isNotSelected,
-          value: transactionTypes.firstWhereOrNull((element) {
+          value: TransactionType.values.firstWhereOrNull((element) {
             return element.name == transactionType.name;
           }),
           onChanged: (value) {
             if (value != null) {
               transactionType = value;
+              selectedMemberID = null;
+              selectedGuestID = null;
               setState(() {});
             }
           },
@@ -88,6 +105,74 @@ class _EditEventTransactionDialogBoxState
             );
           }).toList(),
         ),
+        Gap(20),
+        if (transactionType.isIncome) ...[
+          AppDropDownButton<ResponseGuest>(
+            label: 'Guests',
+            hint: 'Select a Guest',
+            showWarning: isPaidSourceNotSelected,
+            value: widget.responseGuests.firstWhereOrNull((element) {
+              return element.id == selectedGuestID;
+            }),
+            onChanged: (value) {
+              if (value != null) {
+                selectedGuestID = value.id;
+                selectedMemberID = null;
+                isPaidSourceNotSelected = false;
+                setState(() {});
+              }
+            },
+            items: widget.responseGuests.map((e) {
+              return DropdownMenuItem<ResponseGuest>(
+                value: e,
+                child: Text(e.name),
+              );
+            }).toList(),
+          ),
+          Gap(20),
+        ],
+        if (transactionType.isExpense) ...[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: AppDropDownButton<ResponseMember>(
+                  label: 'Members (optional)',
+                  hint: 'Select a Member',
+                  value: widget.responseMembers.firstWhereOrNull((element) {
+                    return element.id == selectedMemberID;
+                  }),
+                  onChanged: (value) {
+                    if (value != null) {
+                      selectedMemberID = value.id;
+                      selectedGuestID = null;
+                      isPaidSourceNotSelected = false;
+                      setState(() {});
+                    }
+                  },
+                  items: widget.responseMembers.map((e) {
+                    return DropdownMenuItem<ResponseMember>(
+                      value: e,
+                      child: Text(e.name),
+                    );
+                  }).toList(),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  selectedMemberID = null;
+                  selectedGuestID = null;
+                  isPaidSourceNotSelected = false;
+                  setState(() {});
+                },
+                icon: Icon(Icons.clear_rounded),
+              ),
+            ],
+          ),
+          Gap(20),
+        ],
+
         Form(
           key: formKey,
           child: Column(
@@ -105,6 +190,7 @@ class _EditEventTransactionDialogBoxState
                   return null;
                 },
               ),
+              Gap(20),
               AppTextField(
                 label: 'Date',
                 hint: DateTime.now().formattedToJalali_yearMonthDay,
@@ -114,6 +200,8 @@ class _EditEventTransactionDialogBoxState
                 onTap: (focusNode) async {
                   PickDate.yearMonthAndDay(
                     context,
+                    startFrom: DateTime.now().toJalali().year - 1,
+                    endTo: DateTime.now().toJalali().year,
                     initDate: selectedDate ?? widget.transaction.date,
                     onSubmit: (pickedDate, formattedDate) {
                       selectedDate = pickedDate;
@@ -131,22 +219,34 @@ class _EditEventTransactionDialogBoxState
             ],
           ),
         ),
+        Gap(20),
         AppTextField(
           label: 'Description (optional)',
           controller: descriptionController,
           minLines: 3,
           maxLines: 4,
         ),
+        Gap(85),
       ],
       onPressed: () {
         if (!formKey.currentState!.validate()) return;
-        final transaction = TransactionEditForm(
+
+        if (transactionType.isIncome && selectedGuestID == null) {
+          isPaidSourceNotSelected = true;
+          setState(() {});
+          return;
+        }
+        final transaction = TransactionParams(
           id: widget.transaction.id,
           eventID: widget.eventID,
           transactionType: transactionType,
           amount: AmountHelper.formattedPriceToInteger(amountController.text),
           description: descriptionController.text,
-          date: selectedDate!,
+          transactionDate: selectedDate!,
+          attachment: null,
+          memberID: selectedMemberID,
+          guestID: selectedGuestID,
+          hasPermissionDeleteOrder: false,
         );
         widget.onPressedSubmit(transaction);
         context.pop();

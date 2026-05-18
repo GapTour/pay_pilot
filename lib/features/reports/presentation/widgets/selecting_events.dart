@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:pay_pilot/core/data/models/event_details_model.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/reports/presentation/cubit/selecting_events_cubit.dart';
 import 'package:pay_pilot/locator.dart';
 import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class SelectingEvents extends StatefulWidget {
-  final List<EventDetailsModel> selectedEvents;
+  final List<ResponseEventDetails> selectedEvents;
   final ({int month, int year})? selectedDate;
-  final Function(EventDetailsModel event, ({int month, int year}) selectedDate)
+  final Function(
+    ResponseEventDetails event,
+    ({int month, int year}) selectedDate,
+  )
   onPressed;
   const SelectingEvents({
     super.key,
@@ -70,7 +73,9 @@ class _SelectingEventsState extends State<SelectingEvents> {
 
   final List<int> years = List.generate(5, (index) => index + 1403);
 
-  List<EventDetailsModel> sortedEvents(List<EventDetailsModel> allEvents) {
+  List<ResponseEventDetails> sortedEvents(
+    List<ResponseEventDetails> allEvents,
+  ) {
     if (allEvents.isEmpty) return [];
     return allEvents.where((element) {
       final Jalali elementDate = element.date.toJalali();
@@ -190,7 +195,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
 
               BlocBuilder<SelectingEventsCubit, SelectingEventsState>(
                 builder: (context, state) {
-                  final List<EventDetailsModel> events = [];
+                  final List<ResponseEventDetails> events = [];
 
                   final isLoading =
                       state is SelectingEventsInitial ||

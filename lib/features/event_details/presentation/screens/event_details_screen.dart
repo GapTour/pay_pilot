@@ -1,16 +1,23 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
-import 'package:pay_pilot/features/event_details/presentation/cubit/event_details_cubit.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
+import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_order_dialog_box.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_ratio_dialog_box.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_transaction_dialog_box.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_details_title.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/event_orders_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_ratios_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_report_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_tab_bar.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_transactions_list.dart';
+import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
+import 'package:pay_pilot/features/members/data/models/response_member.dart';
+import 'package:pay_pilot/features/menu/data/models/response_menu.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   static const routeName = '/event-details/id:${AppArguments.eventDetails}';
@@ -31,64 +38,89 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     super.initState();
 
     eventID = int.parse(widget.eventID);
-    context.read<EventDetailsCubit>().loadTransactions(eventID);
+    context.read<EventDetailsBloc>().add(LoadEventDetails(eventID));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Event Details')),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-        child: Column(
-          children: [
-            EventDetailsTitle(),
-            Gap(30),
-            BlocBuilder<EventDetailsCubit, EventDetailsState>(
-              buildWhen: (p, c) => p.currentPage != c.currentPage,
-              builder: (context, state) {
-                return EventTabBar(state: state);
-              },
-            ),
-            Gap(25),
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 340,
-              child: ListView(
-                padding: EdgeInsets.only(
-                  bottom: 150,
-                  right: 5,
-                  left: 5,
-                  top: 8,
-                ),
-                children: [
-                  BlocBuilder<EventDetailsCubit, EventDetailsState>(
-                    buildWhen: (p, c) => p.currentPage != c.currentPage,
-                    builder: (context, state) {
-                      if (state.currentPage.isTransactions) {
-                        return EventTransactionsList(eventID);
-                      }
-                      if (state.currentPage.isMembers) {
-                        return EventRatiosList(eventID);
-                      }
-                      if (state.currentPage.isReport) {
-                        return EventReportList(eventID);
-                      }
-
-                      return SizedBox.shrink();
-                    },
-                  ),
-                ],
+      body: Column(
+        children: [
+          Gap(12),
+          EventDetailsTitle(),
+          Gap(30),
+          BlocBuilder<EventDetailsBloc, EventDetailsState>(
+            buildWhen: (p, c) => p.currentPage != c.currentPage,
+            builder: (context, state) {
+              return EventTabBar(state: state);
+            },
+          ),
+          Gap(25),
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 340,
+            child: ListView(
+              padding: EdgeInsets.only(
+                bottom: 150,
+                right: 15,
+                left: 15,
+                top: 8,
               ),
+              children: [
+                BlocBuilder<EventDetailsBloc, EventDetailsState>(
+                  buildWhen: (p, c) => p.currentPage != c.currentPage,
+                  builder: (context, state) {
+                    if (state.currentPage.isTransactions) {
+                      return EventTransactionsList(eventID);
+                    }
+                    if (state.currentPage.isMembers) {
+                      return EventRatiosList(eventID);
+                    }
+                    if (state.currentPage.isReport) {
+                      return EventReportList(eventID);
+                    }
+                    if (state.currentPage.isOrder) {
+                      return EventOrdersList();
+                    }
+
+                    return SizedBox.shrink();
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      floatingActionButton: BlocBuilder<EventDetailsCubit, EventDetailsState>(
+      floatingActionButton: BlocBuilder<EventDetailsBloc, EventDetailsState>(
         builder: (context, state) {
           late IconData icon;
+          final members = <ResponseMember>[];
+          final guests = <ResponseGuest>[];
+          final ratios = <ResponseEventRatio>[];
+          final menuItems = <ResponseMenu>[];
+          final addedMembers = <int, double>{};
+
+          if (state.eventDetailStatus is EventDetailSuccess) {
+            final eventDetailStatus =
+                (state.eventDetailStatus as EventDetailSuccess);
+            members.addAll(eventDetailStatus.members);
+            guests.addAll(eventDetailStatus.guests);
+            menuItems.addAll(eventDetailStatus.menuItems);
+            ratios
+              ..addAll(eventDetailStatus.eventDetails.memberRatios)
+              ..sort((a, b) => b.ratio.compareTo(a.ratio));
+            for (var m in members) {
+              final double? ratio = ratios
+                  .firstWhereOrNull((r) => r.memberID == m.id)
+                  ?.ratio;
+
+              if (ratio != null) addedMembers[m.id] = ratio;
+            }
+          }
 
           if (state.currentPage.isTransactions) icon = Icons.add_card_rounded;
           if (state.currentPage.isMembers) icon = Icons.edit_document;
+          if (state.currentPage.isOrder) icon = Icons.menu_book_rounded;
           if (state.currentPage.isReport) {
             return SizedBox.shrink();
           }
@@ -98,24 +130,39 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               showDialog(
                 context: context,
                 builder: (_) {
+                  if (state.currentPage.isOrder) {
+                    return AddEventOrderDialogBox(
+                      eventID: int.parse(widget.eventID),
+                      responseMembers: members,
+                      responseGuests: guests,
+                      menuItems: menuItems,
+                      onPressedSubmit: (order) {
+                        context.read<EventDetailsBloc>().add(AddOrder(order));
+                      },
+                    );
+                  }
                   if (state.currentPage.isMembers) {
                     return AddEventRatioDialogBox(
-                      eventID: int.parse(widget.eventID),
-                      members: state.members,
-                      addedMembers: state.addedMembers,
-                      onPressedSubmit: (ratio) {
-                        context.read<EventDetailsCubit>().insertRatio(ratio);
+                      eventID: eventID,
+                      onPressedSubmit: (ratioEvent) {
+                        context.read<EventDetailsBloc>().add(
+                          AddEventRatio(ratioEvent),
+                        );
                       },
+                      addedMembers: addedMembers,
+                      members: members,
                     );
                   }
 
                   return AddEventTransactionDialogBox(
                     eventID: int.parse(widget.eventID),
-                    onPressedSubmit: (transaction) {
-                      context.read<EventDetailsCubit>().insertTransaction(
-                        transaction,
+                    onPressedSubmit: (transactions) {
+                      context.read<EventDetailsBloc>().add(
+                        AddTransaction(transactions),
                       );
                     },
+                    responseMembers: members,
+                    responseGuests: guests,
                   );
                 },
               );
