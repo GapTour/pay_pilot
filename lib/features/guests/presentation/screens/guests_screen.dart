@@ -68,9 +68,9 @@ class _GuestsScreenState extends State<GuestsScreen> {
                     },
                   );
                 },
-                onDelete: () {
-                  context.read<GuestsCubit>().deleteGuest(guests[index].id);
-                },
+                // onDelete: () {
+                //   context.read<GuestsCubit>().deleteGuest(guests[index].id);
+                // },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

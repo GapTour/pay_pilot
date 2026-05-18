@@ -71,9 +71,9 @@ class _EventsScreenState extends State<EventsScreen> {
                     },
                   );
                 },
-                onDelete: () {
-                  context.read<EventsCubit>().deleteEvent(events[index].id);
-                },
+                // onDelete: () {
+                //   context.read<EventsCubit>().deleteEvent(events[index].id);
+                // },
                 previewButtonTitle: 'Preview',
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

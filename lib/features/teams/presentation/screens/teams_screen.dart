@@ -69,9 +69,9 @@ class _TeamsScreenState extends State<TeamsScreen> {
                     },
                   );
                 },
-                onDelete: () {
-                  context.read<TeamsCubit>().deleteTeam(teams[index].id);
-                },
+                // onDelete: () {
+                //   context.read<TeamsCubit>().deleteTeam(teams[index].id);
+                // },
                 child: Text(
                   teams[index].title,
                   textAlign: TextAlign.left,
