@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
@@ -30,7 +31,7 @@ class _GuestsScreenState extends State<GuestsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Guests')),
+      appBar: AppBar(title: Text(S.current.guest_appBarTitle)),
       body: BlocBuilder<GuestsCubit, GuestsState>(
         builder: (context, state) {
           final guests = state.guests;
@@ -44,7 +45,7 @@ class _GuestsScreenState extends State<GuestsScreen> {
 
           return AppList(
             itemCount: guests.length,
-            emptyInboxMessage: 'There is no guest yet!',
+            emptyInboxMessage: S.current.guest_emptyStateContent,
             itemBuilder: (context, index) {
               return AppTile(
                 onPreview: () {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 
 class AppDropDownButton<T> extends StatelessWidget {
@@ -47,7 +48,7 @@ class AppDropDownButton<T> extends StatelessWidget {
             underline: const SizedBox(),
             isExpanded: true,
             hint: Text(
-              hint ?? 'Select a item',
+              hint ?? S.current.dropDownButton_hint_selectItem,
               style: TextStyle(
                 color: kOnPrimaryColor.withAlpha(100),
                 fontSize: 16,
@@ -67,7 +68,7 @@ class AppDropDownButton<T> extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 10.0),
             child: Text(
-              '*Required',
+              S.current.validator_required,
               style: TextStyle(color: kErrorColor, fontSize: 12),
             ),
           ),

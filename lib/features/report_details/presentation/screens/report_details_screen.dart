@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
@@ -34,7 +35,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Report Details')),
+      appBar: AppBar(title: Text(S.current.reportDetails_appBarTitle)),
       body: BlocBuilder<ReportDetailsBloc, ReportDetailsState>(
         buildWhen: (p, c) => p.reportDetailsStatus != c.reportDetailsStatus,
         builder: (context, state) {
@@ -48,9 +49,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
           }
 
           if (state.reportDetailsStatus is ReportDetailsFailure) {
-            return Center(
-              child: Text('Something went wrong! try again later.'),
-            );
+            return Center(child: Text(S.current.warning_somethingWentWrong));
           }
 
           reportDetails =
@@ -71,7 +70,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'This report generated for ',
+                        text: '${S.current.reportDetails_reportGeneratedFor} ',
                         style: Theme.of(context).textTheme.displayMedium,
                       ),
                       TextSpan(
@@ -104,7 +103,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                       if (state.reportBalanceStatus is ReportBalanceFailure) {
                         return Center(
                           child: Text(
-                            'Calculating members balance goes wrong!',
+                            S.current.warning_calculatingSalaryGoesWrong,
                           ),
                         );
                       }
@@ -135,7 +134,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        'Salary ',
+                                        S.current.contentTitle_salary,
                                         style: Theme.of(
                                           context,
                                         ).textTheme.headlineSmall,
@@ -156,7 +155,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          'Paid expenses ',
+                                          S.current.contentTitle_paidExpenses,
                                           style: Theme.of(
                                             context,
                                           ).textTheme.headlineSmall,

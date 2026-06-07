@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
@@ -47,7 +48,7 @@ class EventTransactionsList extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           itemCount: transactions.length,
-          emptyInboxMessage: 'There is no transaction yet!',
+          emptyInboxMessage: S.current.transaction_emptyStateContent,
           itemBuilder: (context, index) {
             final paidBy =
                 members
@@ -60,7 +61,7 @@ class EventTransactionsList extends StatelessWidget {
                       (g) => g.id == transactions[index].paidByGuest,
                     )
                     ?.name ??
-                'Unknown';
+                S.current.contentTitle_unknown;
 
             return AppTile(
               onEdit: () {
@@ -110,12 +111,14 @@ class EventTransactionsList extends StatelessWidget {
                           AmountHelper.integerToFormattedPrice(
                             transactions[index].amount,
                           ),
-                          textAlign: TextAlign.left,
+                          textAlign: TextAlign.start,
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                       ),
                       Text(
-                        transactions[index].transactionType.name,
+                        transactions[index].transactionType.isIncome
+                            ? S.current.contentTitle_income
+                            : S.current.contentTitle_expense,
                         style: Theme.of(context).textTheme.displayMedium,
                       ),
                     ],
@@ -125,7 +128,7 @@ class EventTransactionsList extends StatelessWidget {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'on  ',
+                          text: S.current.contentTitle_onDate,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         TextSpan(
@@ -142,7 +145,7 @@ class EventTransactionsList extends StatelessWidget {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'by  ',
+                          text: S.current.contentTitle_byWho,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         TextSpan(

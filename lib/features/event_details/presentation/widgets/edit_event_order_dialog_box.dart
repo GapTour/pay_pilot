@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/event_order_params.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_custom_widget_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
@@ -64,13 +65,13 @@ class _EditEventOrderDialogBoxState extends State<EditEventOrderDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AppCustomWidgetDialogBox(
-      title: 'Edit Orders',
+      title: S.current.eventDetails_editEventOrder,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppTextField(
-            label: 'Name',
+            label: S.current.textField_label_name,
             controller: nameController,
             readOnly: true,
           ),
@@ -87,7 +88,7 @@ class _EditEventOrderDialogBoxState extends State<EditEventOrderDialogBox> {
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     child: Text(
-                      'Please select...',
+                      S.current.eventDetails_selectOrder,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   );

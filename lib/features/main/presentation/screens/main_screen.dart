@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_settings.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 
@@ -27,7 +28,7 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
-                      'Members',
+                      S.current.button_title_members,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),
@@ -38,7 +39,7 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
-                      'Guests',
+                      S.current.button_title_guests,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),
@@ -49,7 +50,7 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
-                      'Teams',
+                      S.current.button_title_teams,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),
@@ -60,7 +61,7 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
-                      'Menu Items',
+                      S.current.button_title_menuItems,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),
@@ -71,7 +72,7 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
-                      'Events',
+                      S.current.button_title_events,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),
@@ -82,7 +83,7 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
-                      'Reports',
+                      S.current.button_title_reports,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),
@@ -93,7 +94,7 @@ class MainScreen extends StatelessWidget {
                 AppElevatedButton(
                   child: Center(
                     child: Text(
-                      'Settings',
+                      S.current.button_title_settings,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),

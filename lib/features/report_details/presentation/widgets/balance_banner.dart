@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
@@ -68,7 +69,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Selected Events',
+                  S.current.reportDetails_selectedEvents,
                   style: Theme.of(
                     context,
                   ).textTheme.displayLarge!.copyWith(color: kPrimaryColor),
@@ -78,7 +79,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Total Income:  ',
+                        text: S.current.contentTitle_totalIncome,
                         style: Theme.of(context).textTheme.headlineSmall!
                             .copyWith(color: kPrimaryColor),
                       ),
@@ -95,7 +96,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Total Expense:  ',
+                        text: S.current.contentTitle_totalExpense,
                         style: Theme.of(context).textTheme.headlineSmall!
                             .copyWith(color: kPrimaryColor),
                       ),
@@ -112,7 +113,7 @@ class _BalanceBannerState extends State<BalanceBanner> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Total Balance:  ',
+                        text: S.current.contentTitle_balance,
                         style: Theme.of(context).textTheme.headlineSmall!
                             .copyWith(color: kPrimaryColor),
                       ),

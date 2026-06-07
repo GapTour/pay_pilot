@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_settings.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/features/auth/presentation/bloc/auth_bloc.dart';
@@ -60,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Online Mode',
+                          S.current.button_title_onlineMode,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.displayLarge,
                         ),
@@ -80,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Offline Mode',
+                          S.current.button_title_offlineMode,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.displayLarge,
                         ),

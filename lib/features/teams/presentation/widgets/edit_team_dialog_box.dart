@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/team_params.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/features/teams/data/models/response_team.dart';
@@ -47,18 +48,18 @@ class _EditTeamDialogBoxState extends State<EditTeamDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AppDialogBox(
-      title: 'Edit Team',
+      title: S.current.team_editTeam,
       children: [
         Form(
           key: formKey,
           child: AppTextField(
-            label: 'Title',
-            hint: 'Movie Analyze',
+            label: S.current.textField_label_title,
+            hint: S.current.textField_hint_movieAnalyze,
             controller: titleController,
             keyboardType: TextInputType.name,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return '*Required';
+                return S.current.validator_required;
               }
               return null;
             },
@@ -67,7 +68,8 @@ class _EditTeamDialogBoxState extends State<EditTeamDialogBox> {
         Gap(20),
 
         AppTextField(
-          label: 'Description (optional)',
+          label:
+              '${S.current.textField_label_description} ${S.current.textField_label_optional}',
           controller: descriptionController,
           minLines: 3,
           maxLines: 4,

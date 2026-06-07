@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
@@ -31,7 +32,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Reports')),
+      appBar: AppBar(title: Text(S.current.report_appBarTitle)),
       body: BlocBuilder<ReportsCubit, ReportsState>(
         builder: (context, state) {
           final reports = state.reports;
@@ -45,7 +46,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
           return AppList(
             itemCount: reports.length,
-            emptyInboxMessage: 'There is no report yet!',
+            emptyInboxMessage: S.current.report_emptyStateContent,
             itemBuilder: (context, index) {
               return AppTile(
                 onPreview: () {
@@ -59,7 +60,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 // onDelete: () {
                 //   context.read<ReportsCubit>().deleteReport(reports[index].id);
                 // },
-                previewButtonTitle: 'Salary\'s Report',
+                previewButtonTitle: S.current.button_title_salaryReport,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [

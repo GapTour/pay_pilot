@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/empty_text.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
@@ -27,7 +28,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Member Details')),
+      appBar: AppBar(title: Text(S.current.memberDetails_appBarTitle)),
       body: BlocBuilder<MembersDetailsCubit, MembersDetailsState>(
         builder: (context, state) {
           if (state.membersStatus is MemberSuccess) {
@@ -45,7 +46,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Join at:  ',
+                        text: S.current.contentTitle_joinAt,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(
@@ -62,7 +63,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Birthday:  ',
+                        text: S.current.contentTitle_birthday,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(
@@ -81,7 +82,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Description:  ',
+                        text: S.current.contentTitle_description,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(

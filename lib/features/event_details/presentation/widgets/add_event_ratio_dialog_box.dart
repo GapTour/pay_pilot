@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
@@ -64,11 +65,11 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AppDialogBox(
-      title: 'Add New Member\'s Ratio',
+      title: S.current.eventDetails_addEventRatio,
       children: [
         AppDropDownButton<ResponseMember>(
-          label: 'Members',
-          hint: 'Select a member',
+          label: S.current.dropDownButton_label_members,
+          hint: S.current.dropDownButton_hint_selectMember,
           showWarning: isNotSelected,
           value: widget.members.firstWhereOrNull(
             (element) => element.id == member?.id,
@@ -91,7 +92,7 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
         Form(
           key: formKey,
           child: AppTextField(
-            label: 'Ratio',
+            label: S.current.textField_label_ratio,
             hint: '${remindedRatio.round()}',
             readOnly: remindedRatio == 0,
             prefixIcon: Icons.percent,
@@ -104,13 +105,15 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
             },
             validator: (value) {
               if ((value == null || value.isEmpty) && remindedRatio > 0) {
-                return '*Required';
+                return S.current.validator_required;
               }
               if (remindedRatio == 0) {
-                return '*There is no ratio left to assign';
+                return S.current.validator_thereIsNoRatio;
               }
               if ((double.tryParse(value ?? '0') ?? 0) > remindedRatio) {
-                return '*You can not set ratio more than ${remindedRatio.round()}';
+                return S.current.validator_ratioCanNotMoreThan(
+                  remindedRatio.round(),
+                );
               }
               return null;
             },

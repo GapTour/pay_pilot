@@ -8,6 +8,7 @@ const Color kOnSecondaryColor = Color(0xFFFFFFFF);
 const Color kErrorColor = Color(0xFF760d17);
 
 final ThemeData appTheme = ThemeData(
+  fontFamily: 'IRANSansX',
   colorScheme: ColorScheme(
     brightness: Brightness.dark,
     primary: kPrimaryColor,

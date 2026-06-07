@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/team_member_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
@@ -68,14 +69,18 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AppDialogBox(
-      title: 'Add New Team\'s Member',
+      title: S.current.teamDetails_addMembers,
       children: [
-        AppTextField(label: 'Team', controller: teamController, readOnly: true),
+        AppTextField(
+          label: S.current.textField_label_team,
+          controller: teamController,
+          readOnly: true,
+        ),
         Gap(20),
         if (notAddedMembers.isNotEmpty)
           AppDropDownButton<ResponseMember>(
-            label: 'Members',
-            hint: 'Select a member',
+            label: S.current.dropDownButton_label_members,
+            hint: S.current.dropDownButton_hint_selectMember,
             showWarning: isNotSelected,
             value: notAddedMembers.firstWhereOrNull(
               (element) => element.id == memberID,
@@ -95,15 +100,15 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
           Form(
             key: formDropDownKey,
             child: AppTextField(
-              label: 'Members',
-              hint: 'Select a member',
+              label: S.current.dropDownButton_label_members,
+              hint: S.current.dropDownButton_hint_selectMember,
               readOnly: true,
               onTap: (focusNode) {
                 formDropDownKey.currentState!.validate();
               },
               suffixIcon: Icons.arrow_drop_down_circle_rounded,
               validator: (value) {
-                return '*There is no member to add!';
+                return S.current.validator_noMemberToAddTeam;
               },
             ),
           ),
@@ -111,7 +116,7 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
         Form(
           key: formKey,
           child: AppTextField(
-            label: 'Ratio',
+            label: S.current.textField_label_ratio,
             hint: '${remindedRatio.round()}',
             readOnly: remindedRatio == 0,
             prefixIcon: Icons.percent,
@@ -124,13 +129,15 @@ class _AddRatioDialogBoxState extends State<AddRatioDialogBox> {
             },
             validator: (value) {
               if ((value == null || value.isEmpty) && remindedRatio > 0) {
-                return '*Required';
+                return S.current.validator_required;
               }
               if (remindedRatio == 0) {
-                return '*There is no ratio left to assign';
+                return S.current.validator_thereIsNoRatio;
               }
-              if ((value ?? '0').parseToDouble > remindedRatio) {
-                return '*You can not set ratio more than ${remindedRatio.round()}';
+              if ((double.tryParse(value ?? '0') ?? 0) > remindedRatio) {
+                return S.current.validator_ratioCanNotMoreThan(
+                  remindedRatio.round(),
+                );
               }
               return null;
             },

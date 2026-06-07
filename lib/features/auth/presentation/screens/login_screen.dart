@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
 import 'package:pay_pilot/core/data/params/login_params.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
@@ -61,29 +62,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Login to you account...'),
+                    Text(S.current.login_appBarTitle),
                     Gap(25),
                     AppTextField(
-                      label: 'Email',
+                      label: S.current.textField_label_email,
                       hint: 'example@gmail.com',
                       autoFocus: true,
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '*Required';
+                          return S.current.validator_required;
                         }
                         return null;
                       },
                     ),
                     Gap(5),
                     AppTextField(
-                      label: 'Password',
+                      label: S.current.textField_label_password,
                       controller: passwordController,
                       keyboardType: TextInputType.visiblePassword,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '*Required';
+                          return S.current.validator_required;
                         }
                         return null;
                       },
@@ -127,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Gap(5),
                                   ],
                                   Text(
-                                    'Login',
+                                    S.current.button_title_login,
                                     textAlign: TextAlign.center,
                                     style: Theme.of(
                                       context,
@@ -142,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () {
                             context.pushNamed(AppRoutes.registerScreen);
                           },
-                          child: Text('Register'),
+                          child: Text(S.current.button_title_register),
                         ),
                       ],
                     ),
@@ -157,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Switch to Offline Mode',
+                              S.current.button_title_switchToOfflineMode,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.displayLarge,
                             ),

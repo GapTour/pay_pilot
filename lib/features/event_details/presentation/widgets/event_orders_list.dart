@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/helpers/orders_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
@@ -64,7 +65,7 @@ class EventOrdersList extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
               itemCount: orders.length,
-              emptyInboxMessage: 'There is no order yet!',
+              emptyInboxMessage: S.current.order_emptyStateContent,
               itemBuilder: (context, index) {
                 final order = orders[index];
                 final hasTransaction = transactions.any(
@@ -142,7 +143,7 @@ class EventOrdersList extends StatelessWidget {
                                   ),
                                   Gap(4),
                                   Text(
-                                    'Unpaid',
+                                    S.current.contentTitle_unpaid,
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelMedium
@@ -175,7 +176,7 @@ class EventOrdersList extends StatelessWidget {
     List<ResponseMember> members,
     List<ResponseGuest> guests,
   ) {
-    String orderBy = 'Unknown';
+    String orderBy = S.current.contentTitle_unknown;
 
     if (order.orderedByMember != null) {
       orderBy = members.firstWhere((e) => e.id == order.orderedByMember).name;

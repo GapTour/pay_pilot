@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/report_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
@@ -62,7 +63,7 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
               Column(
                 children: [
                   Text(
-                    'Create new report',
+                    S.current.report_addReport,
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                   Gap(18),
@@ -100,21 +101,24 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                 child: Column(
                                   children: [
                                     AppTextField(
-                                      label: 'Title',
-                                      hint: 'This month salary',
+                                      label: S.current.textField_label_title,
+                                      hint: S
+                                          .current
+                                          .textField_hint_thisMonthSalary,
                                       autoFocus: true,
                                       controller: titleController,
                                       keyboardType: TextInputType.name,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return '*Required';
+                                          return S.current.validator_required;
                                         }
                                         return null;
                                       },
                                     ),
                                     Gap(8),
                                     AppTextField(
-                                      label: 'Generate for',
+                                      label:
+                                          S.current.textField_label_generateFor,
                                       hint: DateTime.now()
                                           .formattedToJalali_yearMonth,
                                       controller: dateController,
@@ -144,7 +148,7 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                       },
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return '*Required';
+                                          return S.current.validator_required;
                                         }
                                         return null;
                                       },
@@ -154,7 +158,8 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                               ),
                               Gap(8),
                               AppTextField(
-                                label: 'Description (optional)',
+                                label:
+                                    '${S.current.textField_label_description} ${S.current.textField_label_optional}',
                                 controller: descriptionController,
                                 minLines: 3,
                                 maxLines: 4,
@@ -180,7 +185,7 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                       children: [
                         if (showIncomesWarning)
                           Text(
-                            'Select event please!',
+                            S.current.warning_selectEvent,
                             textAlign: TextAlign.left,
                             style: TextStyle(color: kErrorColor),
                           ),
@@ -206,7 +211,9 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                 setState(() {});
                               },
                               child: Text(
-                                pageIndex == 0 ? 'Cancel' : 'Previous',
+                                pageIndex == 0
+                                    ? S.current.button_title_cancel
+                                    : S.current.button_title_previous,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.displayMedium,
@@ -259,7 +266,9 @@ class _AddReportDialogBoxState extends State<AddReportDialogBox> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    pageIndex == 1 ? 'Generate' : 'Next',
+                                    pageIndex == 1
+                                        ? S.current.button_title_generate
+                                        : S.current.button_title_next,
                                     textAlign: TextAlign.center,
                                     style: Theme.of(
                                       context,

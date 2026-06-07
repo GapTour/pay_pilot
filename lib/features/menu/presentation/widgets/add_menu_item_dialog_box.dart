@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/menu_params.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 
@@ -25,19 +26,19 @@ class _AddMenuItemDialogBoxState extends State<AddMenuItemDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AppDialogBox(
-      title: 'Add New Menu',
+      title: S.current.menu_addItem,
       children: [
         Form(
           key: formKey,
           child: AppTextField(
-            label: 'Title',
-            hint: 'Chocolate cake',
+            label: S.current.textField_label_title,
+            hint: S.current.textField_hint_chocolateCake,
             autoFocus: true,
             controller: titleController,
             keyboardType: TextInputType.name,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return '*Required';
+                return S.current.validator_required;
               }
               return null;
             },

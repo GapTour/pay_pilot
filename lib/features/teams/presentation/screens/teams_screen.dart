@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
@@ -30,7 +31,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Teams')),
+      appBar: AppBar(title: Text(S.current.team_appBarTitle)),
       body: BlocBuilder<TeamsCubit, TeamsState>(
         builder: (context, state) {
           final teams = state.teams;
@@ -44,10 +45,10 @@ class _TeamsScreenState extends State<TeamsScreen> {
 
           return AppList(
             itemCount: teams.length,
-            emptyInboxMessage: 'There is no team yet!',
+            emptyInboxMessage: S.current.team_emptyStateContent,
             itemBuilder: (context, index) {
               return AppTile(
-                previewButtonTitle: 'Team\'s Members',
+                previewButtonTitle: S.current.button_title_teamMember,
                 onPreview: () {
                   context.pushNamed(
                     AppRoutes.teamMembersScreen,
