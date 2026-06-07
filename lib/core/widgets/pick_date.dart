@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
 class PickDate {
@@ -16,20 +17,23 @@ class PickDate {
       enablePersianDigits: false,
       initialDate: initDate,
       i18n: I18n(
-        buttons: I18nButtons(cancel: 'cancel', submit: 'Submit'),
+        buttons: I18nButtons(
+          cancel: S.current.button_title_cancel,
+          submit: S.current.button_title_submit,
+        ),
         persianMonths: I18nPersianMonths(
-          aban: 'Aban',
-          azar: 'Azar',
-          bahman: 'Bahman',
-          dey: 'Dey',
-          esfand: 'Esfand',
-          farvardin: 'Farvardin',
-          khordad: 'Khordad',
-          mehr: 'Mehr',
-          mordad: 'Mordad',
-          ordibehesht: 'Ordibehesht',
-          shahrivar: 'Sharivar',
-          tir: 'Tir',
+          aban: S.current.monthTitle_aban,
+          azar: S.current.monthTitle_azar,
+          bahman: S.current.monthTitle_bahman,
+          dey: S.current.monthTitle_dey,
+          esfand: S.current.monthTitle_esfand,
+          farvardin: S.current.monthTitle_farvardin,
+          khordad: S.current.monthTitle_khordad,
+          mehr: S.current.monthTitle_mehr,
+          mordad: S.current.monthTitle_mordad,
+          ordibehesht: S.current.monthTitle_ordibehesht,
+          shahrivar: S.current.monthTitle_shahrivar,
+          tir: S.current.monthTitle_tir,
         ),
       ),
       titleBoxStyle: BoxDecoration(
@@ -70,20 +74,23 @@ class PickDate {
       enablePersianDigits: false,
       initialDate: initDate,
       i18n: I18n(
-        buttons: I18nButtons(cancel: 'cancel', submit: 'Submit'),
+        buttons: I18nButtons(
+          cancel: S.current.button_title_cancel,
+          submit: S.current.button_title_submit,
+        ),
         persianMonths: I18nPersianMonths(
-          aban: 'Aban',
-          azar: 'Azar',
-          bahman: 'Bahman',
-          dey: 'Dey',
-          esfand: 'Esfand',
-          farvardin: 'Farvardin',
-          khordad: 'Khordad',
-          mehr: 'Mehr',
-          mordad: 'Mordad',
-          ordibehesht: 'Ordibehesht',
-          shahrivar: 'Sharivar',
-          tir: 'Tir',
+          aban: S.current.monthTitle_aban,
+          azar: S.current.monthTitle_azar,
+          bahman: S.current.monthTitle_bahman,
+          dey: S.current.monthTitle_dey,
+          esfand: S.current.monthTitle_esfand,
+          farvardin: S.current.monthTitle_farvardin,
+          khordad: S.current.monthTitle_khordad,
+          mehr: S.current.monthTitle_mehr,
+          mordad: S.current.monthTitle_mordad,
+          ordibehesht: S.current.monthTitle_ordibehesht,
+          shahrivar: S.current.monthTitle_shahrivar,
+          tir: S.current.monthTitle_tir,
         ),
         weekCodes: I18nWeekCodes(
           friday: 'Fr',

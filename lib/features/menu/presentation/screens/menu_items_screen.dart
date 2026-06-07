@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
@@ -27,7 +28,7 @@ class _MenuItemsScreenState extends State<MenuItemsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Menu Items')),
+      appBar: AppBar(title: Text(S.current.menu_appBarTitle)),
       body: BlocBuilder<MenuCubit, MenuState>(
         builder: (context, state) {
           final items = state.menuItems;
@@ -41,7 +42,7 @@ class _MenuItemsScreenState extends State<MenuItemsScreen> {
 
           return AppList(
             itemCount: items.length,
-            emptyInboxMessage: 'There is no item yet!',
+            emptyInboxMessage: S.current.menu_emptyStateContent,
             itemBuilder: (context, index) {
               return AppTile(
                 onEdit: () {
@@ -72,7 +73,7 @@ class _MenuItemsScreenState extends State<MenuItemsScreen> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Active: ',
+                            text: S.current.contentTitle_active,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
 

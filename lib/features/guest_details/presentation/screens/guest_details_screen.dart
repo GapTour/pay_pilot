@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/empty_text.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
@@ -29,7 +30,7 @@ class _GuestDetailsScreenState extends State<GuestDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Guest Details')),
+      appBar: AppBar(title: Text(S.current.guestDetails_appBarTitle)),
       body: BlocBuilder<GuestsDetailsCubit, GuestsDetailsState>(
         builder: (context, state) {
           if (state.guestsStatus is GuestSuccess) {
@@ -47,7 +48,7 @@ class _GuestDetailsScreenState extends State<GuestDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Phone:  ',
+                        text: S.current.contentTitle_phone,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(
@@ -62,7 +63,7 @@ class _GuestDetailsScreenState extends State<GuestDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Telegram ID:  ',
+                        text: S.current.contentTitle_telegram,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(
@@ -77,7 +78,7 @@ class _GuestDetailsScreenState extends State<GuestDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Instagram ID:  ',
+                        text: S.current.contentTitle_instagram,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(
@@ -92,7 +93,7 @@ class _GuestDetailsScreenState extends State<GuestDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Birthday:  ',
+                        text: S.current.contentTitle_birthday,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(
@@ -111,7 +112,7 @@ class _GuestDetailsScreenState extends State<GuestDetailsScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Description:  ',
+                        text: S.current.contentTitle_description,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(

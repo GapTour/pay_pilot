@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 
@@ -93,7 +94,8 @@ class _AppTileState extends State<AppTile> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(5.0),
                                   child: Text(
-                                    widget.previewButtonTitle ?? 'Preview',
+                                    widget.previewButtonTitle ??
+                                        S.current.button_title_preview,
                                     textAlign: TextAlign.center,
                                     style: Theme.of(
                                       context,
@@ -113,7 +115,7 @@ class _AppTileState extends State<AppTile> {
                                   vertical: 5,
                                 ),
                                 child: Text(
-                                  'Edit',
+                                  S.current.button_title_edit,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.labelMedium,
@@ -129,13 +131,15 @@ class _AppTileState extends State<AppTile> {
                                     return AlertDialog(
                                       backgroundColor: kPrimaryColor,
                                       title: Text(
-                                        'Are sure about this action?',
+                                        S.current.alertDialog_areYouSure,
                                         style: Theme.of(
                                           context,
                                         ).textTheme.displayLarge,
                                       ),
                                       content: Text(
-                                        'Notice that if you used this item, it effects those and delete all data that related to this item too.',
+                                        S
+                                            .current
+                                            .alertDialog_noticeThisAboutAction,
                                         style: Theme.of(
                                           context,
                                         ).textTheme.displayMedium,
@@ -146,7 +150,7 @@ class _AppTileState extends State<AppTile> {
                                             context.pop();
                                           },
                                           child: Text(
-                                            'Cancel',
+                                            S.current.button_title_cancel,
                                             style: Theme.of(
                                               context,
                                             ).textTheme.displayMedium,
@@ -163,7 +167,7 @@ class _AppTileState extends State<AppTile> {
                                               vertical: 5,
                                             ),
                                             child: Text(
-                                              'Delete',
+                                              S.current.button_title_delete,
                                               textAlign: TextAlign.center,
                                               style: Theme.of(context)
                                                   .textTheme

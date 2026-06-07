@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/empty_text.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
@@ -45,7 +46,7 @@ class EventDetailsTitle extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Engaged Team:  ',
+                        text: S.current.contentTitle_engagedTeam,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(
@@ -60,7 +61,7 @@ class EventDetailsTitle extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Date:  ',
+                        text: S.current.contentTitle_date,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(
@@ -77,7 +78,7 @@ class EventDetailsTitle extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Description:  ',
+                        text: S.current.contentTitle_description,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(

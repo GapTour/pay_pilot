@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/enums/payment_source.dart';
 import 'package:pay_pilot/core/data/params/event_order_params.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_custom_widget_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
@@ -42,7 +43,7 @@ class _AddEventOrderDialogBoxState extends State<AddEventOrderDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AppCustomWidgetDialogBox(
-      title: 'Add Orders',
+      title: S.current.eventDetails_addEventOrder,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +52,7 @@ class _AddEventOrderDialogBoxState extends State<AddEventOrderDialogBox> {
             children: [
               Expanded(
                 child: Text(
-                  'Ordered By',
+                  S.current.eventDetails_orderBy,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ),
@@ -59,7 +60,7 @@ class _AddEventOrderDialogBoxState extends State<AddEventOrderDialogBox> {
               AppTab(
                 tabs: [
                   TabTile(
-                    title: 'Member',
+                    title: S.current.eventDetails_tabBar_member,
                     isSelected: paymentSource.isMemberSelected,
                     onTap: () {
                       paymentSource = PaymentSource.member;
@@ -69,7 +70,7 @@ class _AddEventOrderDialogBoxState extends State<AddEventOrderDialogBox> {
                     },
                   ),
                   TabTile(
-                    title: 'Guest',
+                    title: S.current.eventDetails_tabBar_guest,
                     isSelected: paymentSource.isGuestSelected,
                     onTap: () {
                       paymentSource = PaymentSource.guest;
@@ -85,7 +86,7 @@ class _AddEventOrderDialogBoxState extends State<AddEventOrderDialogBox> {
           Gap(4),
           if (paymentSource == PaymentSource.member)
             AppDropDownButton<ResponseMember>(
-              hint: 'Select a Member',
+              hint: S.current.dropDownButton_hint_selectMember,
               showWarning: isNotSelected,
               value: widget.responseMembers.firstWhereOrNull((element) {
                 return element.id == selectedMemberID;
@@ -107,7 +108,7 @@ class _AddEventOrderDialogBoxState extends State<AddEventOrderDialogBox> {
             ),
           if (paymentSource == PaymentSource.guest)
             AppDropDownButton<ResponseGuest>(
-              hint: 'Select a Guest',
+              hint: S.current.dropDownButton_hint_selectGuest,
               showWarning: isNotSelected,
               value: widget.responseGuests.firstWhereOrNull((element) {
                 return element.id == selectedGuestID;
@@ -140,7 +141,7 @@ class _AddEventOrderDialogBoxState extends State<AddEventOrderDialogBox> {
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     child: Text(
-                      'Please select...',
+                      S.current.eventDetails_selectOrder,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                   );

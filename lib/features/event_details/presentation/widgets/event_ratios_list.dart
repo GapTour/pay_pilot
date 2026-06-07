@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
@@ -52,13 +53,13 @@ class EventRatiosList extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           itemCount: ratios.length,
-          emptyInboxMessage: 'There is no ratios yet!',
+          emptyInboxMessage: S.current.ratio_emptyStateContent,
           itemBuilder: (context, index) {
             final String memberName =
                 members.firstWhereOrNull((m) {
                   return m.id == ratios[index].memberID;
                 })?.name ??
-                'Unknown';
+                S.current.contentTitle_unknown;
 
             return AppTile(
               onEdit: () {
@@ -89,7 +90,7 @@ class EventRatiosList extends StatelessWidget {
                   Expanded(
                     child: Text(
                       memberName,
-                      textAlign: TextAlign.left,
+                      textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.displayLarge,
                     ),

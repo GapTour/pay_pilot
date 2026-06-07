@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/event_params.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
@@ -45,11 +46,11 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AppDialogBox(
-      title: 'Add New Event',
+      title: S.current.event_addEvent,
       children: [
         AppDropDownButton<ResponseTeam>(
-          label: 'Teams',
-          hint: 'Select a team',
+          label: S.current.dropDownButton_label_teams,
+          hint: S.current.dropDownButton_hint_selectTeam,
           showWarning: isNotSelected,
           value: widget.teams.firstWhereOrNull(
             (element) => element.id == teamID,
@@ -71,20 +72,20 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
           child: Column(
             children: [
               AppTextField(
-                label: 'Title',
-                hint: 'Cast Away Movie',
+                label: S.current.textField_label_title,
+                hint: S.current.textField_hint_castAwayMovie,
                 controller: titleController,
                 keyboardType: TextInputType.name,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '*Required';
+                    return S.current.validator_required;
                   }
                   return null;
                 },
               ),
               Gap(20),
               AppTextField(
-                label: 'Date',
+                label: S.current.textField_label_date,
                 hint: DateTime.now().formattedToJalali_yearMonthDay,
                 controller: dateController,
                 keyboardType: TextInputType.datetime,
@@ -103,7 +104,7 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '*Required';
+                    return S.current.validator_required;
                   }
                   return null;
                 },
@@ -113,7 +114,8 @@ class _AddEventDialogBoxState extends State<AddEventDialogBox> {
         ),
         Gap(20),
         AppTextField(
-          label: 'Description (optional)',
+          label:
+              '${S.current.textField_label_description} ${S.current.textField_label_optional}',
           controller: descriptionController,
           minLines: 3,
           maxLines: 4,

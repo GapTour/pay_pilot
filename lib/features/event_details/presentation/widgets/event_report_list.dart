@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
@@ -50,7 +51,7 @@ class _EventReportListState extends State<EventReportList> {
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           itemCount: memberBalances.length,
-          emptyInboxMessage: 'There is no ratios yet!',
+          emptyInboxMessage: S.current.ratio_emptyStateContent,
           itemBuilder: (context, index) {
             return AppTile(
               isActive: false,
@@ -66,7 +67,7 @@ class _EventReportListState extends State<EventReportList> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Salary ',
+                          S.current.contentTitle_salary,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                       ),
@@ -83,7 +84,7 @@ class _EventReportListState extends State<EventReportList> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Paid expenses ',
+                            S.current.contentTitle_paidExpenses,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                         ),

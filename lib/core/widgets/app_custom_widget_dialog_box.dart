@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 
@@ -57,7 +58,7 @@ class AppCustomWidgetDialogBox extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Submit',
+                                S.current.button_title_submit,
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.displayLarge,
                               ),
@@ -69,7 +70,7 @@ class AppCustomWidgetDialogBox extends StatelessWidget {
                           onPressed: () => context.pop(),
 
                           child: Text(
-                            'Cancel',
+                            S.current.button_title_cancel,
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                         ),

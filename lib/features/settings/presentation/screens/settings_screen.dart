@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/core/widgets/app_modal_bottom_sheet.dart';
 import 'package:pay_pilot/features/change_language/presentation/widgets/change_language_modal_view.dart';
@@ -12,19 +13,23 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(S.current.settings_appBarTitle)),
       body: ListView(
         children: [
           BlocConsumer<BackupBloc, BackupState>(
             listener: (context, state) {
               if (state is BackupFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Operation failed: $state')),
+                  SnackBar(
+                    content: Text(
+                      '${S.current.warning_operationFailure} $state',
+                    ),
+                  ),
                 );
               } else if (state is BackupSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Operation completed successfully!'),
+                  SnackBar(
+                    content: Text(S.current.warning_operationSuccessful),
                   ),
                 );
               }
@@ -50,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Generate Backup',
+                        S.current.button_title_backup,
                         style: Theme.of(context).textTheme.displayLarge,
                         textAlign: TextAlign.center,
                       ),
@@ -64,7 +69,7 @@ class SettingsScreen extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Restore Backup',
+                        S.current.button_title_restore,
                         style: Theme.of(context).textTheme.displayLarge,
                         textAlign: TextAlign.center,
                       ),
@@ -73,14 +78,14 @@ class SettingsScreen extends StatelessWidget {
                   AppElevatedButton(
                     onTap: () {
                       AppModalBottomSheet.minHeightWithAppBar(
-                        header: 'Change Language',
+                        header: S.current.button_title_changeLanguage,
                         child: ChangeLanguageModalView(),
                       );
                     },
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Change Language',
+                        S.current.modalBottom_title_changeLanguage,
                         style: Theme.of(context).textTheme.displayLarge,
                         textAlign: TextAlign.center,
                       ),

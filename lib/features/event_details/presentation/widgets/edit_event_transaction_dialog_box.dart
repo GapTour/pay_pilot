@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
@@ -81,11 +82,11 @@ class _EditEventTransactionDialogBoxState
   @override
   Widget build(BuildContext context) {
     return AppDialogBox(
-      title: 'Edit Transaction',
+      title: S.current.eventDetails_editEventTransaction,
       children: [
         AppDropDownButton<TransactionType>(
-          label: 'Transaction Type',
-          hint: 'Select a type',
+          label: S.current.dropDownButton_label_transactionType,
+          hint: S.current.dropDownButton_hint_selectType,
           showWarning: isNotSelected,
           value: TransactionType.values.firstWhereOrNull((element) {
             return element.name == transactionType.name;
@@ -108,8 +109,8 @@ class _EditEventTransactionDialogBoxState
         Gap(20),
         if (transactionType.isIncome) ...[
           AppDropDownButton<ResponseGuest>(
-            label: 'Guests',
-            hint: 'Select a Guest',
+            label: S.current.dropDownButton_label_guests,
+            hint: S.current.dropDownButton_hint_selectGuest,
             showWarning: isPaidSourceNotSelected,
             value: widget.responseGuests.firstWhereOrNull((element) {
               return element.id == selectedGuestID;
@@ -138,8 +139,9 @@ class _EditEventTransactionDialogBoxState
             children: [
               Expanded(
                 child: AppDropDownButton<ResponseMember>(
-                  label: 'Members (optional)',
-                  hint: 'Select a Member',
+                  label:
+                      '${S.current.dropDownButton_label_members} ${S.current.textField_label_optional}',
+                  hint: S.current.dropDownButton_hint_selectMember,
                   value: widget.responseMembers.firstWhereOrNull((element) {
                     return element.id == selectedMemberID;
                   }),
@@ -178,21 +180,21 @@ class _EditEventTransactionDialogBoxState
           child: Column(
             children: [
               AppTextField(
-                label: 'Amount',
+                label: S.current.textField_label_amount,
                 hint: '10,000,000',
                 controller: amountController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [PriceInputFormatter()],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '*Required';
+                    return S.current.validator_required;
                   }
                   return null;
                 },
               ),
               Gap(20),
               AppTextField(
-                label: 'Date',
+                label: S.current.textField_label_date,
                 hint: DateTime.now().formattedToJalali_yearMonthDay,
                 controller: dateController,
                 keyboardType: TextInputType.datetime,
@@ -211,7 +213,7 @@ class _EditEventTransactionDialogBoxState
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '*Required';
+                    return S.current.validator_required;
                   }
                   return null;
                 },
@@ -221,7 +223,8 @@ class _EditEventTransactionDialogBoxState
         ),
         Gap(20),
         AppTextField(
-          label: 'Description (optional)',
+          label:
+              '${S.current.textField_label_description} ${S.current.textField_label_optional}',
           controller: descriptionController,
           minLines: 3,
           maxLines: 4,

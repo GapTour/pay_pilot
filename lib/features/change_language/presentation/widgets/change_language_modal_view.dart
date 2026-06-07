@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/enums/language_code.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/features/change_language/presentation/cubit/language_cubit.dart';
 
@@ -82,7 +83,7 @@ class _ChangeLanguageModalViewState extends State<ChangeLanguageModalView> {
                 context.read<LanguageCubit>().changeLanguage(_language);
               },
               isSelected: isLoading,
-              child: Center(child: Text('Submit')),
+              child: Center(child: Text(S.current.button_title_submit)),
             ),
           ],
         );

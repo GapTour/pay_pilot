@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
@@ -32,7 +33,7 @@ class _MembersScreenState extends State<MembersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Members')),
+      appBar: AppBar(title: Text(S.current.member_appBarTitle)),
       body: BlocBuilder<MembersCubit, MembersState>(
         builder: (context, state) {
           final members = state.members;
@@ -46,7 +47,7 @@ class _MembersScreenState extends State<MembersScreen> {
 
           return AppList(
             itemCount: members.length,
-            emptyInboxMessage: 'There is no member yet!',
+            emptyInboxMessage: S.current.member_emptyStateContent,
             itemBuilder: (context, index) {
               return AppTile(
                 onPreview: () {
@@ -85,7 +86,7 @@ class _MembersScreenState extends State<MembersScreen> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Join at: ',
+                            text: S.current.contentTitle_joinAt,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           if (members[index].joinAt != null)

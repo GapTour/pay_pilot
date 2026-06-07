@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/data/params/member_params.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
@@ -38,19 +39,19 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
   @override
   Widget build(BuildContext context) {
     return AppDialogBox(
-      title: 'Add New Member',
+      title: S.current.member_addMember,
       children: [
         Form(
           key: formKey,
           child: AppTextField(
-            label: 'Name',
-            hint: 'Mahdiyar',
+            label: S.current.textField_label_name,
+            hint: S.current.textField_hint_mahdiyar,
             autoFocus: true,
             controller: nameController,
             keyboardType: TextInputType.name,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return '*Required';
+                return S.current.validator_required;
               }
               return null;
             },
@@ -58,7 +59,7 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
         ),
         Gap(20),
         AppTextField(
-          label: 'Join at',
+          label: S.current.textField_label_joinAt,
           hint: DateTime.now().formattedToJalali_yearMonth,
           controller: joinAtDateController,
           keyboardType: TextInputType.datetime,
@@ -78,7 +79,7 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
         ),
         Gap(20),
         AppTextField(
-          label: 'Birthday',
+          label: S.current.textField_label_birthday,
           hint: DateTime.now().formattedToJalali_yearMonthDay,
           controller: birthdayController,
           keyboardType: TextInputType.datetime,
@@ -98,7 +99,8 @@ class _AddMemberDialogBoxState extends State<AddMemberDialogBox> {
         ),
         Gap(20),
         AppTextField(
-          label: 'Description (optional)',
+          label:
+              '${S.current.textField_label_description} ${S.current.textField_label_optional}',
           controller: descriptionController,
           minLines: 3,
           maxLines: 4,

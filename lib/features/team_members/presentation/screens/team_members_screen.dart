@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/empty_text.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
@@ -34,7 +35,7 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Team\'s Members')),
+      appBar: AppBar(title: Text(S.current.teamDetials_appBarTitle)),
       body: BlocBuilder<RatiosCubit, RatiosState>(
         builder: (context, state) {
           late ResponseTeam teamInfo;
@@ -52,9 +53,7 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
           }
 
           if (state.teamMemberStatus is TeamMemberFailure) {
-            return const Center(
-              child: Text('Something went wrong, try again later...'),
-            );
+            return Center(child: Text(S.current.warning_somethingWentWrong));
           }
 
           if (state.teamMemberStatus is TeamMemberSuccess) {
@@ -76,7 +75,7 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Description:  ',
+                      text: S.current.contentTitle_description,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     TextSpan(
@@ -95,7 +94,7 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                 physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 itemCount: teamMembers.length,
-                emptyInboxMessage: 'There is no member yet!',
+                emptyInboxMessage: S.current.teamDetails_emptyStateContent,
                 itemBuilder: (context, index) {
                   return AppTile(
                     onEdit: () {
@@ -124,7 +123,7 @@ class _TeamMembersScreenState extends State<TeamMembersScreen> {
                         Expanded(
                           child: Text(
                             teamMembers[index].memberInfo.name,
-                            textAlign: TextAlign.left,
+                            textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.displayLarge,
                           ),

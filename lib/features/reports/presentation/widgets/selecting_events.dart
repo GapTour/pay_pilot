@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
@@ -57,18 +58,18 @@ class _SelectingEventsState extends State<SelectingEvents> {
   // };
 
   final Map<int, String> months = {
-    1: 'Farvardin',
-    2: 'Ordibehesht',
-    3: 'Khordad',
-    4: 'Tir',
-    5: 'Mordad',
-    6: 'Shahrivar',
-    7: 'Mehr',
-    8: 'Aban',
-    9: 'Azar',
-    10: 'Day',
-    11: 'Bahman',
-    12: 'Esfand',
+    1: S.current.monthTitle_farvardin,
+    2: S.current.monthTitle_ordibehesht,
+    3: S.current.monthTitle_khordad,
+    4: S.current.monthTitle_tir,
+    5: S.current.monthTitle_mordad,
+    6: S.current.monthTitle_shahrivar,
+    7: S.current.monthTitle_mehr,
+    8: S.current.monthTitle_aban,
+    9: S.current.monthTitle_azar,
+    10: S.current.monthTitle_dey,
+    11: S.current.monthTitle_bahman,
+    12: S.current.monthTitle_esfand,
   };
 
   final List<int> years = List.generate(5, (index) => index + 1403);
@@ -220,7 +221,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
                       padding: const EdgeInsets.only(top: 18.0),
                       child: Center(
                         child: Text(
-                          'No events found on ${months[selectedMonth]}, $selectedYear',
+                          '${S.current.report_selectingEvents_noEvent} ${months[selectedMonth]}, $selectedYear',
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                       ),
@@ -310,7 +311,7 @@ class _SelectingEventsState extends State<SelectingEvents> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: 'Income:  ',
+                                            text: S.current.contentTitle_income,
                                             style: Theme.of(
                                               context,
                                             ).textTheme.headlineSmall,
@@ -331,7 +332,8 @@ class _SelectingEventsState extends State<SelectingEvents> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: 'Expense:  ',
+                                            text:
+                                                S.current.contentTitle_expense,
                                             style: Theme.of(
                                               context,
                                             ).textTheme.headlineSmall,

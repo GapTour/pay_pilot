@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
@@ -32,7 +33,7 @@ class _EventsScreenState extends State<EventsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Events')),
+      appBar: AppBar(title: Text(S.current.event_appBarTitle)),
       body: BlocBuilder<EventsCubit, EventsState>(
         builder: (context, state) {
           final events = state.events;
@@ -46,7 +47,7 @@ class _EventsScreenState extends State<EventsScreen> {
 
           return AppList(
             itemCount: events.length,
-            emptyInboxMessage: 'There is no event yet!',
+            emptyInboxMessage: S.current.event_emptyStateContent,
             itemBuilder: (context, index) {
               return AppTile(
                 onEdit: () {
@@ -74,7 +75,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 // onDelete: () {
                 //   context.read<EventsCubit>().deleteEvent(events[index].id);
                 // },
-                previewButtonTitle: 'Preview',
+                previewButtonTitle: S.current.button_title_preview,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -88,7 +89,7 @@ class _EventsScreenState extends State<EventsScreen> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'on: ',
+                            text: S.current.contentTitle_onDate,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           TextSpan(

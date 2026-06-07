@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/helpers/orders_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
@@ -62,7 +63,11 @@ class EventOrdersBanner extends StatelessWidget {
             .reduce((a, b) {
               return a + b;
             });
-        ordersOverview.insert(0, ('All', [], totalOrders));
+        ordersOverview.insert(0, (
+          S.current.eventDetails_eventOrdersBanner_all,
+          [],
+          totalOrders,
+        ));
         // final int notDeliveredOrders = orders
         //     .map((e) => e.isDelivered ? 0 : 1)
         //     .toList()
@@ -80,12 +85,16 @@ class EventOrdersBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Total Capacity: $totalOrders (Guests: $totalGuests, Members: $totalMembers)',
+                  S.current.eventDetails_eventOrdersBanner_totalCapacity(
+                    totalOrders,
+                    totalGuests,
+                    totalMembers,
+                  ),
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
                 if (notAttendedOrder > 0)
                   Text(
-                    'Not Attended : $notAttendedOrder',
+                    '${S.current.eventDetails_eventOrdersBanner_notAttended}: $notAttendedOrder',
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 Divider(color: kPrimaryColor),

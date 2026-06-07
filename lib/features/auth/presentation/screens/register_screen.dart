@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pay_pilot/core/data/params/register_params.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
@@ -57,44 +58,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Register a new account...'),
+                    Text(S.current.register_appBarTitle),
                     Gap(25),
                     AppTextField(
-                      label: 'Email',
+                      label: S.current.textField_label_email,
                       hint: 'example@gmail.com',
                       autoFocus: true,
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '*Required';
+                          return S.current.validator_required;
                         }
                         return null;
                       },
                     ),
                     Gap(5),
                     AppTextField(
-                      label: 'Password',
+                      label: S.current.textField_label_password,
                       controller: passwordController,
                       keyboardType: TextInputType.visiblePassword,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '*Required';
+                          return S.current.validator_required;
                         }
                         return null;
                       },
                     ),
                     Gap(5),
                     AppTextField(
-                      label: 'Repeat Password',
+                      label: S.current.textField_label_repeatPassword,
                       controller: confirmPasswordController,
                       keyboardType: TextInputType.visiblePassword,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '*Required';
+                          return S.current.validator_required;
                         }
                         if (value != confirmPasswordController.text) {
-                          return '*Password not match';
+                          return S.current.validator_passwordNotMatch;
                         }
                         return null;
                       },
@@ -139,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     Gap(5),
                                   ],
                                   Text(
-                                    'Register',
+                                    S.current.button_title_register,
                                     textAlign: TextAlign.center,
                                     style: Theme.of(
                                       context,
@@ -173,7 +174,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               : () {
                                   context.pop();
                                 },
-                          child: Text('back to login'),
+                          child: Text(S.current.button_title_backToLogin),
                         ),
                       ],
                     ),
