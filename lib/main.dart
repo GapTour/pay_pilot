@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/data/enums/language_code.dart';
+import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
+import 'package:pay_pilot/features/change_language/presentation/cubit/language_cubit.dart';
 import 'package:pay_pilot/locator.dart';
 
 void main() async {
@@ -20,7 +25,12 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(const MyApp());
+    runApp(
+      BlocProvider(
+        create: (context) => LanguageCubit(locator())..fetchLanguageInfo(),
+        child: const MyApp(),
+      ),
+    );
   });
 }
 
@@ -29,11 +39,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: AppRoutes.router,
-      themeMode: ThemeMode.dark,
-      theme: appTheme,
-      title: 'Pay Pilot',
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, state) {
+        LanguageCode language = LanguageCode.persian;
+
+        if (state.materialLanguageStatus is MaterialChangingSuccess) {
+          language =
+              (state.materialLanguageStatus as MaterialChangingSuccess).code;
+        }
+
+        return MaterialApp.router(
+          routerConfig: AppRoutes.router,
+          themeMode: ThemeMode.dark,
+          theme: appTheme,
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          title: 'Pay Pilot',
+          locale: Locale(language.code, ''),
+          supportedLocales: LanguageCode.values
+              .map((e) => Locale(e.code, ''))
+              .toList(),
+        );
+      },
     );
   }
 }

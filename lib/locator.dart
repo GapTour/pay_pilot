@@ -15,6 +15,8 @@ import 'package:pay_pilot/core/utils/services/secure_storage_service.dart';
 import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/auth/data/login_api_provider.dart';
 import 'package:pay_pilot/features/auth/repository/auth_repository.dart';
+import 'package:pay_pilot/features/change_language/data/language_local_provider.dart';
+import 'package:pay_pilot/features/change_language/repository/language_repository.dart';
 import 'package:pay_pilot/features/event_details/data/providers/event_details_api_provider.dart';
 import 'package:pay_pilot/features/event_details/data/sources/local_event_details_source.dart';
 import 'package:pay_pilot/features/event_details/data/sources/remote_event_details_source.dart';
@@ -104,6 +106,10 @@ Future<void> _callServices() async {
 }
 
 void _callProviders() {
+  locator.registerLazySingleton<LanguageLocalProvider>(
+    () => LanguageLocalProvider(locator()),
+  );
+
   locator.registerLazySingleton<LoginApiProvider>(() => LoginApiProvider());
 
   locator.registerLazySingleton<MemberApiProvider>(
@@ -225,6 +231,9 @@ void _callSources() {
 }
 
 void _callRepositories() {
+  locator.registerLazySingleton<LanguageRepository>(
+    () => LanguageRepository(locator()),
+  );
   locator.registerLazySingleton<AuthRepository>(
     () => AuthRepository(locator(), locator(), locator()),
   );
