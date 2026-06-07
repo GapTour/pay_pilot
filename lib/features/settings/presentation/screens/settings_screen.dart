@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
+import 'package:pay_pilot/core/widgets/app_modal_bottom_sheet.dart';
+import 'package:pay_pilot/features/change_language/presentation/widgets/change_language_modal_view.dart';
 import 'package:pay_pilot/features/settings/presentation/bloc/backup_bloc.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -63,6 +65,22 @@ class SettingsScreen extends StatelessWidget {
                       alignment: Alignment.center,
                       child: Text(
                         'Restore Backup',
+                        style: Theme.of(context).textTheme.displayLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  AppElevatedButton(
+                    onTap: () {
+                      AppModalBottomSheet.minHeightWithAppBar(
+                        header: 'Change Language',
+                        child: ChangeLanguageModalView(),
+                      );
+                    },
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Change Language',
                         style: Theme.of(context).textTheme.displayLarge,
                         textAlign: TextAlign.center,
                       ),
