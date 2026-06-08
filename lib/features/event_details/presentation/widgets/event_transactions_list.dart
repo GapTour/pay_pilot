@@ -110,16 +110,32 @@ class EventTransactionsList extends StatelessWidget {
                         child: Text(
                           AmountHelper.integerToFormattedPrice(
                             transactions[index].amount,
+                            transactions[index].transactionType,
                           ),
                           textAlign: TextAlign.start,
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                       ),
-                      Text(
-                        transactions[index].transactionType.isIncome
-                            ? S.current.contentTitle_income
-                            : S.current.contentTitle_expense,
-                        style: Theme.of(context).textTheme.displayMedium,
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: transactions[index].transactionType.isExpense
+                              ? Colors.red
+                              : null,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6.0,
+                            vertical: 4,
+                          ),
+                          child: Text(
+                            transactions[index].transactionType.isIncome
+                                ? S.current.contentTitle_income
+                                : S.current.contentTitle_expense,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                        ),
                       ),
                     ],
                   ),
