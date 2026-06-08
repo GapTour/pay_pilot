@@ -10,11 +10,12 @@ import 'package:pay_pilot/features/event_details/presentation/bloc/event_details
 import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_order_dialog_box.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_ratio_dialog_box.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_transaction_dialog_box.dart';
-import 'package:pay_pilot/features/event_details/presentation/widgets/event_details_title.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/event_more_details.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_orders_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_ratios_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_report_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_tab_bar.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/event_transactions_banner.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_transactions_list.dart';
 import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
@@ -49,8 +50,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       body: Column(
         children: [
           Gap(12),
-          EventDetailsTitle(),
-          Gap(30),
+          EventTransactionsBanner(),
+          Gap(12),
           BlocBuilder<EventDetailsBloc, EventDetailsState>(
             buildWhen: (p, c) => p.currentPage != c.currentPage,
             builder: (context, state) {
@@ -71,6 +72,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 BlocBuilder<EventDetailsBloc, EventDetailsState>(
                   buildWhen: (p, c) => p.currentPage != c.currentPage,
                   builder: (context, state) {
+                    if (state.currentPage.isDetails) {
+                      return EventMoreDetails();
+                    }
                     if (state.currentPage.isTransactions) {
                       return EventTransactionsList(eventID);
                     }
@@ -123,6 +127,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           if (state.currentPage.isMembers) icon = Icons.edit_document;
           if (state.currentPage.isOrder) icon = Icons.menu_book_rounded;
           if (state.currentPage.isReport) {
+            return SizedBox.shrink();
+          }
+          if (state.currentPage.isDetails) {
             return SizedBox.shrink();
           }
 

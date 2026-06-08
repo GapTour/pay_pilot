@@ -7,8 +7,8 @@ import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
 
-class EventDetailsTitle extends StatelessWidget {
-  const EventDetailsTitle({super.key});
+class EventMoreDetails extends StatelessWidget {
+  const EventMoreDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
