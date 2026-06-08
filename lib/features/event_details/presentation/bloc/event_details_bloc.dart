@@ -29,6 +29,8 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
   EventDetailsBloc(this._repository)
     : super(
         EventDetailsState(
+          totalExpenses: 0,
+          totalIncomes: 0,
           eventDetailStatus: EventDetailInitial(),
           eventTransactionStatus: EventTransactionInitial(),
           currentPage: EventDetailsPage.transactions,
@@ -168,11 +170,9 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
           (state.eventDetailStatus as EventDetailSuccess).eventDetails;
       members.addAll((state.eventDetailStatus as EventDetailSuccess).members);
 
-      final totalAmount = CalculatorHelper.calculateTotalAmount(
-        transactions: eventDetails.transactions,
-      );
+      final totalBalance = state.totalIncomes - state.totalExpenses;
       final membersBalance = await CalculatorHelper.customEventSalary(
-        totalAmount: totalAmount,
+        totalBalance: totalBalance,
         transactions: eventDetails.transactions,
         memberRatios: eventDetails.memberRatios,
         members: members,
@@ -240,8 +240,16 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
     final dataState = await _repository.getEvent(event.eventId);
 
     if (dataState is DataSuccess) {
+      final totalIncomes = CalculatorHelper.calculateTotalIncomes(
+        transactions: dataState.data!.transactions,
+      );
+      final totalExpenses = CalculatorHelper.calculateTotalExpenses(
+        transactions: dataState.data!.transactions,
+      );
       emit(
         state.copyWith(
+          totalExpenses: totalExpenses,
+          totalIncomes: totalIncomes,
           eventDetailStatus: EventDetailSuccess(
             dataState.data!,
             members,
@@ -266,9 +274,19 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
     final dataState = await _repository.insertTransaction(event.params);
 
     if (dataState is DataSuccess) {
+      final addedTransactions = dataState.data!;
+      final addedTransactionsIncomes = CalculatorHelper.calculateTotalIncomes(
+        transactions: addedTransactions,
+      );
+      final addedTransactionsExpenses = CalculatorHelper.calculateTotalExpenses(
+        transactions: addedTransactions,
+      );
+
       emit(
         state.copyWith(
-          eventTransactionStatus: EventTransactionSuccess(dataState.data!),
+          eventTransactionStatus: EventTransactionSuccess(addedTransactions),
+          totalIncomes: state.totalIncomes + addedTransactionsIncomes,
+          totalExpenses: state.totalExpenses + addedTransactionsExpenses,
         ),
       );
 
@@ -278,7 +296,7 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
         final eventDetailStatus = state.eventDetailStatus as EventDetailSuccess;
         final eventDetailsInfo = eventDetailStatus.eventDetails;
         final transactions = eventDetailsInfo.transactions
-          ..addAll(dataState.data!);
+          ..addAll(addedTransactions);
 
         emit(
           state.copyWith(
@@ -322,6 +340,12 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
         final index = eventDetailsInfo.transactions.indexWhere(
           (transaction) => transaction.id == dataState.data!.id,
         );
+        final updateResult = _updateTotalAmounts(
+          state: state,
+          notEditedItem: eventDetailsInfo.transactions[index],
+          editedItem: dataState.data!,
+        );
+
         eventDetailsInfo.transactions[index] = dataState.data!;
         final transactions = eventDetailsInfo.transactions;
 
@@ -333,6 +357,8 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
               eventDetailStatus.guests,
               eventDetailStatus.menuItems,
             ),
+            totalIncomes: updateResult.totalIncomes,
+            totalExpenses: updateResult.totalExpenses,
           ),
         );
 
@@ -344,17 +370,59 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
     }
   }
 
+  ({double totalIncomes, double totalExpenses}) _updateTotalAmounts({
+    required EventDetailsState state,
+    required ResponseEventTransaction notEditedItem,
+    required ResponseEventTransaction editedItem,
+  }) {
+    double totalIncomes = state.totalIncomes;
+    double totalExpenses = state.totalExpenses;
+
+    if (notEditedItem.transactionType == editedItem.transactionType) {
+      if (notEditedItem.transactionType.isIncome) {
+        totalIncomes = totalIncomes - notEditedItem.amount + editedItem.amount;
+      }
+      if (notEditedItem.transactionType.isExpense) {
+        totalExpenses =
+            totalExpenses - notEditedItem.amount + editedItem.amount;
+      }
+    }
+    if (notEditedItem.transactionType != editedItem.transactionType) {
+      if (notEditedItem.transactionType.isIncome) {
+        totalIncomes = totalIncomes - notEditedItem.amount;
+        totalExpenses = totalExpenses + editedItem.amount;
+      }
+      if (notEditedItem.transactionType.isExpense) {
+        totalExpenses = totalExpenses - notEditedItem.amount;
+        totalIncomes = totalIncomes + editedItem.amount;
+      }
+    }
+
+    return (totalIncomes: totalIncomes, totalExpenses: totalExpenses);
+  }
+
   Future<void> _deleteTransaction(
     DeleteTransaction event,
     Emitter<EventDetailsState> emit,
   ) async {
     emit(state.copyWith(eventTransactionStatus: EventTransactionLoading()));
 
+    double totalIncomes = state.totalIncomes;
+    double totalExpenses = state.totalExpenses;
+
     final dataState = await _repository.deleteTransaction(event.params);
 
     if (dataState is DataSuccess) {
+      if (event.params.transactionType.isExpense) {
+        totalExpenses = totalExpenses - event.params.amount;
+      }
+      if (event.params.transactionType.isIncome) {
+        totalIncomes = totalIncomes - event.params.amount;
+      }
       emit(
         state.copyWith(
+          totalExpenses: totalExpenses,
+          totalIncomes: totalIncomes,
           eventTransactionStatus: EventTransactionSuccess([
             ResponseEventTransaction(
               id: event.params.id!,

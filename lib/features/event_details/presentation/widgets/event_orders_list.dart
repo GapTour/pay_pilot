@@ -149,6 +149,7 @@ class EventOrdersList extends StatelessWidget {
                                         .labelMedium
                                         ?.copyWith(color: Colors.redAccent),
                                   ),
+                                  Gap(12),
                                 ],
                               ],
                             ),

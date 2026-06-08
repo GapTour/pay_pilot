@@ -107,7 +107,7 @@ class CalculatorHelper {
     return membersBalance;
   }
 
-  static double calculateTotalAmount({
+  static double calculateTotalBalance({
     required List<ResponseEventTransaction> transactions,
   }) {
     return transactions.fold(0, (previousValue, element) {
@@ -118,8 +118,30 @@ class CalculatorHelper {
     });
   }
 
+  static double calculateTotalExpenses({
+    required List<ResponseEventTransaction> transactions,
+  }) {
+    return transactions.fold(0, (previousValue, element) {
+      if (element.transactionType.isExpense) {
+        return previousValue + element.amount;
+      }
+      return 0;
+    });
+  }
+
+  static double calculateTotalIncomes({
+    required List<ResponseEventTransaction> transactions,
+  }) {
+    return transactions.fold(0, (previousValue, element) {
+      if (element.transactionType.isIncome) {
+        return previousValue + element.amount;
+      }
+      return 0;
+    });
+  }
+
   static Future<List<ResponseEventBalance>> customEventSalary({
-    required double totalAmount,
+    required double totalBalance,
     required List<ResponseEventTransaction> transactions,
     required List<ResponseMember> members,
     required List<ResponseEventRatio> memberRatios,
@@ -127,14 +149,14 @@ class CalculatorHelper {
     final List<ResponseEventBalance> membersBalance = [];
     double totalExpense = 0;
 
-    if (totalAmount < 1) totalAmount = 0;
+    if (totalBalance < 1) totalBalance = 0;
 
     for (var item in memberRatios) {
       final involvedMember = members.firstWhere(
         (element) => element.id == item.memberID,
       );
 
-      final double balance = totalAmount * (item.ratio / 100);
+      final double balance = totalBalance * (item.ratio / 100);
       final memberBalanceInfo = membersBalance.firstWhereOrNull(
         (e) => e.member.id == item.memberID,
       );
