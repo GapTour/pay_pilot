@@ -11,6 +11,7 @@ import 'package:pay_pilot/core/database/schema_versions.dart';
 import 'package:pay_pilot/core/database/tables/collect_report_events.dart';
 import 'package:pay_pilot/core/database/tables/event_orders.dart';
 import 'package:pay_pilot/core/database/tables/event_ratios.dart';
+import 'package:pay_pilot/core/database/tables/event_stories.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/database/tables/events.dart';
 import 'package:pay_pilot/core/database/tables/guests.dart';
@@ -35,6 +36,7 @@ part 'app_database.g.dart';
     Menus,
     Guests,
     EventOrders,
+    EventStories,
   ],
   daos: [
     ReportDao,
@@ -51,7 +53,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration {
@@ -200,6 +202,9 @@ class AppDatabase extends _$AppDatabase {
               newColumns: [schema.collectReportEvents.modifiedAt],
             ),
           );
+        },
+        from4To5: (m, schema) async {
+          await m.createTable(schema.eventStories);
         },
       ),
       beforeOpen: (openingDetails) async {

@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:pay_pilot/core/data/params/event_order_params.dart';
 import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
+import 'package:pay_pilot/core/data/params/event_story_params.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
 import 'package:pay_pilot/core/database/daos/event_dao/event_dao.dart';
@@ -10,6 +11,7 @@ import 'package:pay_pilot/core/database/daos/menu_dao/menu_dao.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_story.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_order.dart';
 import 'package:pay_pilot/features/event_details/data/sources/i_event_details_source.dart';
@@ -250,6 +252,53 @@ class LocalEventDetailsSource implements IEventDetailsSource {
       final transaction = ResponseEventTransaction.fromParams(params);
 
       return DataSuccess(transaction);
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
+    }
+  }
+
+  @override
+  Future<DataState<int>> deleteStory(int id) async {
+    try {
+      await _dbServiceForEvent.deleteStory(id);
+
+      return DataSuccess(id);
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
+    }
+  }
+
+  @override
+  Future<DataState<ResponseEventStory>> insertStory(
+    EventStoryParams params,
+  ) async {
+    try {
+      final response = await _dbServiceForEvent.insertStory(params);
+      final story = ResponseEventStory.fromParams(
+        params.copyWith(id: response),
+      );
+
+      return DataSuccess(story);
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
+    }
+  }
+
+  @override
+  Future<DataState<ResponseEventStory>> updateStory(
+    EventStoryParams params,
+  ) async {
+    try {
+      await _dbServiceForEvent.updateStory(params);
+      final story = ResponseEventStory.fromParams(params);
+
+      return DataSuccess(story);
     } on PlatformException catch (e) {
       return DataFailed(
         ErrorResponse.defaultError(e.message, int.tryParse(e.code)),

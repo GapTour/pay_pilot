@@ -1,6 +1,7 @@
 part of 'event_details_bloc.dart';
 
 enum EventDetailsPage {
+  details,
   transactions,
   members,
   orders,
@@ -10,9 +11,12 @@ enum EventDetailsPage {
   bool get isMembers => this == members;
   bool get isReport => this == report;
   bool get isOrder => this == orders;
+  bool get isDetails => this == details;
 }
 
 class EventDetailsState extends Equatable {
+  final double totalIncomes;
+  final double totalExpenses;
   final EventDetailStatus eventDetailStatus;
   final EventTransactionStatus eventTransactionStatus;
   final EventRatioStatus eventRatioStatus;
@@ -21,6 +25,8 @@ class EventDetailsState extends Equatable {
   final EventDetailsPage currentPage;
   final List<int> filteredOrders;
   const EventDetailsState({
+    required this.totalIncomes,
+    required this.totalExpenses,
     required this.eventDetailStatus,
     required this.eventTransactionStatus,
     required this.eventRatioStatus,
@@ -31,17 +37,23 @@ class EventDetailsState extends Equatable {
   });
 
   @override
-  List<Object> get props => [
-    eventDetailStatus,
-    eventTransactionStatus,
-    eventRatioStatus,
-    eventOrderStatus,
-    eventReportStatus,
-    currentPage,
-    filteredOrders,
-  ];
+  List<Object> get props {
+    return [
+      totalIncomes,
+      totalExpenses,
+      eventDetailStatus,
+      eventTransactionStatus,
+      eventRatioStatus,
+      eventOrderStatus,
+      eventReportStatus,
+      currentPage,
+      filteredOrders,
+    ];
+  }
 
   EventDetailsState copyWith({
+    double? totalIncomes,
+    double? totalExpenses,
     EventDetailStatus? eventDetailStatus,
     EventTransactionStatus? eventTransactionStatus,
     EventRatioStatus? eventRatioStatus,
@@ -51,6 +63,8 @@ class EventDetailsState extends Equatable {
     List<int>? filteredOrders,
   }) {
     return EventDetailsState(
+      totalIncomes: totalIncomes ?? this.totalIncomes,
+      totalExpenses: totalExpenses ?? this.totalExpenses,
       eventDetailStatus: eventDetailStatus ?? this.eventDetailStatus,
       eventTransactionStatus:
           eventTransactionStatus ?? this.eventTransactionStatus,

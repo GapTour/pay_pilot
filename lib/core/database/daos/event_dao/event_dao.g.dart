@@ -13,4 +13,5 @@ mixin _$EventDaoMixin on DatabaseAccessor<AppDatabase> {
   $EventRatiosTable get eventRatios => attachedDatabase.eventRatios;
   $RatiosTable get ratios => attachedDatabase.ratios;
   $EventOrdersTable get eventOrders => attachedDatabase.eventOrders;
+  $EventStoriesTable get eventStories => attachedDatabase.eventStories;
 }

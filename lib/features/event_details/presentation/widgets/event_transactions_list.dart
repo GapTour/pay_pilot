@@ -18,6 +18,35 @@ class EventTransactionsList extends StatelessWidget {
   final int eventID;
   const EventTransactionsList(this.eventID, {super.key});
 
+  String paidBy(
+    ResponseEventTransaction transaction,
+    List<ResponseMember> members,
+    List<ResponseGuest> guests,
+  ) {
+    final ResponseMember? memberInfo = members.firstWhereOrNull(
+      (m) => m.id == transaction.paidByMember,
+    );
+
+    final ResponseGuest? guestInfo = guests.firstWhereOrNull(
+      (g) => g.id == transaction.paidByGuest,
+    );
+
+    return memberInfo?.name ??
+        guestInfo?.name ??
+        S.current.contentTitle_unknown;
+  }
+
+  bool isMoreThanOne(
+    ResponseEventTransaction transaction,
+    List<ResponseEventTransaction> transactions,
+  ) {
+    if (transaction.paidByGuest == null) return false;
+    return transactions
+            .where((element) => element.paidByGuest == transaction.paidByGuest)
+            .length >
+        1;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EventDetailsBloc, EventDetailsState>(
@@ -50,18 +79,11 @@ class EventTransactionsList extends StatelessWidget {
           itemCount: transactions.length,
           emptyInboxMessage: S.current.transaction_emptyStateContent,
           itemBuilder: (context, index) {
-            final paidBy =
-                members
-                    .firstWhereOrNull(
-                      (m) => m.id == transactions[index].paidByMember,
-                    )
-                    ?.name ??
-                guests
-                    .firstWhereOrNull(
-                      (g) => g.id == transactions[index].paidByGuest,
-                    )
-                    ?.name ??
-                S.current.contentTitle_unknown;
+            final paidInfo = paidBy(transactions[index], members, guests);
+            final isDuplicate = isMoreThanOne(
+              transactions[index],
+              transactions,
+            );
 
             return AppTile(
               onEdit: () {
@@ -87,7 +109,7 @@ class EventTransactionsList extends StatelessWidget {
                   DeleteTransaction(
                     TransactionParams(
                       id: transactions[index].id,
-                      amount: 0,
+                      amount: transactions[index].amount,
                       attachment: null,
                       description: null,
                       eventID: 0,
@@ -110,16 +132,32 @@ class EventTransactionsList extends StatelessWidget {
                         child: Text(
                           AmountHelper.integerToFormattedPrice(
                             transactions[index].amount,
+                            transactions[index].transactionType,
                           ),
                           textAlign: TextAlign.start,
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                       ),
-                      Text(
-                        transactions[index].transactionType.isIncome
-                            ? S.current.contentTitle_income
-                            : S.current.contentTitle_expense,
-                        style: Theme.of(context).textTheme.displayMedium,
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: transactions[index].transactionType.isExpense
+                              ? Colors.red
+                              : null,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6.0,
+                            vertical: 4,
+                          ),
+                          child: Text(
+                            transactions[index].transactionType.isIncome
+                                ? S.current.contentTitle_income
+                                : S.current.contentTitle_expense,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -141,19 +179,42 @@ class EventTransactionsList extends StatelessWidget {
                     ),
                   ),
                   Gap(5),
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: S.current.contentTitle_byWho,
-                          style: Theme.of(context).textTheme.headlineSmall,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: S.current.contentTitle_byWho,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall,
+                              ),
+                              TextSpan(
+                                text: paidInfo,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.displayMedium,
+                              ),
+                            ],
+                          ),
                         ),
-                        TextSpan(
-                          text: paidBy,
-                          style: Theme.of(context).textTheme.displayMedium,
+                      ),
+                      if (isDuplicate) ...[
+                        Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.redAccent,
+                          size: 16,
+                        ),
+                        Gap(4),
+                        Text(
+                          'تکراری',
+                          style: Theme.of(context).textTheme.labelMedium
+                              ?.copyWith(color: Colors.redAccent),
                         ),
                       ],
-                    ),
+                    ],
                   ),
                 ],
               ),

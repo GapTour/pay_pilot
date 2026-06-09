@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
+import 'package:pay_pilot/core/widgets/app_delete_dialog.dart';
 import 'package:pay_pilot/core/widgets/app_elevated_button.dart';
 
 class AppTile extends StatefulWidget {
@@ -125,59 +125,10 @@ class _AppTileState extends State<AppTile> {
                           if (widget.onDelete != null) ...[
                             AppElevatedButton(
                               onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      backgroundColor: kPrimaryColor,
-                                      title: Text(
-                                        S.current.alertDialog_areYouSure,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.displayLarge,
-                                      ),
-                                      content: Text(
-                                        S
-                                            .current
-                                            .alertDialog_noticeThisAboutAction,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.displayMedium,
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            context.pop();
-                                          },
-                                          child: Text(
-                                            S.current.button_title_cancel,
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.displayMedium,
-                                          ),
-                                        ),
-                                        AppElevatedButton(
-                                          onTap: () {
-                                            widget.onDelete!.call();
-                                            context.pop();
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 25.0,
-                                              vertical: 5,
-                                            ),
-                                            child: Text(
-                                              S.current.button_title_delete,
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .displayMedium!
-                                                  .copyWith(color: kErrorColor),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
+                                AppDeleteDialog.showDefault(
+                                  context,
+                                  onDelete: () {
+                                    widget.onDelete!.call();
                                   },
                                 );
                               },

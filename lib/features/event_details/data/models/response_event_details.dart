@@ -1,4 +1,5 @@
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_story.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_order.dart';
 import 'package:pay_pilot/features/teams/data/models/response_team.dart';
@@ -12,6 +13,7 @@ class ResponseEventDetails {
   final List<ResponseEventTransaction> transactions;
   final List<ResponseEventRatio> memberRatios;
   final List<ResponseOrder> orders;
+  final List<ResponseEventStory> stories;
 
   ResponseEventDetails({
     required this.id,
@@ -22,6 +24,7 @@ class ResponseEventDetails {
     required this.transactions,
     required this.memberRatios,
     required this.orders,
+    required this.stories,
   });
 
   factory ResponseEventDetails.fromApi(Map<String, dynamic> map) {
@@ -52,6 +55,13 @@ class ResponseEventDetails {
                 .map((e) => ResponseOrder.fromApi(e as Map<String, dynamic>))
                 .toList()
           : [],
+      stories: map['stories'] != null
+          ? (map['stories'] as List<dynamic>)
+                .map(
+                  (e) => ResponseEventStory.fromMap(e as Map<String, dynamic>),
+                )
+                .toList()
+          : [],
     );
   }
 
@@ -64,6 +74,7 @@ class ResponseEventDetails {
     List<ResponseEventTransaction>? transactions,
     List<ResponseEventRatio>? memberRatios,
     List<ResponseOrder>? orders,
+    List<ResponseEventStory>? stories,
   }) {
     return ResponseEventDetails(
       id: id ?? this.id,
@@ -74,6 +85,7 @@ class ResponseEventDetails {
       transactions: transactions ?? this.transactions,
       memberRatios: memberRatios ?? this.memberRatios,
       orders: orders ?? this.orders,
+      stories: stories ?? this.stories,
     );
   }
 }

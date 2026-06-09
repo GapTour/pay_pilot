@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:pay_pilot/core/data/params/event_order_params.dart';
 import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
+import 'package:pay_pilot/core/data/params/event_story_params.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
@@ -9,6 +10,7 @@ import 'package:pay_pilot/core/utils/resource/data_state.dart';
 import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_story.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_order.dart';
 import 'package:pay_pilot/features/event_details/data/sources/local_event_details_source.dart';
@@ -149,6 +151,46 @@ class EventDetailsRepository {
     }
   }
 
+  Future<DataState<ResponseEventStory>> updateStory(
+    EventStoryParams params,
+  ) async {
+    try {
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
+
+      if (isOffline!) return await _localEventDetailsSource.updateStory(params);
+      return await _remoteEventDetailsSource.updateStory(params);
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
+    }
+  }
+
+  Future<DataState<ResponseEventStory>> insertStory(
+    EventStoryParams params,
+  ) async {
+    try {
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
+
+      if (isOffline!) return await _localEventDetailsSource.insertStory(params);
+      return await _remoteEventDetailsSource.insertStory(params);
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
+    }
+  }
+
   Future<DataState<ResponseOrder>> changeOrderStatus(
     int id,
     bool isDelivered,
@@ -204,6 +246,24 @@ class EventDetailsRepository {
 
       if (isOffline!) return await _localEventDetailsSource.deleteOrder(id);
       return await _remoteEventDetailsSource.deleteOrder(id);
+    } on DioException catch (e) {
+      return DataFailed(ErrorResponse.fromMap(e));
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
+    }
+  }
+
+  Future<DataState<int>> deleteStory(int id) async {
+    try {
+      isOffline = await _preferencesService.read<bool>(
+        AppArguments.mode,
+        defaultValue: true,
+      );
+
+      if (isOffline!) return await _localEventDetailsSource.deleteStory(id);
+      return await _remoteEventDetailsSource.deleteStory(id);
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
     } on PlatformException catch (e) {

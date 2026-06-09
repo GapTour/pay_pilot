@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
 
 class AmountHelper {
@@ -8,7 +9,10 @@ class AmountHelper {
     return simplePrice;
   }
 
-  static String integerToFormattedPrice(double inputPrice) {
+  static String integerToFormattedPrice(
+    double inputPrice, [
+    TransactionType? type,
+  ]) {
     final String simplePrice = inputPrice.toStringAsFixed(0);
 
     final int parsedValue =
@@ -16,6 +20,7 @@ class AmountHelper {
 
     final String formattedText = NumberFormat('#,###').format(parsedValue);
 
+    if (type?.isExpense ?? false) return '$formattedText -';
     return formattedText;
   }
 }

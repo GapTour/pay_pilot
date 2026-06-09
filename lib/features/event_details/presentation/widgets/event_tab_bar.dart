@@ -15,6 +15,15 @@ class EventTabBar extends StatelessWidget {
     return AppTab(
       tabs: [
         TabTile(
+          isSelected: currentPage.isDetails,
+          title: 'جزییات',
+          onTap: () {
+            context.read<EventDetailsBloc>().add(
+              ChangePage(EventDetailsPage.details),
+            );
+          },
+        ),
+        TabTile(
           isSelected: currentPage.isTransactions,
           title: S.current.eventDetails_tabBar_transactions,
           onTap: () {
