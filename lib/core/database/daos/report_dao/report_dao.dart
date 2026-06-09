@@ -320,6 +320,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
           title: eventRow.readTable(events).title,
           description: eventRow.readTable(events).description,
           orders: [],
+          stories: [],
         ),
       );
     }

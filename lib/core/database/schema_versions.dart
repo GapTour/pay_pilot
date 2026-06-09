@@ -1040,10 +1040,275 @@ i1.GeneratedColumn<String> _column_28(String aliasedName) =>
       true,
       type: i1.DriftSqlType.string,
     );
+
+final class Schema5 extends i0.VersionedSchema {
+  Schema5({required super.database}) : super(version: 5);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    teams,
+    events,
+    members,
+    reports,
+    ratios,
+    collectReportEvents,
+    guests,
+    eventTransactions,
+    eventRatios,
+    menus,
+    eventOrders,
+    eventStories,
+  ];
+  late final Shape8 teams = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'teams',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_16,
+        _column_17,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape9 events = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_4,
+        _column_5,
+        _column_3,
+        _column_16,
+        _column_17,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape10 members = Shape10(
+    source: i0.VersionedTable(
+      entityName: 'members',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_6,
+        _column_2,
+        _column_7,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_3,
+        _column_16,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape11 reports = Shape11(
+    source: i0.VersionedTable(
+      entityName: 'reports',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_8,
+        _column_2,
+        _column_9,
+        _column_3,
+        _column_16,
+        _column_17,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape12 ratios = Shape12(
+    source: i0.VersionedTable(
+      entityName: 'ratios',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_10,
+        _column_4,
+        _column_11,
+        _column_3,
+        _column_16,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape13 collectReportEvents = Shape13(
+    source: i0.VersionedTable(
+      entityName: 'collect_report_events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_0, _column_12, _column_13, _column_3, _column_16],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape14 guests = Shape14(
+    source: i0.VersionedTable(
+      entityName: 'guests',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_6,
+        _column_2,
+        _column_19,
+        _column_3,
+        _column_16,
+        _column_17,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_18,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape15 eventTransactions = Shape15(
+    source: i0.VersionedTable(
+      entityName: 'event_transactions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_2,
+        _column_14,
+        _column_15,
+        _column_12,
+        _column_5,
+        _column_3,
+        _column_16,
+        _column_23,
+        _column_24,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape16 eventRatios = Shape16(
+    source: i0.VersionedTable(
+      entityName: 'event_ratios',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_10,
+        _column_12,
+        _column_11,
+        _column_3,
+        _column_16,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape17 menus = Shape17(
+    source: i0.VersionedTable(
+      entityName: 'menus',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_0, _column_1, _column_3, _column_16, _column_17],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape18 eventOrders = Shape18(
+    source: i0.VersionedTable(
+      entityName: 'event_orders',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_23,
+        _column_26,
+        _column_12,
+        _column_27,
+        _column_28,
+        _column_3,
+        _column_16,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape19 eventStories = Shape19(
+    source: i0.VersionedTable(
+      entityName: 'event_stories',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_12,
+        _column_29,
+        _column_1,
+        _column_3,
+        _column_16,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape19 extends i0.VersionedTable {
+  Shape19({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get eventID =>
+      columnsByName['event_i_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get encodedText =>
+      columnsByName['encoded_text']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get title =>
+      columnsByName['title']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<DateTime> get createAt =>
+      columnsByName['create_at']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get modifiedAt =>
+      columnsByName['modified_at']! as i1.GeneratedColumn<DateTime>;
+}
+
+i1.GeneratedColumn<String> _column_29(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'encoded_text',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -1062,6 +1327,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from3To4(migrator, schema);
         return 4;
+      case 4:
+        final schema = Schema5(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from4To5(migrator, schema);
+        return 5;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -1072,10 +1342,12 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from1To2: from1To2,
     from2To3: from2To3,
     from3To4: from3To4,
+    from4To5: from4To5,
   ),
 );

@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:pay_pilot/core/data/params/event_order_params.dart';
 import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
+import 'package:pay_pilot/core/data/params/event_story_params.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_story.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_order.dart';
 import 'package:pay_pilot/features/event_details/data/providers/event_details_api_provider.dart';
@@ -301,5 +303,23 @@ class RemoteEventDetailsSource implements IEventDetailsSource {
     } on DioException catch (e) {
       return DataFailed(ErrorResponse.fromMap(e));
     }
+  }
+
+  @override
+  Future<DataState<int>> deleteStory(int id) {
+    // TODO: implement deleteStory
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DataState<ResponseEventStory>> insertStory(EventStoryParams params) {
+    // TODO: implement insertStory
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DataState<ResponseEventStory>> updateStory(EventStoryParams params) {
+    // TODO: implement updateStory
+    throw UnimplementedError();
   }
 }

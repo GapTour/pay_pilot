@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:pay_pilot/core/app/app_routes.dart';
 import 'package:pay_pilot/core/data/enums/language_code.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
+            FlutterQuillLocalizations.delegate,
           ],
           title: 'Pay Pilot',
           locale: Locale(language.code, ''),

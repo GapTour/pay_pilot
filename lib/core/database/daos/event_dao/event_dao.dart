@@ -10,10 +10,12 @@ import 'package:pay_pilot/core/data/models/transaction_model.dart';
 import 'package:pay_pilot/core/data/params/event_order_params.dart';
 import 'package:pay_pilot/core/data/params/event_params.dart';
 import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
+import 'package:pay_pilot/core/data/params/event_story_params.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/database/tables/event_orders.dart';
 import 'package:pay_pilot/core/database/tables/event_ratios.dart';
+import 'package:pay_pilot/core/database/tables/event_stories.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/database/tables/events.dart';
 import 'package:pay_pilot/core/database/tables/ratios.dart';
@@ -21,6 +23,7 @@ import 'package:pay_pilot/core/database/tables/teams.dart';
 import 'package:pay_pilot/core/utils/helpers/calculator_helper.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_story.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_order.dart';
 import 'package:pay_pilot/features/teams/data/models/response_team.dart';
@@ -28,7 +31,15 @@ import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 part 'event_dao.g.dart';
 
 @DriftAccessor(
-  tables: [Events, Teams, EventTransactions, EventRatios, Ratios, EventOrders],
+  tables: [
+    Events,
+    Teams,
+    EventTransactions,
+    EventRatios,
+    Ratios,
+    EventOrders,
+    EventStories,
+  ],
 )
 class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
   EventDao(super.db);
@@ -175,6 +186,20 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
       );
     }).toList();
 
+    final List<EventStory> rawStories = await (select(
+      eventStories,
+    )..where((tbl) => tbl.eventID.equals(id))).get();
+
+    final List<ResponseEventStory> stories = rawStories.map((e) {
+      return ResponseEventStory(
+        id: e.id,
+        title: e.title,
+        encodedText: e.encodedText,
+        createAt: e.createAt,
+        updateAt: e.modifiedAt,
+      );
+    }).toList();
+
     return ResponseEventDetails(
       id: rowEvent.readTable(events).id,
       title: rowEvent.readTable(events).title,
@@ -184,6 +209,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
       team: ResponseTeam.fromDb(rowEvent.readTable(teams)),
       memberRatios: ratiosList.map(ResponseEventRatio.fromDb).toList(),
       orders: orders.map(ResponseOrder.fromDb).toList(),
+      stories: stories,
     );
   }
 
@@ -266,6 +292,20 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         );
       }).toList();
 
+      final List<EventStory> rawStories = await (select(
+        eventStories,
+      )..where((tbl) => tbl.eventID.equals(id))).get();
+
+      final List<ResponseEventStory> stories = rawStories.map((e) {
+        return ResponseEventStory(
+          id: e.id,
+          title: e.title,
+          encodedText: e.encodedText,
+          createAt: e.createAt,
+          updateAt: e.modifiedAt,
+        );
+      }).toList();
+
       responses.add(
         ResponseEventDetails(
           id: er.readTable(events).id,
@@ -278,6 +318,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
           team: ResponseTeam.fromDb(er.readTable(teams)),
           memberRatios: ratiosList.map(ResponseEventRatio.fromDb).toList(),
           orders: orders.map(ResponseOrder.fromDb).toList(),
+          stories: stories,
         ),
       );
     }
@@ -813,5 +854,42 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
 
   Future<void> deleteOrder(int id) async {
     await (db.delete(eventOrders)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  Future<int> insertStory(EventStoryParams eventStory) async {
+    return await db
+        .into(eventStories)
+        .insert(
+          EventStoriesCompanion(
+            encodedText: Value(eventStory.encodedText),
+            eventID: Value(eventStory.eventID),
+            title: Value(eventStory.title),
+          ),
+        );
+  }
+
+  Future<ResponseEventStory> updateStory(EventStoryParams eventStory) async {
+    await (db.update(
+      eventStories,
+    )..where((tbl) => tbl.id.equals(eventStory.id!))).write(
+      EventStoriesCompanion(
+        encodedText: Value(eventStory.encodedText),
+        eventID: Value(eventStory.eventID),
+        title: Value(eventStory.title),
+        modifiedAt: Value(DateTime.now().toUtc()),
+      ),
+    );
+
+    return ResponseEventStory(
+      id: eventStory.id!,
+      title: eventStory.title,
+      encodedText: eventStory.encodedText,
+      updateAt: DateTime.now().toUtc(),
+      createAt: eventStory.createAt,
+    );
+  }
+
+  Future<void> deleteStory(int id) async {
+    await (db.delete(eventStories)..where((tbl) => tbl.id.equals(id))).go();
   }
 }
