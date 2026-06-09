@@ -2,6 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pay_pilot/core/app/app_routes.dart';
+import 'package:pay_pilot/core/data/params/event_story_params.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
@@ -73,7 +76,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   buildWhen: (p, c) => p.currentPage != c.currentPage,
                   builder: (context, state) {
                     if (state.currentPage.isDetails) {
-                      return EventMoreDetails();
+                      return EventMoreDetails(eventID);
                     }
                     if (state.currentPage.isTransactions) {
                       return EventTransactionsList(eventID);
@@ -129,12 +132,31 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           if (state.currentPage.isReport) {
             return SizedBox.shrink();
           }
-          if (state.currentPage.isDetails) {
-            return SizedBox.shrink();
-          }
+          if (state.currentPage.isDetails) icon = Icons.theaters_outlined;
 
           return FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
+              if (state.currentPage.isDetails) {
+                final passedData = await context
+                    .pushNamed<Map<String, dynamic>>(
+                      AppRoutes.eventStoryScreen,
+                      extra: {'eventID': eventID},
+                    );
+
+                if (passedData == null) return;
+                final storyParams = EventStoryParams.fromJson(
+                  passedData['encoded'],
+                );
+
+                if (storyParams.id == null && context.mounted) {
+                  context.read<EventDetailsBloc>().add(AddStory(storyParams));
+                }
+                if (storyParams.id != null && context.mounted) {
+                  context.read<EventDetailsBloc>().add(EditStory(storyParams));
+                }
+                return;
+              }
+
               showDialog(
                 context: context,
                 builder: (_) {

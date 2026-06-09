@@ -9,6 +9,7 @@ import 'package:pay_pilot/features/auth/presentation/screens/register_screen.dar
 import 'package:pay_pilot/features/auth/presentation/screens/splash_screen.dart';
 import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
 import 'package:pay_pilot/features/event_details/presentation/screens/event_details_screen.dart';
+import 'package:pay_pilot/features/event_details/presentation/screens/event_story_screen.dart';
 import 'package:pay_pilot/features/events/presentation/cubit/events_cubit.dart';
 import 'package:pay_pilot/features/events/presentation/screens/events_screen.dart';
 import 'package:pay_pilot/features/guest_details/presentation/cubit/guests_details_cubit.dart';
@@ -48,6 +49,7 @@ class AppRoutes {
   static const String guestDetailsScreen = 'guestDetailsScreen';
   static const String eventsScreen = 'eventsScreen';
   static const String eventDetailsScreen = 'eventDetailsScreen';
+  static const String eventStoryScreen = 'eventStoryScreen';
   static const String reportsScreen = 'reportsScreen';
   static const String reportDetailsScreen = 'reportDetailsScreen';
   static const String teamsScreen = 'teamsScreen';
@@ -195,6 +197,11 @@ class AppRoutes {
           create: (context) => BackupBloc(locator()),
           child: SettingsScreen(),
         ),
+      ),
+      GoRoute(
+        name: eventStoryScreen,
+        path: EventStoryScreen.routeName,
+        builder: (context, state) => EventStoryScreen(),
       ),
     ],
   );

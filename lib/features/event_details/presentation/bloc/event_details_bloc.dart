@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pay_pilot/core/data/params/event_order_params.dart';
 import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
+import 'package:pay_pilot/core/data/params/event_story_params.dart';
 import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/utils/helpers/calculator_helper.dart';
@@ -51,6 +52,9 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
     on<AddOrder>(_addOrder);
     on<EditOrder>(_editOrder);
     on<DeleteOrder>(_deleteOrder);
+    on<AddStory>(_addStory);
+    on<EditStory>(_editStory);
+    on<DeleteStory>(_deleteStory);
     on<ChangePage>(_changePage);
     on<ChangeStatesToInit>(_changeStatesToInit);
     on<LoadReportList>(_loadReportList);
@@ -621,6 +625,89 @@ class EventDetailsBloc extends Bloc<EventDetailsEvent, EventDetailsState> {
 
     if (dataState is DataFailed) {
       emit(state.copyWith(eventOrderStatus: EventOrderFailure()));
+    }
+  }
+
+  Future<void> _addStory(
+    AddStory event,
+    Emitter<EventDetailsState> emit,
+  ) async {
+    final dataState = await _repository.insertStory(event.params);
+
+    if (dataState is DataSuccess) {
+      if (state.eventDetailStatus is EventDetailSuccess) {
+        final eventDetailStatus = state.eventDetailStatus as EventDetailSuccess;
+        final eventDetailsInfo = eventDetailStatus.eventDetails;
+        final stories = eventDetailsInfo.stories..add(dataState.data!);
+
+        emit(
+          state.copyWith(
+            eventDetailStatus: EventDetailSuccess(
+              eventDetailsInfo.copyWith(stories: stories),
+              eventDetailStatus.members,
+              eventDetailStatus.guests,
+              eventDetailStatus.menuItems,
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _editStory(
+    EditStory event,
+    Emitter<EventDetailsState> emit,
+  ) async {
+    final dataState = await _repository.updateStory(event.params);
+
+    if (dataState is DataSuccess) {
+      if (state.eventDetailStatus is EventDetailSuccess) {
+        final eventDetailStatus = state.eventDetailStatus as EventDetailSuccess;
+        final eventDetailsInfo = eventDetailStatus.eventDetails;
+        final index = eventDetailsInfo.stories.indexWhere(
+          (story) => story.id == dataState.data!.id,
+        );
+        eventDetailsInfo.stories[index] = dataState.data!;
+        final stories = eventDetailsInfo.stories;
+
+        emit(
+          state.copyWith(
+            eventDetailStatus: EventDetailSuccess(
+              eventDetailsInfo.copyWith(stories: stories),
+              eventDetailStatus.members,
+              eventDetailStatus.guests,
+              eventDetailStatus.menuItems,
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _deleteStory(
+    DeleteStory event,
+    Emitter<EventDetailsState> emit,
+  ) async {
+    final dataState = await _repository.deleteStory(event.storyId);
+
+    if (dataState is DataSuccess) {
+      if (state.eventDetailStatus is EventDetailSuccess) {
+        final eventDetailStatus = state.eventDetailStatus as EventDetailSuccess;
+        final eventDetailsInfo = eventDetailStatus.eventDetails;
+        final stories = eventDetailsInfo.stories
+          ..removeWhere((story) => story.id == event.storyId);
+
+        emit(
+          state.copyWith(
+            eventDetailStatus: EventDetailSuccess(
+              eventDetailsInfo.copyWith(stories: stories),
+              eventDetailStatus.members,
+              eventDetailStatus.guests,
+              eventDetailStatus.menuItems,
+            ),
+          ),
+        );
+      }
     }
   }
 

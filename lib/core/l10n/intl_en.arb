@@ -112,6 +112,7 @@
   "modalBottom_title_changeLanguage": "Change Language",
   "alertDialog_areYouSure": "Are sure about this action?",
   "alertDialog_noticeThisAboutAction": "Notice that if you used this item, it effects those and delete all data that related to this item too.",
+  "alertDialog_discardChanges": "If you proceed this action, all your changes will be discard!",
   "register_appBarTitle": "Register a new account...",
   "login_appBarTitle": "Login to your account...",
   "settings_appBarTitle": "Settings",
@@ -160,6 +161,8 @@
     }
   },
   "eventDetails_eventOrdersBanner_notAttended": "Not Attended",
+  "eventStory_appBarTitle": "Notebook",
+  "eventStory_writeHere": "Start writing from here...",
   "transaction_emptyStateContent": "There is no transaction added yet!",
   "ratio_emptyStateContent": "There is no ratio added yet!",
   "order_emptyStateContent": "There is no order added yet!",

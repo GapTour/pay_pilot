@@ -79,6 +79,24 @@ class DeleteOrder extends EventDetailsEvent {
   const DeleteOrder(this.orderId);
 }
 
+class AddStory extends EventDetailsEvent {
+  final EventStoryParams params;
+
+  const AddStory(this.params);
+}
+
+class EditStory extends EventDetailsEvent {
+  final EventStoryParams params;
+
+  const EditStory(this.params);
+}
+
+class DeleteStory extends EventDetailsEvent {
+  final int storyId;
+
+  const DeleteStory(this.storyId);
+}
+
 class ChangeStatesToInit extends EventDetailsEvent {}
 
 class LoadReportList extends EventDetailsEvent {}

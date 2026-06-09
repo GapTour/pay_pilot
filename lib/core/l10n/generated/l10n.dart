@@ -1034,6 +1034,16 @@ class S {
     );
   }
 
+  /// `در صورت تایید تغییرات اعمال شده ذخیره نخواهد شد!`
+  String get alertDialog_discardChanges {
+    return Intl.message(
+      'در صورت تایید تغییرات اعمال شده ذخیره نخواهد شد!',
+      name: 'alertDialog_discardChanges',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `ثبت یک حساب جدید...`
   String get register_appBarTitle {
     return Intl.message(
@@ -1358,11 +1368,31 @@ class S {
     );
   }
 
-  /// `حاضر نشده`
+  /// `بدون سفارش`
   String get eventDetails_eventOrdersBanner_notAttended {
     return Intl.message(
-      'حاضر نشده',
+      'بدون سفارش',
       name: 'eventDetails_eventOrdersBanner_notAttended',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `دفتر یادداشت`
+  String get eventStory_appBarTitle {
+    return Intl.message(
+      'دفتر یادداشت',
+      name: 'eventStory_appBarTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `از اینجا شروع به نوشتن کنید...`
+  String get eventStory_writeHere {
+    return Intl.message(
+      'از اینجا شروع به نوشتن کنید...',
+      name: 'eventStory_writeHere',
       desc: '',
       args: [],
     );

@@ -30,6 +30,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "alertDialog_areYouSure": MessageLookupByLibrary.simpleMessage(
       "درباره انجام این عملیات اطمینان دارید؟",
     ),
+    "alertDialog_discardChanges": MessageLookupByLibrary.simpleMessage(
+      "در صورت تایید تغییرات اعمال شده ذخیره نخواهد شد!",
+    ),
     "alertDialog_noticeThisAboutAction": MessageLookupByLibrary.simpleMessage(
       "توجه کنید که در صورت حذف این آیتم، تمامی اطلاعات مربوط به این آیتم هم به صورت اتوماتیک حذف خواهد شد.",
     ),
@@ -166,7 +169,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "همه",
     ),
     "eventDetails_eventOrdersBanner_notAttended":
-        MessageLookupByLibrary.simpleMessage("حاضر نشده"),
+        MessageLookupByLibrary.simpleMessage("بدون سفارش"),
     "eventDetails_eventOrdersBanner_totalCapacity": m0,
     "eventDetails_orderBy": MessageLookupByLibrary.simpleMessage("سفارش‌دهنده"),
     "eventDetails_selectOrder": MessageLookupByLibrary.simpleMessage(
@@ -181,6 +184,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "eventDetails_tabBar_report": MessageLookupByLibrary.simpleMessage("گزارش"),
     "eventDetails_tabBar_transactions": MessageLookupByLibrary.simpleMessage(
       "تراکنش‌ها",
+    ),
+    "eventStory_appBarTitle": MessageLookupByLibrary.simpleMessage(
+      "دفتر یادداشت",
+    ),
+    "eventStory_writeHere": MessageLookupByLibrary.simpleMessage(
+      "از اینجا شروع به نوشتن کنید...",
     ),
     "event_addEvent": MessageLookupByLibrary.simpleMessage(
       "افزودن رویداد جدید",

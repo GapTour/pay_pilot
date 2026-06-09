@@ -112,6 +112,7 @@
   "modalBottom_title_changeLanguage": "تغییر زبان",
   "alertDialog_areYouSure": "درباره انجام این عملیات اطمینان دارید؟",
   "alertDialog_noticeThisAboutAction": "توجه کنید که در صورت حذف این آیتم، تمامی اطلاعات مربوط به این آیتم هم به صورت اتوماتیک حذف خواهد شد.",
+  "alertDialog_discardChanges": "در صورت تایید تغییرات اعمال شده ذخیره نخواهد شد!",
   "register_appBarTitle": "ثبت یک حساب جدید...",
   "login_appBarTitle": "ورود به حساب کاربری...",
   "settings_appBarTitle": "تنظیمات",
@@ -159,7 +160,9 @@
       }
     }
   },
-  "eventDetails_eventOrdersBanner_notAttended": "حاضر نشده",
+  "eventDetails_eventOrdersBanner_notAttended": "بدون سفارش",
+  "eventStory_appBarTitle": "دفتر یادداشت",
+  "eventStory_writeHere": "از اینجا شروع به نوشتن کنید...",
   "transaction_emptyStateContent": "هنوز تراکنشی اضافه نشده است!",
   "ratio_emptyStateContent": "هنوز نسبتی اضافه نشده است!",
   "order_emptyStateContent": "هنوز سفارشی اضافه نشده است!",

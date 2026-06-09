@@ -30,6 +30,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "alertDialog_areYouSure": MessageLookupByLibrary.simpleMessage(
       "Are sure about this action?",
     ),
+    "alertDialog_discardChanges": MessageLookupByLibrary.simpleMessage(
+      "If you proceed this action, all your changes will be discard!",
+    ),
     "alertDialog_noticeThisAboutAction": MessageLookupByLibrary.simpleMessage(
       "Notice that if you used this item, it effects those and delete all data that related to this item too.",
     ),
@@ -183,6 +186,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "eventDetails_tabBar_transactions": MessageLookupByLibrary.simpleMessage(
       "Transactions",
+    ),
+    "eventStory_appBarTitle": MessageLookupByLibrary.simpleMessage("Notebook"),
+    "eventStory_writeHere": MessageLookupByLibrary.simpleMessage(
+      "Start writing from here...",
     ),
     "event_addEvent": MessageLookupByLibrary.simpleMessage("Add new event"),
     "event_appBarTitle": MessageLookupByLibrary.simpleMessage("Events"),
