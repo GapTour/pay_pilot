@@ -125,7 +125,7 @@ class CalculatorHelper {
       if (element.transactionType.isExpense) {
         return previousValue + element.amount;
       }
-      return 0;
+      return previousValue;
     });
   }
 
@@ -136,7 +136,7 @@ class CalculatorHelper {
       if (element.transactionType.isIncome) {
         return previousValue + element.amount;
       }
-      return 0;
+      return previousValue;
     });
   }
 
