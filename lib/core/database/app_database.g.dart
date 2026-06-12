@@ -5765,7 +5765,22 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $EventStoriesTable eventStories = $EventStoriesTable(this);
   late final ReportDao reportDao = ReportDao(this as AppDatabase);
   late final RatioDao ratioDao = RatioDao(this as AppDatabase);
-  late final EventDao eventDao = EventDao(this as AppDatabase);
+  late final EventsDao eventsDao = EventsDao(this as AppDatabase);
+  late final EventTransactionsDao eventTransactionsDao = EventTransactionsDao(
+    this as AppDatabase,
+  );
+  late final EventDetailsDao eventDetailsDao = EventDetailsDao(
+    this as AppDatabase,
+  );
+  late final EventOrdersDao eventOrdersDao = EventOrdersDao(
+    this as AppDatabase,
+  );
+  late final EventStoriesDao eventStoriesDao = EventStoriesDao(
+    this as AppDatabase,
+  );
+  late final EventRatiosDao eventRatiosDao = EventRatiosDao(
+    this as AppDatabase,
+  );
   late final TeamDao teamDao = TeamDao(this as AppDatabase);
   late final MemberDao memberDao = MemberDao(this as AppDatabase);
   late final GuestDao guestDao = GuestDao(this as AppDatabase);

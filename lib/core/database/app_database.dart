@@ -1,5 +1,10 @@
 import 'package:drift/drift.dart';
-import 'package:pay_pilot/core/database/daos/event_dao/event_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_details_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_orders_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_ratios_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_stories_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_transactions_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/events_dao.dart';
 import 'package:pay_pilot/core/database/daos/guest_dao/guest_dao.dart';
 import 'package:pay_pilot/core/database/daos/member_dao/member_dao.dart';
 import 'package:pay_pilot/core/database/daos/menu_dao/menu_dao.dart';
@@ -41,7 +46,12 @@ part 'app_database.g.dart';
   daos: [
     ReportDao,
     RatioDao,
-    EventDao,
+    EventsDao,
+    EventTransactionsDao,
+    EventDetailsDao,
+    EventOrdersDao,
+    EventStoriesDao,
+    EventRatiosDao,
     TeamDao,
     MemberDao,
     GuestDao,
