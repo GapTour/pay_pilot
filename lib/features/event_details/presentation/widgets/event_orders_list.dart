@@ -5,12 +5,13 @@ import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/helpers/orders_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
+import 'package:pay_pilot/core/widgets/app_modal_bottom_sheet.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
 import 'package:pay_pilot/core/widgets/app_wrap_builder.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_order.dart';
 import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
-import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event_order_dialog_box.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event_order_modal_view.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_orders_banner.dart';
 import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
@@ -80,21 +81,19 @@ class EventOrdersList extends StatelessWidget {
                 return AppTile(
                   isActive: !order.isDelivered,
                   onEdit: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) {
-                        return EditEventOrderDialogBox(
-                          order: order,
-                          responseGuests: guests,
-                          responseMembers: members,
-                          menuItems: menuItems,
-                          onSubmit: (params) {
-                            context.read<EventDetailsBloc>().add(
-                              EditOrder(params),
-                            );
-                          },
-                        );
-                      },
+                    AppModalBottomSheet.maxHeightWithAppBar(
+                      header: S.current.eventDetails_editEventOrder,
+                      child: EditEventOrderModalView(
+                        order: order,
+                        responseGuests: guests,
+                        responseMembers: members,
+                        menuItems: menuItems,
+                        onSubmit: (params) {
+                          context.read<EventDetailsBloc>().add(
+                            EditOrder(params),
+                          );
+                        },
+                      ),
                     );
                   },
                   onDelete: hasTransaction

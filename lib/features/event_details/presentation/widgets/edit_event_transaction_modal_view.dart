@@ -8,8 +8,8 @@ import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
-import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
+import 'package:pay_pilot/core/widgets/app_modal_list_view_skin.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
@@ -17,13 +17,13 @@ import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
 import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
-class EditEventTransactionDialogBox extends StatefulWidget {
+class EditEventTransactionModalView extends StatefulWidget {
   final ResponseEventTransaction transaction;
   final List<ResponseMember> responseMembers;
   final List<ResponseGuest> responseGuests;
   final int eventID;
   final Function(TransactionParams transaction) onPressedSubmit;
-  const EditEventTransactionDialogBox({
+  const EditEventTransactionModalView({
     super.key,
     required this.transaction,
     required this.responseMembers,
@@ -33,12 +33,12 @@ class EditEventTransactionDialogBox extends StatefulWidget {
   });
 
   @override
-  State<EditEventTransactionDialogBox> createState() =>
-      _EditEventTransactionDialogBoxState();
+  State<EditEventTransactionModalView> createState() =>
+      _EditEventTransactionModalViewState();
 }
 
-class _EditEventTransactionDialogBoxState
-    extends State<EditEventTransactionDialogBox> {
+class _EditEventTransactionModalViewState
+    extends State<EditEventTransactionModalView> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -81,8 +81,7 @@ class _EditEventTransactionDialogBoxState
 
   @override
   Widget build(BuildContext context) {
-    return AppDialogBox(
-      title: S.current.eventDetails_editEventTransaction,
+    return AppModalListViewSkin(
       children: [
         AppDropDownButton<TransactionType>(
           label: S.current.dropDownButton_label_transactionType,
@@ -102,7 +101,11 @@ class _EditEventTransactionDialogBoxState
           items: TransactionType.values.map((e) {
             return DropdownMenuItem<TransactionType>(
               value: e,
-              child: Text(e.name),
+              child: Text(
+                e.isIncome
+                    ? S.current.contentTitle_income
+                    : S.current.contentTitle_expense,
+              ),
             );
           }).toList(),
         ),
@@ -231,7 +234,7 @@ class _EditEventTransactionDialogBoxState
         ),
         Gap(85),
       ],
-      onPressed: () {
+      onSubmit: () {
         if (!formKey.currentState!.validate()) return;
 
         if (transactionType.isIncome && selectedGuestID == null) {

@@ -7,10 +7,11 @@ import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
+import 'package:pay_pilot/core/widgets/app_modal_bottom_sheet.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
-import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event_transaction_dialog_box.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event_transaction_modal_view.dart';
 import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
@@ -87,21 +88,19 @@ class EventTransactionsList extends StatelessWidget {
 
             return AppTile(
               onEdit: () {
-                showDialog(
-                  context: context,
-                  builder: (_) {
-                    return EditEventTransactionDialogBox(
-                      transaction: transactions[index],
-                      responseGuests: guests,
-                      responseMembers: members,
-                      eventID: eventID,
-                      onPressedSubmit: (transaction) {
-                        context.read<EventDetailsBloc>().add(
-                          EditTransaction(transaction),
-                        );
-                      },
-                    );
-                  },
+                AppModalBottomSheet.maxHeightWithAppBar(
+                  header: S.current.eventDetails_editEventTransaction,
+                  child: EditEventTransactionModalView(
+                    transaction: transactions[index],
+                    responseGuests: guests,
+                    responseMembers: members,
+                    eventID: eventID,
+                    onPressedSubmit: (transaction) {
+                      context.read<EventDetailsBloc>().add(
+                        EditTransaction(transaction),
+                      );
+                    },
+                  ),
                 );
               },
               onDelete: () {

@@ -6,21 +6,18 @@ import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
-import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
+import 'package:pay_pilot/core/widgets/app_modal_column_view_skin.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
-import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
-class EditEventRatioDialogBox extends StatefulWidget {
-  final ResponseEventRatio memberRatio;
+class AddEventRatioModalView extends StatefulWidget {
   final int eventID;
   final List<ResponseMember> members;
   final Map<int, double> addedMembers;
   final Function(EventRatioParams ratioEvent) onPressedSubmit;
-  const EditEventRatioDialogBox({
+  const AddEventRatioModalView({
     super.key,
-    required this.memberRatio,
     required this.eventID,
     required this.onPressedSubmit,
     required this.addedMembers,
@@ -28,18 +25,16 @@ class EditEventRatioDialogBox extends StatefulWidget {
   });
 
   @override
-  State<EditEventRatioDialogBox> createState() =>
-      _EditEventRatioDialogBoxState();
+  State<AddEventRatioModalView> createState() => _AddEventRatioModalViewState();
 }
 
-class _EditEventRatioDialogBoxState extends State<EditEventRatioDialogBox> {
+class _AddEventRatioModalViewState extends State<AddEventRatioModalView> {
   final TextEditingController ratioController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final formDropDownKey = GlobalKey<FormState>();
   final List<ResponseMember> notAddedMembers = [];
   double remindedRatio = 100;
-  late ResponseMember member;
-  late int ratioID;
+  ResponseMember? member;
   bool isNotSelected = false;
 
   @override
@@ -51,15 +46,6 @@ class _EditEventRatioDialogBoxState extends State<EditEventRatioDialogBox> {
   @override
   void initState() {
     super.initState();
-
-    ratioID = widget.memberRatio.id;
-    member = widget.members.firstWhere(
-      (element) => element.id == widget.memberRatio.memberID,
-    );
-    ratioController.text = widget.memberRatio.ratio.toString();
-
-    notAddedMembers.add(member);
-    remindedRatio = remindedRatio + widget.memberRatio.ratio;
 
     widget.members.fold<List<Member>>([], (previousValue, element) {
       if (!widget.addedMembers.containsKey(element.id)) {
@@ -78,19 +64,19 @@ class _EditEventRatioDialogBoxState extends State<EditEventRatioDialogBox> {
 
   @override
   Widget build(BuildContext context) {
-    return AppDialogBox(
-      title: S.current.eventDetails_editEventRatio,
+    return AppModalColumnViewSkin(
       children: [
         AppDropDownButton<ResponseMember>(
           label: S.current.dropDownButton_label_members,
           hint: S.current.dropDownButton_hint_selectMember,
           showWarning: isNotSelected,
           value: widget.members.firstWhereOrNull(
-            (element) => element.id == member.id,
+            (element) => element.id == member?.id,
           ),
           onChanged: (value) {
             if (value != null) {
               member = value;
+              isNotSelected = false;
               setState(() {});
             }
           },
@@ -132,12 +118,18 @@ class _EditEventRatioDialogBoxState extends State<EditEventRatioDialogBox> {
             },
           ),
         ),
+        Gap(120),
       ],
-      onPressed: () {
+      onSubmit: () {
         if (!formKey.currentState!.validate()) return;
+        if (member == null) {
+          isNotSelected = true;
+          setState(() {});
+          return;
+        }
         final ratio = EventRatioParams(
-          id: ratioID,
-          memberID: member.id,
+          id: null,
+          memberID: member!.id,
           ratioValue: ratioController.text.parseToDouble,
           eventID: widget.eventID,
         );

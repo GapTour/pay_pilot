@@ -8,8 +8,8 @@ import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
-import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
+import 'package:pay_pilot/core/widgets/app_modal_list_view_skin.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
 import 'package:pay_pilot/core/widgets/app_wrap_builder.dart';
 import 'package:pay_pilot/core/widgets/pick_date.dart';
@@ -17,12 +17,12 @@ import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
 import 'package:persian_calendar_widget/persian_calendar_widget.dart';
 
-class AddEventTransactionDialogBox extends StatefulWidget {
+class AddEventTransactionModalView extends StatefulWidget {
   final int eventID;
   final Function(List<TransactionParams> transactions) onPressedSubmit;
   final List<ResponseMember> responseMembers;
   final List<ResponseGuest> responseGuests;
-  const AddEventTransactionDialogBox({
+  const AddEventTransactionModalView({
     super.key,
     required this.eventID,
     required this.onPressedSubmit,
@@ -31,12 +31,12 @@ class AddEventTransactionDialogBox extends StatefulWidget {
   });
 
   @override
-  State<AddEventTransactionDialogBox> createState() =>
-      _AddEventTransactionDialogBoxState();
+  State<AddEventTransactionModalView> createState() =>
+      _AddEventTransactionModalViewState();
 }
 
-class _AddEventTransactionDialogBoxState
-    extends State<AddEventTransactionDialogBox> {
+class _AddEventTransactionModalViewState
+    extends State<AddEventTransactionModalView> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -60,8 +60,7 @@ class _AddEventTransactionDialogBoxState
 
   @override
   Widget build(BuildContext context) {
-    return AppDialogBox(
-      title: S.current.eventDetails_addEventTransaction,
+    return AppModalListViewSkin(
       children: [
         AppDropDownButton<TransactionType>(
           label: S.current.dropDownButton_label_transactionType,
@@ -81,7 +80,11 @@ class _AddEventTransactionDialogBoxState
           items: TransactionType.values.map((e) {
             return DropdownMenuItem<TransactionType>(
               value: e,
-              child: Text(e.name),
+              child: Text(
+                e.isIncome
+                    ? S.current.contentTitle_income
+                    : S.current.contentTitle_expense,
+              ),
             );
           }).toList(),
         ),
@@ -230,7 +233,7 @@ class _AddEventTransactionDialogBoxState
         ),
         Gap(85),
       ],
-      onPressed: () {
+      onSubmit: () {
         if (!formKey.currentState!.validate()) return;
         if (transactionType == null) {
           isNotSelected = true;
