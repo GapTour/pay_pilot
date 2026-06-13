@@ -139,7 +139,8 @@ class _EditEventRatioModalViewState extends State<EditEventRatioModalView> {
             onChange: (value) {
               debounce.call(() {
                 final isZero =
-                    value == ratioController.text.replaceAll('-', '').trim();
+                    value.replaceAll('-', '').trim() == '0' ||
+                    value.replaceAll('-', '').trim() == '0.0';
 
                 if (isZero) ratioController.clear();
               });
