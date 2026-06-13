@@ -49,6 +49,7 @@ class _AddEventTransactionModalViewState
   DateTime? selectedDate;
   bool isNotSelected = false;
   bool isPaidSourceNotSelected = false;
+  bool isFree = false;
   int? selectedMemberID;
   final selectedGuestIDs = <int>[];
   final transactions = <TransactionParams>[];
@@ -85,6 +86,7 @@ class _AddEventTransactionModalViewState
               transactionType = value;
               selectedMemberID = null;
               selectedGuestIDs.clear();
+              if (transactionType?.isExpense ?? false) isFree = false;
               setState(() {});
             }
           },
@@ -193,29 +195,6 @@ class _AddEventTransactionModalViewState
           child: Column(
             children: [
               AppTextField(
-                label: S.current.textField_label_amount,
-                hint: '10,000,000',
-                controller: amountController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [PriceInputFormatter()],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return S.current.validator_required;
-                  }
-                  return null;
-                },
-                onChange: (value) {
-                  debounce.call(() {
-                    final isZero =
-                        value.replaceAll('-', '').trim() == '0' ||
-                        value.replaceAll('-', '').trim() == '0.0';
-
-                    if (isZero) amountController.clear();
-                  });
-                },
-              ),
-              Gap(20),
-              AppTextField(
                 label: S.current.textField_label_date,
                 hint: DateTime.now().formattedToJalali_yearMonthDay,
                 controller: dateController,
@@ -240,6 +219,52 @@ class _AddEventTransactionModalViewState
                   return null;
                 },
               ),
+              Gap(20),
+              AppTextField(
+                label: S.current.textField_label_amount,
+                hint: isFree
+                    ? 'برای ثبت مبلغ تیک تخفیف برداشته شود'
+                    : '10,000,000',
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [PriceInputFormatter()],
+                readOnly: isFree,
+                validator: isFree
+                    ? null
+                    : (value) {
+                        if (value == null || value.isEmpty) {
+                          return S.current.validator_required;
+                        }
+                        return null;
+                      },
+                onChange: (value) {
+                  debounce.call(() {
+                    final isZero =
+                        value.replaceAll('-', '').trim() == '0' ||
+                        value.replaceAll('-', '').trim() == '0.0';
+
+                    if (isZero) amountController.clear();
+                  });
+                },
+              ),
+              if (transactionType?.isIncome ?? false) ...[
+                Row(
+                  children: [
+                    Checkbox.adaptive(
+                      value: isFree,
+                      onChanged: (value) {
+                        if (value != null) {
+                          isFree = value;
+                          if (isFree) amountController.clear();
+
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    Expanded(child: Text('تخفیف ۱۰۰٪')),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -274,9 +299,11 @@ class _AddEventTransactionModalViewState
                 id: null,
                 eventID: widget.eventID,
                 transactionType: transactionType!,
-                amount: AmountHelper.formattedPriceToInteger(
-                  amountController.text,
-                ),
+                amount: isFree
+                    ? 0
+                    : AmountHelper.formattedPriceToInteger(
+                        amountController.text,
+                      ),
                 description: descriptionController.text,
                 transactionDate: selectedDate!,
                 attachment: null,

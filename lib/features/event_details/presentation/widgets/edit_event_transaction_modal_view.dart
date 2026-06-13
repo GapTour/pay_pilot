@@ -50,6 +50,7 @@ class _EditEventTransactionModalViewState
   late DebounceHelper debounce;
   bool isNotSelected = false;
   bool isPaidSourceNotSelected = false;
+  bool isFree = false;
   int? selectedMemberID;
   int? selectedGuestID;
 
@@ -102,6 +103,7 @@ class _EditEventTransactionModalViewState
               transactionType = value;
               selectedMemberID = null;
               selectedGuestID = null;
+              if (transactionType.isExpense) isFree = false;
               setState(() {});
             }
           },
@@ -190,29 +192,6 @@ class _EditEventTransactionModalViewState
           child: Column(
             children: [
               AppTextField(
-                label: S.current.textField_label_amount,
-                hint: '10,000,000',
-                controller: amountController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [PriceInputFormatter()],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return S.current.validator_required;
-                  }
-                  return null;
-                },
-                onChange: (value) {
-                  debounce.call(() {
-                    final isZero =
-                        value.replaceAll('-', '').trim() == '0' ||
-                        value.replaceAll('-', '').trim() == '0.0';
-
-                    if (isZero) amountController.clear();
-                  });
-                },
-              ),
-              Gap(20),
-              AppTextField(
                 label: S.current.textField_label_date,
                 hint: DateTime.now().formattedToJalali_yearMonthDay,
                 controller: dateController,
@@ -237,6 +216,52 @@ class _EditEventTransactionModalViewState
                   return null;
                 },
               ),
+              Gap(20),
+              AppTextField(
+                label: S.current.textField_label_amount,
+                hint: isFree
+                    ? 'برای ثبت مبلغ تیک تخفیف برداشته شود'
+                    : '10,000,000',
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [PriceInputFormatter()],
+                readOnly: isFree,
+                validator: isFree
+                    ? null
+                    : (value) {
+                        if (value == null || value.isEmpty) {
+                          return S.current.validator_required;
+                        }
+                        return null;
+                      },
+                onChange: (value) {
+                  debounce.call(() {
+                    final isZero =
+                        value.replaceAll('-', '').trim() == '0' ||
+                        value.replaceAll('-', '').trim() == '0.0';
+
+                    if (isZero) amountController.clear();
+                  });
+                },
+              ),
+              if (transactionType.isIncome) ...[
+                Row(
+                  children: [
+                    Checkbox.adaptive(
+                      value: isFree,
+                      onChanged: (value) {
+                        if (value != null) {
+                          isFree = value;
+                          if (isFree) amountController.clear();
+
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    Expanded(child: Text('تخفیف ۱۰۰٪')),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -262,7 +287,9 @@ class _EditEventTransactionModalViewState
           id: widget.transaction.id,
           eventID: widget.eventID,
           transactionType: transactionType,
-          amount: AmountHelper.formattedPriceToInteger(amountController.text),
+          amount: isFree
+              ? 0
+              : AmountHelper.formattedPriceToInteger(amountController.text),
           description: descriptionController.text,
           transactionDate: selectedDate!,
           attachment: null,
