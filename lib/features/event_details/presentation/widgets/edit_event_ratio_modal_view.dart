@@ -6,6 +6,7 @@ import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
+import 'package:pay_pilot/core/utils/helpers/debounce_helper.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_modal_column_view_skin.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
@@ -40,11 +41,13 @@ class _EditEventRatioModalViewState extends State<EditEventRatioModalView> {
   double remindedRatio = 100;
   late ResponseMember member;
   late int ratioID;
+  late DebounceHelper debounce;
   bool isNotSelected = false;
 
   @override
   void dispose() {
     ratioController.dispose();
+    debounce.dispose();
     super.dispose();
   }
 
@@ -52,11 +55,15 @@ class _EditEventRatioModalViewState extends State<EditEventRatioModalView> {
   void initState() {
     super.initState();
 
+    debounce = DebounceHelper();
+
     ratioID = widget.memberRatio.id;
     member = widget.members.firstWhere(
       (element) => element.id == widget.memberRatio.memberID,
     );
-    ratioController.text = widget.memberRatio.ratio.toString();
+    if (widget.memberRatio.ratio != 0) {
+      ratioController.text = widget.memberRatio.ratio.toString();
+    }
 
     notAddedMembers.add(member);
     remindedRatio = remindedRatio + widget.memberRatio.ratio;
@@ -128,6 +135,14 @@ class _EditEventRatioModalViewState extends State<EditEventRatioModalView> {
                 );
               }
               return null;
+            },
+            onChange: (value) {
+              debounce.call(() {
+                final isZero =
+                    value == ratioController.text.replaceAll('-', '').trim();
+
+                if (isZero) ratioController.clear();
+              });
             },
           ),
         ),

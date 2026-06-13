@@ -7,6 +7,7 @@ import 'package:pay_pilot/core/database/tables/event_transactions.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
+import 'package:pay_pilot/core/utils/helpers/debounce_helper.dart';
 import 'package:pay_pilot/core/utils/resource/input_formatter.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_modal_list_view_skin.dart';
@@ -42,6 +43,8 @@ class _AddEventTransactionModalViewState
   final TextEditingController dateController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
+  late DebounceHelper debounce;
+
   TransactionType? transactionType;
   DateTime? selectedDate;
   bool isNotSelected = false;
@@ -51,10 +54,18 @@ class _AddEventTransactionModalViewState
   final transactions = <TransactionParams>[];
 
   @override
+  void initState() {
+    super.initState();
+
+    debounce = DebounceHelper();
+  }
+
+  @override
   void dispose() {
     descriptionController.dispose();
     amountController.dispose();
     dateController.dispose();
+    debounce.dispose();
     super.dispose();
   }
 
@@ -192,6 +203,15 @@ class _AddEventTransactionModalViewState
                     return S.current.validator_required;
                   }
                   return null;
+                },
+                onChange: (value) {
+                  debounce.call(() {
+                    final isZero =
+                        value ==
+                        amountController.text.replaceAll('-', '').trim();
+
+                    if (isZero) amountController.clear();
+                  });
                 },
               ),
               Gap(20),

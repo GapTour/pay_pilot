@@ -6,6 +6,7 @@ import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
+import 'package:pay_pilot/core/utils/helpers/debounce_helper.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
 import 'package:pay_pilot/core/widgets/app_modal_column_view_skin.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
@@ -36,16 +37,20 @@ class _AddEventRatioModalViewState extends State<AddEventRatioModalView> {
   double remindedRatio = 100;
   ResponseMember? member;
   bool isNotSelected = false;
+  late DebounceHelper debounce;
 
   @override
   void dispose() {
     ratioController.dispose();
+    debounce.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+
+    debounce = DebounceHelper();
 
     widget.members.fold<List<Member>>([], (previousValue, element) {
       if (!widget.addedMembers.containsKey(element.id)) {
@@ -115,6 +120,14 @@ class _AddEventRatioModalViewState extends State<AddEventRatioModalView> {
                 );
               }
               return null;
+            },
+            onChange: (value) {
+              debounce.call(() {
+                final isZero =
+                    value == ratioController.text.replaceAll('-', '').trim();
+
+                if (isZero) ratioController.clear();
+              });
             },
           ),
         ),
