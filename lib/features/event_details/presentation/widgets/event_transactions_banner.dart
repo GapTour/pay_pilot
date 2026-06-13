@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:pay_pilot/core/database/tables/event_transactions.dart';
+import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_transaction.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_order.dart';
@@ -82,7 +84,10 @@ class EventTransactionsBanner extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${incomes.toInt()}',
+                        AmountHelper.integerToFormattedPriceWithSymbols(
+                          incomes,
+                          TransactionType.income,
+                        ),
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ],
@@ -96,28 +101,47 @@ class EventTransactionsBanner extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${expenses.toInt()}',
+                        AmountHelper.integerToFormattedPriceWithSymbols(
+                          expenses,
+                          TransactionType.expense,
+                        ),
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ],
                   ),
                   Gap(8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'مانده',
-                          style: Theme.of(context).textTheme.labelSmall,
-                        ),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'مانده',
+                              style: Theme.of(context).textTheme.labelSmall!
+                                  .copyWith(color: kOnPrimaryColor),
+                            ),
+                          ),
+                          Text(
+                            AmountHelper.integerToFormattedPrice(
+                              incomes - expenses,
+                              incomes - expenses > 0
+                                  ? TransactionType.income
+                                  : TransactionType.expense,
+                            ),
+                            style: Theme.of(context).textTheme.labelSmall!
+                                .copyWith(color: kOnPrimaryColor),
+                          ),
+                        ],
                       ),
-                      Text(
-                        '${incomes.toInt() - expenses.toInt()}',
-                        style: Theme.of(context).textTheme.labelSmall,
-                      ),
-                    ],
+                    ),
                   ),
 
-                  Divider(color: kPrimaryColor),
+                  Gap(8),
                   Text(
                     'جمع کل مهمانان $totalGuests',
                     style: Theme.of(context).textTheme.labelSmall,

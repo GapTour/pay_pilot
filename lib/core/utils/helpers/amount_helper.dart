@@ -23,4 +23,19 @@ class AmountHelper {
     if (type?.isExpense ?? false) return '$formattedText -';
     return formattedText;
   }
+
+  static String integerToFormattedPriceWithSymbols(
+    double inputPrice, [
+    TransactionType? type,
+  ]) {
+    final String simplePrice = inputPrice.toStringAsFixed(0);
+
+    final int parsedValue =
+        int.tryParse(simplePrice.replaceAll(RegExp(r'[^\d]'), '')) ?? 0;
+
+    final String formattedText = NumberFormat('#,###').format(parsedValue);
+
+    if (type?.isExpense ?? false) return '$formattedText  -';
+    return '$formattedText +';
+  }
 }
