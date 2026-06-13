@@ -8,11 +8,12 @@ import 'package:pay_pilot/core/data/params/event_story_params.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/constants/app_arguments.dart';
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
+import 'package:pay_pilot/core/widgets/app_modal_bottom_sheet.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
 import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
-import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_order_dialog_box.dart';
-import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_ratio_dialog_box.dart';
-import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_transaction_dialog_box.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_order_modal_view.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_ratio_modal_view.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/add_event_transaction_modal_view.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_more_details.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_orders_list.dart';
 import 'package:pay_pilot/features/event_details/presentation/widgets/event_ratios_list.dart';
@@ -61,9 +62,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               return EventTabBar(state: state);
             },
           ),
-          Gap(25),
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 340,
+          Expanded(
             child: ListView(
               padding: EdgeInsets.only(
                 bottom: 150,
@@ -157,34 +156,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 return;
               }
 
-              showDialog(
-                context: context,
-                builder: (_) {
-                  if (state.currentPage.isOrder) {
-                    return AddEventOrderDialogBox(
-                      eventID: int.parse(widget.eventID),
-                      responseMembers: members,
-                      responseGuests: guests,
-                      menuItems: menuItems,
-                      onPressedSubmit: (order) {
-                        context.read<EventDetailsBloc>().add(AddOrder(order));
-                      },
-                    );
-                  }
-                  if (state.currentPage.isMembers) {
-                    return AddEventRatioDialogBox(
-                      eventID: eventID,
-                      onPressedSubmit: (ratioEvent) {
-                        context.read<EventDetailsBloc>().add(
-                          AddEventRatio(ratioEvent),
-                        );
-                      },
-                      addedMembers: addedMembers,
-                      members: members,
-                    );
-                  }
-
-                  return AddEventTransactionDialogBox(
+              if (state.currentPage.isTransactions) {
+                AppModalBottomSheet.maxHeightWithAppBar(
+                  header: S.current.eventDetails_addEventTransaction,
+                  child: AddEventTransactionModalView(
                     eventID: int.parse(widget.eventID),
                     onPressedSubmit: (transactions) {
                       context.read<EventDetailsBloc>().add(
@@ -193,9 +168,43 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     },
                     responseMembers: members,
                     responseGuests: guests,
-                  );
-                },
-              );
+                  ),
+                );
+                return;
+              }
+
+              if (state.currentPage.isOrder) {
+                AppModalBottomSheet.maxHeightWithAppBar(
+                  header: S.current.eventDetails_addEventOrder,
+                  child: AddEventOrderModalView(
+                    eventID: int.parse(widget.eventID),
+                    responseMembers: members,
+                    responseGuests: guests,
+                    menuItems: menuItems,
+                    onPressedSubmit: (order) {
+                      context.read<EventDetailsBloc>().add(AddOrder(order));
+                    },
+                  ),
+                );
+                return;
+              }
+
+              if (state.currentPage.isMembers) {
+                AppModalBottomSheet.minHeightWithAppBar(
+                  header: S.current.eventDetails_addEventRatio,
+                  child: AddEventRatioModalView(
+                    eventID: eventID,
+                    onPressedSubmit: (ratioEvent) {
+                      context.read<EventDetailsBloc>().add(
+                        AddEventRatio(ratioEvent),
+                      );
+                    },
+                    addedMembers: addedMembers,
+                    members: members,
+                  ),
+                );
+                return;
+              }
             },
             backgroundColor: kSecondaryColor,
             splashColor: kPrimaryColor,

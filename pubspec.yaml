@@ -1,9 +1,9 @@
 name: pay_pilot
 description: "an app to manage your member's payments"
-version: 2.1.0
+version: 2.1.1
 
 environment:
-  sdk: ^3.8.1
+  sdk: ^3.10.8
 
 dependencies:
   flutter:

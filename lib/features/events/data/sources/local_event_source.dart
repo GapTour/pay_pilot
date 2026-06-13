@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:pay_pilot/core/data/params/event_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
-import 'package:pay_pilot/core/database/daos/event_dao/event_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/events_dao.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
 import 'package:pay_pilot/features/events/data/models/response_event.dart';
@@ -9,7 +9,7 @@ import 'package:pay_pilot/features/events/data/sources/i_event_source.dart';
 import 'package:pay_pilot/features/teams/data/models/response_team.dart';
 
 class LocalEventSource implements IEventSource {
-  final EventDao _dbServiceForEvent;
+  final EventsDao _dbServiceForEvent;
   final TeamDao _dbServiceForTeam;
 
   LocalEventSource(this._dbServiceForEvent, this._dbServiceForTeam);

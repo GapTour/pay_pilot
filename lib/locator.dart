@@ -2,7 +2,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
-import 'package:pay_pilot/core/database/daos/event_dao/event_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_details_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_orders_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_ratios_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_stories_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_transactions_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/events_dao.dart';
 import 'package:pay_pilot/core/database/daos/guest_dao/guest_dao.dart';
 import 'package:pay_pilot/core/database/daos/member_dao/member_dao.dart';
 import 'package:pay_pilot/core/database/daos/menu_dao/menu_dao.dart';
@@ -99,7 +104,14 @@ Future<void> _callServices() async {
   locator.registerSingleton<ReportDao>(ReportDao(locator()));
   locator.registerSingleton<RatioDao>(RatioDao(locator()));
   locator.registerSingleton<MemberDao>(MemberDao(locator()));
-  locator.registerSingleton<EventDao>(EventDao(locator()));
+  locator.registerSingleton<EventsDao>(EventsDao(locator()));
+  locator.registerSingleton<EventDetailsDao>(EventDetailsDao(locator()));
+  locator.registerSingleton<EventTransactionsDao>(
+    EventTransactionsDao(locator()),
+  );
+  locator.registerSingleton<EventOrdersDao>(EventOrdersDao(locator()));
+  locator.registerSingleton<EventRatiosDao>(EventRatiosDao(locator()));
+  locator.registerSingleton<EventStoriesDao>(EventStoriesDao(locator()));
   locator.registerSingleton<GuestDao>(GuestDao(locator()));
   locator.registerSingleton<MenuDao>(MenuDao(locator()));
   locator.registerSingleton<SettingsDao>(SettingsDao(locator()));
@@ -209,7 +221,16 @@ void _callSources() {
     () => RemoteEventDetailsSource(locator()),
   );
   locator.registerLazySingleton<LocalEventDetailsSource>(
-    () => LocalEventDetailsSource(locator(), locator(), locator(), locator()),
+    () => LocalEventDetailsSource(
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+      locator(),
+    ),
   );
 
   locator.registerLazySingleton<RemoteReportSource>(

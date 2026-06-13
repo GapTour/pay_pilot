@@ -6,18 +6,22 @@ import 'package:pay_pilot/core/data/params/event_ratio_params.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
-import 'package:pay_pilot/core/widgets/app_dialog_box.dart';
+import 'package:pay_pilot/core/utils/helpers/debounce_helper.dart';
 import 'package:pay_pilot/core/widgets/app_drop_down_button.dart';
+import 'package:pay_pilot/core/widgets/app_modal_column_view_skin.dart';
 import 'package:pay_pilot/core/widgets/app_text_field.dart';
+import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
-class AddEventRatioDialogBox extends StatefulWidget {
+class EditEventRatioModalView extends StatefulWidget {
+  final ResponseEventRatio memberRatio;
   final int eventID;
   final List<ResponseMember> members;
   final Map<int, double> addedMembers;
   final Function(EventRatioParams ratioEvent) onPressedSubmit;
-  const AddEventRatioDialogBox({
+  const EditEventRatioModalView({
     super.key,
+    required this.memberRatio,
     required this.eventID,
     required this.onPressedSubmit,
     required this.addedMembers,
@@ -25,27 +29,44 @@ class AddEventRatioDialogBox extends StatefulWidget {
   });
 
   @override
-  State<AddEventRatioDialogBox> createState() => _AddEventRatioDialogBoxState();
+  State<EditEventRatioModalView> createState() =>
+      _EditEventRatioModalViewState();
 }
 
-class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
+class _EditEventRatioModalViewState extends State<EditEventRatioModalView> {
   final TextEditingController ratioController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final formDropDownKey = GlobalKey<FormState>();
   final List<ResponseMember> notAddedMembers = [];
   double remindedRatio = 100;
-  ResponseMember? member;
+  late ResponseMember member;
+  late int ratioID;
+  late DebounceHelper debounce;
   bool isNotSelected = false;
 
   @override
   void dispose() {
     ratioController.dispose();
+    debounce.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+
+    debounce = DebounceHelper();
+
+    ratioID = widget.memberRatio.id;
+    member = widget.members.firstWhere(
+      (element) => element.id == widget.memberRatio.memberID,
+    );
+    if (widget.memberRatio.ratio != 0) {
+      ratioController.text = widget.memberRatio.ratio.toString();
+    }
+
+    notAddedMembers.add(member);
+    remindedRatio = remindedRatio + widget.memberRatio.ratio;
 
     widget.members.fold<List<Member>>([], (previousValue, element) {
       if (!widget.addedMembers.containsKey(element.id)) {
@@ -64,20 +85,18 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
 
   @override
   Widget build(BuildContext context) {
-    return AppDialogBox(
-      title: S.current.eventDetails_addEventRatio,
+    return AppModalColumnViewSkin(
       children: [
         AppDropDownButton<ResponseMember>(
           label: S.current.dropDownButton_label_members,
           hint: S.current.dropDownButton_hint_selectMember,
           showWarning: isNotSelected,
           value: widget.members.firstWhereOrNull(
-            (element) => element.id == member?.id,
+            (element) => element.id == member.id,
           ),
           onChanged: (value) {
             if (value != null) {
               member = value;
-              isNotSelected = false;
               setState(() {});
             }
           },
@@ -117,19 +136,24 @@ class _AddEventRatioDialogBoxState extends State<AddEventRatioDialogBox> {
               }
               return null;
             },
+            onChange: (value) {
+              debounce.call(() {
+                final isZero =
+                    value.replaceAll('-', '').trim() == '0' ||
+                    value.replaceAll('-', '').trim() == '0.0';
+
+                if (isZero) ratioController.clear();
+              });
+            },
           ),
         ),
+        Gap(120),
       ],
-      onPressed: () {
+      onSubmit: () {
         if (!formKey.currentState!.validate()) return;
-        if (member == null) {
-          isNotSelected = true;
-          setState(() {});
-          return;
-        }
         final ratio = EventRatioParams(
-          id: null,
-          memberID: member!.id,
+          id: ratioID,
+          memberID: member.id,
           ratioValue: ratioController.text.parseToDouble,
           eventID: widget.eventID,
         );

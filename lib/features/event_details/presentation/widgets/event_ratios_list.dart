@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
+import 'package:pay_pilot/core/widgets/app_modal_bottom_sheet.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_ratio.dart';
 import 'package:pay_pilot/features/event_details/presentation/bloc/event_details_bloc.dart';
-import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event_ratio_dialog_box.dart';
+import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event_ratio_modal_view.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
 class EventRatiosList extends StatelessWidget {
@@ -63,21 +64,19 @@ class EventRatiosList extends StatelessWidget {
 
             return AppTile(
               onEdit: () {
-                showDialog(
-                  context: context,
-                  builder: (_) {
-                    return EditEventRatioDialogBox(
-                      memberRatio: ratios[index],
-                      eventID: eventID,
-                      members: members,
-                      addedMembers: addedMembers,
-                      onPressedSubmit: (submittedRatio) {
-                        context.read<EventDetailsBloc>().add(
-                          EditEventRatio(submittedRatio),
-                        );
-                      },
-                    );
-                  },
+                AppModalBottomSheet.minHeightWithAppBar(
+                  header: S.current.eventDetails_editEventRatio,
+                  child: EditEventRatioModalView(
+                    memberRatio: ratios[index],
+                    eventID: eventID,
+                    members: members,
+                    addedMembers: addedMembers,
+                    onPressedSubmit: (submittedRatio) {
+                      context.read<EventDetailsBloc>().add(
+                        EditEventRatio(submittedRatio),
+                      );
+                    },
+                  ),
                 );
               },
               onDelete: () {

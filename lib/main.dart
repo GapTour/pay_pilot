@@ -19,6 +19,8 @@ void main() async {
     ),
   );
 
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   /// init locator
   await locatorSetup();
 

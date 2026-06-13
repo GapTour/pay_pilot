@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:pay_pilot/core/data/params/report_params.dart';
 import 'package:pay_pilot/core/data/response/error_response.dart';
-import 'package:pay_pilot/core/database/daos/event_dao/event_dao.dart';
+import 'package:pay_pilot/core/database/daos/event_dao/event_details_dao.dart';
 import 'package:pay_pilot/core/database/daos/report_dao/report_dao.dart';
 import 'package:pay_pilot/core/utils/resource/data_state.dart';
 import 'package:pay_pilot/features/event_details/data/models/response_event_details.dart';
@@ -9,7 +9,7 @@ import 'package:pay_pilot/features/reports/data/models/response_report.dart';
 import 'package:pay_pilot/features/reports/data/sources/i_report_source.dart';
 
 class LocalReportSource implements IReportSource {
-  final EventDao _dbServiceForEvent;
+  final EventDetailsDao _dbServiceForEvent;
   final ReportDao _dbServiceForReport;
 
   LocalReportSource(this._dbServiceForEvent, this._dbServiceForReport);

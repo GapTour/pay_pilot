@@ -18,6 +18,7 @@ class EventTransactionsBanner extends StatelessWidget {
         return false;
       },
       builder: (context, state) {
+        String? eventTitle;
         final incomes = state.totalIncomes;
         final expenses = state.totalExpenses;
         final transactions = <ResponseEventTransaction>[];
@@ -33,6 +34,7 @@ class EventTransactionsBanner extends StatelessWidget {
           orders.addAll(eventDetailStatus.eventDetails.orders);
           transactions.addAll(eventDetailStatus.eventDetails.transactions);
 
+          eventTitle = eventDetailStatus.eventDetails.title;
           totalIncomeTransactions = transactions
               .where((element) => element.transactionType.isIncome)
               .length;
@@ -64,6 +66,13 @@ class EventTransactionsBanner extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    eventTitle ?? '-',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: kPrimaryColor),
+                  ),
+                  Gap(8),
                   Row(
                     children: [
                       Expanded(
