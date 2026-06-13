@@ -61,11 +61,14 @@ class EventTransactionsDao extends DatabaseAccessor<AppDatabase>
 
     final notEditedOrderInfo =
         await (db.select(db.eventOrders)..where((tbl) {
-              return tbl.eventID.equals(notEditedTransaction.eventID) &
-                  (tbl.guessID.equalsNullable(notEditedTransaction.guestID) |
-                      tbl.guessID.equalsNullable(
-                        notEditedTransaction.memberID,
-                      ));
+              if (notEditedTransaction.guestID != null) {
+                return tbl.eventID.equals(notEditedTransaction.eventID) &
+                    tbl.guessID.equalsNullable(notEditedTransaction.guestID);
+              } else if (notEditedTransaction.memberID != null) {
+                return tbl.eventID.equals(notEditedTransaction.eventID) &
+                    tbl.memberID.equalsNullable(notEditedTransaction.memberID);
+              }
+              return tbl.eventID.equals(0);
             }))
             .getSingleOrNull();
 
