@@ -1,6 +1,6 @@
 name: pay_pilot
 description: "an app to manage your member's payments"
-version: 2.1.1
+version: 2.1.2
 
 environment:
   sdk: ^3.10.8

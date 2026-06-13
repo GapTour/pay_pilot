@@ -1,8 +1,8 @@
 {
   "version": {
-    "name": "2.1.1",
+    "name": "2.1.2",
     "android": {
-      "code": 4
+      "code": 5
     },
     "ios": {
       "code": 1
