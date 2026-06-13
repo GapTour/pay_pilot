@@ -4,9 +4,9 @@ import 'package:pay_pilot/core/utils/extensions/persian_numbers_converter.dart';
 
 class AmountHelper {
   static double formattedPriceToInteger(String inputPrice) {
-    final double simplePrice = inputPrice.replaceAll(',', '').parseToDouble;
+    final cleaned = inputPrice.replaceAll(',', '').replaceAll('٬', '').trim();
 
-    return simplePrice;
+    return cleaned.parseToDouble;
   }
 
   static String integerToFormattedPrice(
