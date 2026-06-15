@@ -215,6 +215,23 @@ class EventTransactionsList extends StatelessWidget {
                       ],
                     ],
                   ),
+                  if (transactions[index].description != null) ...[
+                    Gap(7),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'توضیحات  ',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          TextSpan(
+                            text: transactions[index].description,
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             );
