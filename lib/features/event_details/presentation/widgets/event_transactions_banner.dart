@@ -142,9 +142,21 @@ class EventTransactionsBanner extends StatelessWidget {
                   ),
 
                   Gap(8),
-                  Text(
-                    'جمع کل مهمانان $totalGuests',
-                    style: Theme.of(context).textTheme.labelSmall,
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'جمع کل مهمانان  ',
+                          style: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(color: kPrimaryColor),
+                        ),
+                        TextSpan(
+                          text: '$totalGuests',
+                          style: Theme.of(context).textTheme.headlineLarge
+                              ?.copyWith(color: kPrimaryColor),
+                        ),
+                      ],
+                    ),
                   ),
 
                   if (unknownTransactions != 0) ...[
