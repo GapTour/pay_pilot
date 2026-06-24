@@ -141,22 +141,43 @@ class EventTransactionsBanner extends StatelessWidget {
                     ),
                   ),
 
-                  Gap(8),
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'جمع کل مهمانان  ',
-                          style: Theme.of(context).textTheme.labelLarge
-                              ?.copyWith(color: kPrimaryColor),
+                  Row(
+                    children: [
+                      Text(
+                        'جمع کل مهمانان  ',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelLarge?.copyWith(color: kPrimaryColor),
+                      ),
+                      Spacer(),
+                      if (totalIncomeTransactions != totalGuests) ...[
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: kErrorColor,
+                            shape: .circle,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(7),
+                            child: Icon(Icons.warning_amber, size: 19),
+                          ),
                         ),
-                        TextSpan(
-                          text: '$totalGuests',
-                          style: Theme.of(context).textTheme.headlineLarge
-                              ?.copyWith(color: kPrimaryColor),
-                        ),
+                        Gap(8),
                       ],
-                    ),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            '$totalGuests',
+                            style: Theme.of(context).textTheme.headlineLarge
+                                ?.copyWith(color: kOnPrimaryColor),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
 
                   if (unknownTransactions != 0) ...[

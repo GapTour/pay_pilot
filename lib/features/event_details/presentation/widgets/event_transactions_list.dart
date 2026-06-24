@@ -6,6 +6,7 @@ import 'package:pay_pilot/core/data/params/transaction_params.dart';
 import 'package:pay_pilot/core/l10n/generated/l10n.dart';
 import 'package:pay_pilot/core/utils/extensions/format_date_to_persian_calendar.dart';
 import 'package:pay_pilot/core/utils/helpers/amount_helper.dart';
+import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/core/widgets/app_list.dart';
 import 'package:pay_pilot/core/widgets/app_modal_bottom_sheet.dart';
 import 'package:pay_pilot/core/widgets/app_tile.dart';
@@ -15,10 +16,15 @@ import 'package:pay_pilot/features/event_details/presentation/widgets/edit_event
 import 'package:pay_pilot/features/guests/data/models/response_guest.dart';
 import 'package:pay_pilot/features/members/data/models/response_member.dart';
 
-class EventTransactionsList extends StatelessWidget {
+class EventTransactionsList extends StatefulWidget {
   final int eventID;
   const EventTransactionsList(this.eventID, {super.key});
 
+  @override
+  State<EventTransactionsList> createState() => _EventTransactionsListState();
+}
+
+class _EventTransactionsListState extends State<EventTransactionsList> {
   String paidBy(
     ResponseEventTransaction transaction,
     List<ResponseMember> members,
@@ -57,6 +63,7 @@ class EventTransactionsList extends StatelessWidget {
         return false;
       },
       builder: (context, state) {
+        int incomeCounter = 0;
         final transactions = <ResponseEventTransaction>[];
         final members = <ResponseMember>[];
         final guests = <ResponseGuest>[];
@@ -85,6 +92,7 @@ class EventTransactionsList extends StatelessWidget {
               transactions[index],
               transactions,
             );
+            if (transactions[index].transactionType.isIncome) incomeCounter++;
 
             return AppTile(
               onEdit: () {
@@ -94,7 +102,7 @@ class EventTransactionsList extends StatelessWidget {
                     transaction: transactions[index],
                     responseGuests: guests,
                     responseMembers: members,
-                    eventID: eventID,
+                    eventID: widget.eventID,
                     onPressedSubmit: (transaction) {
                       context.read<EventDetailsBloc>().add(
                         EditTransaction(transaction),
@@ -158,6 +166,25 @@ class EventTransactionsList extends StatelessWidget {
                           ),
                         ),
                       ),
+                      if (transactions[index].transactionType.isIncome)
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: kSecondaryColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(8),
+                            child: Center(
+                              child: Text(
+                                incomeCounter.toString(),
+                                style: TextStyle(
+                                  color: kPrimaryColor,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                   Gap(5),
@@ -169,9 +196,8 @@ class EventTransactionsList extends StatelessWidget {
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         TextSpan(
-                          text: transactions[index]
-                              .date
-                              .formattedToJalali_yearMonthDay,
+                          text:
+                              '   ${transactions[index].date.formattedToJalali_yearMonthDay}',
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                       ],
@@ -191,7 +217,7 @@ class EventTransactionsList extends StatelessWidget {
                                 ).textTheme.headlineSmall,
                               ),
                               TextSpan(
-                                text: paidInfo,
+                                text: '   $paidInfo',
                                 style: Theme.of(
                                   context,
                                 ).textTheme.displayMedium,
@@ -215,20 +241,24 @@ class EventTransactionsList extends StatelessWidget {
                       ],
                     ],
                   ),
-                  if (transactions[index].description != null) ...[
+                  if (transactions[index].description != null &&
+                      (transactions[index].description ?? '').isNotEmpty) ...[
                     Gap(7),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'توضیحات  ',
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          TextSpan(
-                            text: transactions[index].description,
-                            style: Theme.of(context).textTheme.displayMedium,
-                          ),
-                        ],
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: kSecondaryColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 8,
+                        ),
+                        child: Text(
+                          transactions[index].description!,
+                          style: Theme.of(context).textTheme.displayMedium
+                              ?.copyWith(color: kPrimaryColor),
+                        ),
                       ),
                     ),
                   ],
