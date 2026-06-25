@@ -23,6 +23,11 @@ jobs:
 
       - run: flutter pub get
 
+      - name: Create variables.env file
+        run: |
+          echo "${{ secrets.DEV_ENV_VARS }}" > variables.env
+        shell: bash
+
       - run: flutter config --enable-macos-desktop
 
       - name: Build macOS release
@@ -54,6 +59,11 @@ jobs:
           cache: true
 
       - run: flutter pub get
+
+      - name: Create variables.env file
+        run: |
+          echo "${{ secrets.DEV_ENV_VARS }}" > variables.env
+        shell: bash
 
       - name: Build Android APK
         run: flutter build apk --release
