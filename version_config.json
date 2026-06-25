@@ -1,10 +1,13 @@
 {
   "version": {
-    "name": "2.1.4",
+    "name": "2.2.0",
     "android": {
-      "code": 6
+      "code": 7
     },
     "ios": {
+      "code": 1
+    },
+    "macos": {
       "code": 1
     }
   }
