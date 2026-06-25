@@ -13,4 +13,9 @@ class PlatformInterface {
       return NativeDatabase(file);
     });
   }
+
+  static Future<File> databaseFile(String databaseName) async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File(join(dir.path, '$databaseName.sqlite'));
+  }
 }

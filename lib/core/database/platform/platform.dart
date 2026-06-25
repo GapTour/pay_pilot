@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:drift/drift.dart';
 
 import 'platform_stub.dart'
@@ -7,4 +9,7 @@ import 'platform_stub.dart'
 class Platform {
   static QueryExecutor createDatabaseConnection(String databaseName) =>
       PlatformInterface.createDatabaseConnection(databaseName);
+
+  static Future<File> databaseFile(String databaseName) =>
+      PlatformInterface.databaseFile(databaseName);
 }
