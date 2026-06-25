@@ -50,6 +50,15 @@ echo "  CFBundleShortVersionString: $VERSION_NAME"
 echo "  CFBundleVersion: $IOS_CODE"
 echo ""
 
+# Update macOS version
+echo "Updating macOS version..."
+/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION_NAME" ../macos/Runner/Info.plist
+/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $IOS_CODE" ../macos/Runner/Info.plist
+echo "✓ macOS version updated successfully!"
+echo "  CFBundleShortVersionString: $VERSION_NAME"
+echo "  CFBundleVersion: $IOS_CODE"
+echo ""
+
 # Update pubspec.yaml
 echo "Updating pubspec.yaml..."
 sed -i '' "s/version: .*/version: $VERSION_NAME/" ../pubspec.yaml

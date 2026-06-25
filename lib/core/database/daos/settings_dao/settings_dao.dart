@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:drift/drift.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pay_pilot/core/data/typedefs/progress_callback.dart';
 import 'package:pay_pilot/core/database/app_database.dart';
+import 'package:pay_pilot/core/database/platform/platform.dart' as platform;
 import 'package:pay_pilot/core/database/tables/collect_report_events.dart';
 import 'package:pay_pilot/core/database/tables/event_orders.dart';
 import 'package:pay_pilot/core/database/tables/event_ratios.dart';
@@ -15,6 +19,7 @@ import 'package:pay_pilot/core/database/tables/ratios.dart';
 import 'package:pay_pilot/core/database/tables/reports.dart';
 import 'package:pay_pilot/core/database/tables/teams.dart';
 import 'package:pay_pilot/features/settings/data/models/backup_report.dart';
+import 'package:sqlite3/sqlite3.dart' show sqlite3;
 
 part 'settings_dao.g.dart';
 
@@ -36,6 +41,43 @@ part 'settings_dao.g.dart';
 class SettingsDao extends DatabaseAccessor<AppDatabase>
     with _$SettingsDaoMixin {
   SettingsDao(super.db);
+
+  Future<File> exportSqliteBackup() async {
+    final dir = await getTemporaryDirectory();
+
+    final timestamp = DateTime.now()
+        .toUtc()
+        .toIso8601String()
+        .replaceAll(':', '-')
+        .replaceAll('.', '-');
+
+    final file = File('${dir.path}/pay-pilot-backup-$timestamp.sqlite');
+
+    if (await file.exists()) {
+      await file.delete();
+    }
+
+    await db.customStatement('VACUUM INTO ?', [file.path]);
+
+    return file;
+  }
+
+  Future<void> importSqliteBackup({required File backupFile}) async {
+    final targetFile = await platform.Platform.databaseFile('pay-pilot-db');
+    final backupDb = sqlite3.open(backupFile.path);
+
+    // Vacuum it into a temporary location first to make sure it's working.
+    final tempPath = await getTemporaryDirectory();
+    final tempDb = join(tempPath.path, 'import.db');
+    backupDb
+      ..execute('VACUUM INTO ?', [tempDb])
+      ..dispose();
+
+    // Then replace the existing database file with it.
+    final tempDbFile = File(tempDb);
+    await tempDbFile.copy(targetFile.path);
+    await tempDbFile.delete();
+  }
 
   // Future<Map<String, dynamic>> getAllData() async {
   //   final collectReportEvents = await db.select(db.collectReportEvents).get();

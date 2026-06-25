@@ -15,7 +15,7 @@ import 'package:pay_pilot/core/database/daos/ratio_dao/ratio_dao.dart';
 import 'package:pay_pilot/core/database/daos/report_dao/report_dao.dart';
 import 'package:pay_pilot/core/database/daos/settings_dao/settings_dao.dart';
 import 'package:pay_pilot/core/database/daos/team_dao/team_dao.dart';
-import 'package:pay_pilot/core/database/platform/platfrom.dart';
+import 'package:pay_pilot/core/database/platform/platform.dart';
 import 'package:pay_pilot/core/utils/services/secure_storage_service.dart';
 import 'package:pay_pilot/core/utils/services/shared_preferences_service.dart';
 import 'package:pay_pilot/features/auth/data/login_api_provider.dart';

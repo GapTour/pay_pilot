@@ -59,4 +59,60 @@ class PickFileHelper {
       );
     }
   }
+
+  static Future<DataState<File>> pickSqliteFile() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['sqlite', 'sqflite', '.sqlite', '.sqflite'],
+        withData: true,
+      );
+
+      if (result == null) {
+        return DataFailed(
+          ErrorResponse(
+            message: 'No file selected',
+            status: 'Failed',
+            code: 600,
+            data: '',
+          ),
+        );
+      }
+
+      if (!result.files.first.name.endsWith('.sqlite')) {
+        return DataFailed(
+          ErrorResponse(
+            message: 'Selected file is not valid',
+            status: 'Failed',
+            code: 600,
+            data: '',
+          ),
+        );
+      }
+
+      final pickedFile = result.files.single;
+
+      if (pickedFile.path != null) {
+        return DataSuccess(File(pickedFile.path!));
+      }
+
+      return DataFailed(
+        ErrorResponse(
+          message: 'Invalid file selected',
+          status: 'Failed',
+          code: 600,
+          data: '',
+        ),
+      );
+    } catch (e) {
+      return DataFailed(
+        ErrorResponse(
+          message: 'Error occurred while picking file',
+          status: 'Failed',
+          code: 600,
+          data: '$e',
+        ),
+      );
+    }
+  }
 }

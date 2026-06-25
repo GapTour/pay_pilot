@@ -58,4 +58,53 @@ class BackupNativeSource implements IBackupSource {
 
     return DataSuccess(backupReport);
   }
+
+  @override
+  Future<DataState<ShareParams>> createNativeBackup() async {
+    try {
+      final backupFile = await _settingsDao.exportSqliteBackup();
+
+      final params = ShareParams(
+        title: 'Share Backup File',
+        files: [
+          xfile.XFile(
+            backupFile.path,
+            mimeType: 'application/vnd.sqlite3',
+            name: backupFile.uri.pathSegments.last,
+          ),
+        ],
+      );
+
+      return DataSuccess(params);
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
+    }
+  }
+
+  @override
+  Future<DataState<void>> restoreNativeBackup() async {
+    try {
+      final pickDataState = await PickFileHelper.pickSqliteFile();
+      if (pickDataState is DataSuccess) {
+        await _settingsDao.importSqliteBackup(backupFile: pickDataState.data!);
+      }
+
+      if (pickDataState is DataFailed) {
+        return DataFailed(
+          ErrorResponse.defaultError(
+            pickDataState.errorResponse!.message,
+            pickDataState.errorResponse!.code,
+          ),
+        );
+      }
+
+      return DataSuccess(null);
+    } on PlatformException catch (e) {
+      return DataFailed(
+        ErrorResponse.defaultError(e.message, int.tryParse(e.code)),
+      );
+    }
+  }
 }

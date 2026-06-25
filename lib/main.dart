@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +12,7 @@ import 'package:pay_pilot/core/utils/imports/flutter_quill_localization/quill_lo
 import 'package:pay_pilot/core/utils/theme/app_theme.dart';
 import 'package:pay_pilot/features/change_language/presentation/cubit/language_cubit.dart';
 import 'package:pay_pilot/locator.dart';
+import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +23,24 @@ void main() async {
     ),
   );
 
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  if (!kIsWeb) {
+    if (Platform.isIOS || Platform.isAndroid) {
+      await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    }
+
+    if (Platform.isMacOS || Platform.isWindows) {
+      await windowManager.ensureInitialized();
+
+      WindowOptions windowOptions = WindowOptions(
+        minimumSize: const Size(600, 850),
+        // maximumSize: const Size(800, 600),
+        size: Size(600, 850),
+      );
+      windowManager.waitUntilReadyToShow(windowOptions, () async {
+        await windowManager.show();
+      });
+    }
+  }
 
   /// init locator
   await locatorSetup();
