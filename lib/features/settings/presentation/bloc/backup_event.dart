@@ -10,3 +10,9 @@ sealed class BackupEvent extends Equatable {
 final class BackupRequested extends BackupEvent {}
 
 final class RestoreRequested extends BackupEvent {}
+
+final class ExportBackupRequested extends BackupEvent {}
+
+final class ImportBackupRequested extends BackupEvent {}
+
+final class ChangeToInit extends BackupEvent {}
