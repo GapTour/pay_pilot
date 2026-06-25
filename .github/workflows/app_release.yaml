@@ -53,6 +53,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Java
+        uses: actions/setup-java@v3.12.0
+        with:
+          distribution: "oracle"
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+
+      - name: Install NDK
+        run: |
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;29.0.13113456"
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.38.9"
